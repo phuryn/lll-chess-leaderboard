@@ -14,7 +14,7 @@ const CodeBlock = ({ children, language = "json" }: { children: string; language
 );
 
 const Docs = () => {
-  const baseUrl = window.location.origin;
+  const baseUrl = "https://csdagwvbuurumpgrqweh.supabase.co";
 
   return (
     <div className="min-h-screen bg-background">
