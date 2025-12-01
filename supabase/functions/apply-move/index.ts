@@ -58,17 +58,59 @@ Deno.serve(async (req) => {
     const chess = new Chess(game.fen);
     
     // Attempt to make the move
-    const result = chess.move(move);
+    let result;
+    try {
+      result = chess.move(move);
+    } catch (moveError) {
+      // chess.js 1.4.0 throws on invalid moves
+      result = null;
+    }
     
     if (!result) {
       console.log('Invalid move:', move, 'for position:', game.fen);
+      
+      // Determine winner (opponent of current side to move)
+      const winner = game.side_to_move === 'white' ? 'black' : 'white';
+      const updatedMoveHistory = [...game.move_history, `${move}??`]; // Mark as invalid
+      
+      // Update game as finished in database
+      const { data: updatedGame, error: updateError } = await supabase
+        .from('games')
+        .update({
+          status: 'invalid_move',
+          winner,
+          reason: 'invalid_move',
+          move_history: updatedMoveHistory,
+          legal_moves: game.legal_moves, // Keep current legal moves for reference
+        })
+        .eq('id', gameId)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error('Database update error:', updateError);
+        throw updateError;
+      }
+
+      console.log('Game ended by invalid move. Winner:', winner);
+
       return new Response(
         JSON.stringify({ 
           ok: false, 
-          error: `Invalid move: ${move}` 
+          error: `Invalid move: ${move}`,
+          gameId: updatedGame.id,
+          fen: updatedGame.fen,
+          sideToMove: updatedGame.side_to_move,
+          legalMoves: updatedGame.legal_moves,
+          status: updatedGame.status,
+          winner: updatedGame.winner,
+          reason: updatedGame.reason,
+          moveHistory: updatedGame.move_history,
+          whitePlayer: updatedGame.white_player,
+          blackPlayer: updatedGame.black_player,
         }),
         {
-          status: 400,
+          status: 200, // Domain-level outcome
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
