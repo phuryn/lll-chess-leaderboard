@@ -1,0 +1,10 @@
+project_id = "csdagwvbuurumpgrqweh"
+
+[functions.apply-move]
+verify_jwt = false
+
+[functions.start-position]
+verify_jwt = false
+
+[functions.legal-moves]
+verify_jwt = false
