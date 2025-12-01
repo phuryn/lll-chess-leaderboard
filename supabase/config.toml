@@ -3,7 +3,10 @@ project_id = "csdagwvbuurumpgrqweh"
 [functions.apply-move]
 verify_jwt = false
 
-[functions.start-position]
+[functions.new-game]
+verify_jwt = false
+
+[functions.current-position]
 verify_jwt = false
 
 [functions.legal-moves]

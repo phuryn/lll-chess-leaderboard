@@ -1,4 +1,5 @@
 import { Chess } from 'npm:chess.js';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -6,19 +7,22 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { fen, move } = await req.json();
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-    if (!fen || !move) {
+    const { gameId, move } = await req.json();
+
+    if (!gameId || !move) {
       return new Response(
         JSON.stringify({ 
           ok: false, 
-          error: 'Missing required fields: fen and move' 
+          error: 'gameId and move are required' 
         }),
         {
           status: 400,
@@ -27,17 +31,41 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Create a new chess instance and load the FEN
-    const chess = new Chess();
+    console.log('Applying move to game:', gameId, 'Move:', move);
+
+    // Fetch current game state
+    const { data: game, error: fetchError } = await supabase
+      .from('games')
+      .select('*')
+      .eq('id', gameId)
+      .single();
+
+    if (fetchError || !game) {
+      console.error('Game not found:', gameId, fetchError);
+      return new Response(
+        JSON.stringify({ 
+          ok: false, 
+          error: 'Game not found' 
+        }),
+        {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Initialize chess with current position
+    const chess = new Chess(game.fen);
     
-    try {
-      chess.load(fen);
-    } catch (e) {
-      const errorMsg = e instanceof Error ? e.message : String(e);
+    // Attempt to make the move
+    const result = chess.move(move);
+    
+    if (!result) {
+      console.log('Invalid move:', move, 'for position:', game.fen);
       return new Response(
         JSON.stringify({ 
           ok: false, 
-          error: `Invalid FEN: ${errorMsg}` 
+          error: `Invalid move: ${move}` 
         }),
         {
           status: 400,
@@ -46,91 +74,75 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Get side to move before applying the move
-    const sideToMove = chess.turn() === 'w' ? 'white' : 'black';
+    console.log('Move applied successfully:', result.san);
 
-    // Try to apply the move - chess.js throws an error for invalid moves
-    let moveResult;
-    try {
-      moveResult = chess.move(move);
-    } catch (e) {
-      // Invalid move - return proper response
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          status: 'invalid_move',
-          fen: fen, // Return original FEN
-          sideToMove: sideToMove,
-          winner: null,
-          reason: e instanceof Error ? e.message : 'Illegal move',
-          legalMoves: chess.moves(),
-        }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // If move result is null (shouldn't happen with try-catch, but safety check)
-    if (moveResult === null) {
-      return new Response(
-        JSON.stringify({
-          ok: true,
-          status: 'invalid_move',
-          fen: fen,
-          sideToMove: sideToMove,
-          winner: null,
-          reason: 'Illegal move',
-          legalMoves: chess.moves(),
-        }),
-        {
-          status: 200,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // Move was valid, get the new state
+    // Get new game state
     const newFen = chess.fen();
-    const newSideToMove = chess.turn() === 'w' ? 'white' : 'black';
     const legalMoves = chess.moves();
-
-    // Determine game status
+    
     let status = 'continue';
     let winner = null;
     let reason = null;
-
+    
     if (chess.isCheckmate()) {
       status = 'mate';
-      winner = sideToMove; // The side that just moved wins
-      reason = 'Checkmate';
+      winner = game.side_to_move; // Previous side won
+      reason = 'checkmate';
+      console.log('Checkmate! Winner:', winner);
     } else if (chess.isStalemate()) {
-      status = 'stalemate';
-      reason = 'Stalemate';
+      status = 'draw';
+      reason = 'stalemate';
+      console.log('Stalemate!');
     } else if (chess.isDraw()) {
-      status = 'game_over';
+      status = 'draw';
       if (chess.isThreefoldRepetition()) {
-        reason = 'Threefold repetition';
+        reason = 'threefold_repetition';
       } else if (chess.isInsufficientMaterial()) {
-        reason = 'Insufficient material';
+        reason = 'insufficient_material';
       } else {
-        reason = 'Draw by 50-move rule';
+        reason = '50_move_rule';
       }
-    } else if (chess.isGameOver()) {
-      status = 'game_over';
-      reason = 'Game over';
+      console.log('Draw:', reason);
     }
+
+    const newSideToMove = chess.turn() === 'w' ? 'white' : 'black';
+    const updatedMoveHistory = [...game.move_history, result.san];
+
+    // Update game in database
+    const { data: updatedGame, error: updateError } = await supabase
+      .from('games')
+      .update({
+        fen: newFen,
+        status,
+        side_to_move: newSideToMove,
+        winner,
+        reason,
+        legal_moves: legalMoves,
+        move_history: updatedMoveHistory,
+      })
+      .eq('id', gameId)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error('Database update error:', updateError);
+      throw updateError;
+    }
+
+    console.log('Game updated successfully');
 
     return new Response(
       JSON.stringify({
-        ok: true,
-        status,
-        fen: newFen,
-        sideToMove: newSideToMove,
-        winner,
-        reason,
-        legalMoves,
+        gameId: updatedGame.id,
+        fen: updatedGame.fen,
+        sideToMove: updatedGame.side_to_move,
+        legalMoves: updatedGame.legal_moves,
+        status: updatedGame.status,
+        winner: updatedGame.winner,
+        reason: updatedGame.reason,
+        moveHistory: updatedGame.move_history,
+        whitePlayer: updatedGame.white_player,
+        blackPlayer: updatedGame.black_player,
       }),
       {
         status: 200,

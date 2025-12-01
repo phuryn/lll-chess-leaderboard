@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      games: {
+        Row: {
+          black_player: string | null
+          created_at: string
+          fen: string
+          id: string
+          legal_moves: string[]
+          move_history: string[]
+          reason: string | null
+          side_to_move: string
+          status: string
+          updated_at: string
+          white_player: string | null
+          winner: string | null
+        }
+        Insert: {
+          black_player?: string | null
+          created_at?: string
+          fen: string
+          id?: string
+          legal_moves?: string[]
+          move_history?: string[]
+          reason?: string | null
+          side_to_move: string
+          status?: string
+          updated_at?: string
+          white_player?: string | null
+          winner?: string | null
+        }
+        Update: {
+          black_player?: string | null
+          created_at?: string
+          fen?: string
+          id?: string
+          legal_moves?: string[]
+          move_history?: string[]
+          reason?: string | null
+          side_to_move?: string
+          status?: string
+          updated_at?: string
+          white_player?: string | null
+          winner?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
