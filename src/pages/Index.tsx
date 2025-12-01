@@ -26,6 +26,9 @@ const Index = () => {
               <Button asChild size="lg" variant="outline" className="text-lg">
                 <Link to="/n8n-prompts">n8n Agent Prompts</Link>
               </Button>
+              <Button asChild size="lg" variant="secondary" className="text-lg">
+                <Link to="/tests">Run API Tests</Link>
+              </Button>
             </div>
           </div>
 
