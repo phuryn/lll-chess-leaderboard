@@ -474,8 +474,8 @@ const Tests = () => {
       {
         const start = performance.now();
         try {
-          // White pawn on e7, can promote to queen
-          const fen = "8/4P3/8/8/8/8/k7/K7 w - - 0 1";
+          // Clean position: White pawn on e7, kings far apart
+          const fen = "4k3/4P3/8/8/8/8/8/4K3 w - - 0 1";
           const response = await fetch(`${baseUrl}/apply-move`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
