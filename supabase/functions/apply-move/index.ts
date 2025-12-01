@@ -18,11 +18,11 @@ Deno.serve(async (req) => {
 
     const { gameId, move } = await req.json();
 
-    if (!gameId || !move) {
+    if (!gameId) {
       return new Response(
         JSON.stringify({ 
           ok: false, 
-          error: 'gameId and move are required' 
+          error: 'gameId is required' 
         }),
         {
           status: 400,
@@ -49,6 +49,57 @@ Deno.serve(async (req) => {
         }),
         {
           status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Check if move is empty or null - treat as invalid move
+    if (!move || move.trim() === '') {
+      console.log('Empty or null move provided for game:', gameId);
+      
+      // Determine winner (opponent of current side to move)
+      const winner = game.side_to_move === 'white' ? 'black' : 'white';
+      const updatedMoveHistory = [...game.move_history, '(empty)??']; // Mark as invalid empty move
+      
+      // Update game as finished in database
+      const { data: updatedGame, error: updateError } = await supabase
+        .from('games')
+        .update({
+          status: 'invalid_move',
+          winner,
+          reason: 'invalid_move',
+          move_history: updatedMoveHistory,
+          legal_moves: game.legal_moves, // Keep current legal moves for reference
+        })
+        .eq('id', gameId)
+        .select()
+        .single();
+
+      if (updateError) {
+        console.error('Database update error:', updateError);
+        throw updateError;
+      }
+
+      console.log('Game ended by empty move. Winner:', winner);
+
+      return new Response(
+        JSON.stringify({ 
+          ok: false, 
+          error: 'Invalid move: empty or null move provided',
+          gameId: updatedGame.id,
+          fen: updatedGame.fen,
+          sideToMove: updatedGame.side_to_move,
+          legalMoves: updatedGame.legal_moves,
+          status: updatedGame.status,
+          winner: updatedGame.winner,
+          reason: updatedGame.reason,
+          moveHistory: updatedGame.move_history,
+          whitePlayer: updatedGame.white_player,
+          blackPlayer: updatedGame.black_player,
+        }),
+        {
+          status: 200, // Domain-level outcome
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
