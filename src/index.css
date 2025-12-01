@@ -102,4 +102,12 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  code {
+    @apply font-mono;
+  }
+
+  pre code {
+    @apply text-xs sm:text-sm;
+  }
 }
