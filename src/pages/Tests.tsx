@@ -430,8 +430,9 @@ const Tests = () => {
       {
         const start = performance.now();
         try {
-          // Position: White king on h1, Black king on h3, White queen on g2 to deliver stalemate
-          const fen = "8/8/8/8/8/7k/6Q1/7K b - - 0 1";
+          // True stalemate: Black king on a8, White queen on b6, White king on b5
+          // Black to move has no legal moves (Ka7, Kb7, Kb8 all controlled)
+          const fen = "k7/8/1Q6/1K6/8/8/8/8 b - - 0 1";
           const response = await fetch(`${baseUrl}/legal-moves`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

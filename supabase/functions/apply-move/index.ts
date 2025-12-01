@@ -49,16 +49,36 @@ Deno.serve(async (req) => {
     // Get side to move before applying the move
     const sideToMove = chess.turn() === 'w' ? 'white' : 'black';
 
-    // Try to apply the move
-    const moveResult = chess.move(move);
-
-    // If move is invalid
-    if (moveResult === null) {
+    // Try to apply the move - chess.js throws an error for invalid moves
+    let moveResult;
+    try {
+      moveResult = chess.move(move);
+    } catch (e) {
+      // Invalid move - return proper response
       return new Response(
         JSON.stringify({
           ok: true,
           status: 'invalid_move',
           fen: fen, // Return original FEN
+          sideToMove: sideToMove,
+          winner: null,
+          reason: e instanceof Error ? e.message : 'Illegal move',
+          legalMoves: chess.moves(),
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // If move result is null (shouldn't happen with try-catch, but safety check)
+    if (moveResult === null) {
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          status: 'invalid_move',
+          fen: fen,
           sideToMove: sideToMove,
           winner: null,
           reason: 'Illegal move',
