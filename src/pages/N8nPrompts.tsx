@@ -28,7 +28,7 @@ const N8nPrompts = () => {
           <div className="mt-4 flex gap-2">
             <Badge variant="outline">n8n Integration</Badge>
             <Badge variant="outline">LLM Agents</Badge>
-            <Badge variant="outline">Coordinate Notation</Badge>
+            <Badge variant="outline">SAN Notation</Badge>
           </div>
         </div>
 
@@ -66,13 +66,14 @@ const N8nPrompts = () => {
 
 Your job:
 - Analyze the current position in FEN format: {{ $json.FEN }}
-- Output ONE legal move for WHITE in coordinate notation: exactly 4 characters (e.g., e2e4, g1f3).
-- Never explain the move. Never add text. Never include SAN notation.
+- Output ONE legal move for WHITE in Standard Algebraic Notation (SAN).
+- Examples: e4, Nf3, Bxe5, O-O, e8=Q
+- Never explain the move. Never add commentary or reasoning.
 - If you have no legal move (checkmate or stalemate), output exactly: resign
-- Do not output punctuation, commentary, or multiple moves.
-- Format strictly: lowercase letters a–h, digits 1–8.
+- Do not include periods, exclamation marks, question marks, or multiple moves.
+- SAN is case-sensitive: use uppercase for pieces (N, B, R, Q, K), lowercase for files (a-h).
 
-Any output that is not a single 4-character move is considered an illegal move and loses the game.`}
+Any output that is not a valid SAN move or "resign" is considered an illegal move and loses the game.`}
                 </CodeBlock>
               </div>
 
@@ -82,7 +83,7 @@ Any output that is not a single 4-character move is considered an illegal move a
                   <div className="p-3 bg-muted rounded-lg">
                     <span className="font-semibold text-sm">Move Format:</span>
                     <span className="text-sm text-muted-foreground ml-2">
-                      Exactly 4 characters in coordinate notation (e.g., <code className="bg-background px-1.5 py-0.5 rounded">e2e4</code>)
+                      Standard Algebraic Notation (SAN) - case sensitive (e.g., <code className="bg-background px-1.5 py-0.5 rounded">e4</code>, <code className="bg-background px-1.5 py-0.5 rounded">Nf3</code>)
                     </span>
                   </div>
                   <div className="p-3 bg-muted rounded-lg">
@@ -97,6 +98,12 @@ Any output that is not a single 4-character move is considered an illegal move a
                       Output <code className="bg-background px-1.5 py-0.5 rounded">resign</code> if no legal moves available
                     </span>
                   </div>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <span className="font-semibold text-sm">Case Sensitive:</span>
+                    <span className="text-sm text-muted-foreground ml-2">
+                      Pieces use uppercase (N, B, R, Q, K), pawns have no prefix, files use lowercase (a-h)
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -105,11 +112,15 @@ Any output that is not a single 4-character move is considered an illegal move a
                 <div className="space-y-2">
                   <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
-                    <code className="font-mono text-sm">e2e4</code>
+                    <code className="font-mono text-sm">e4</code>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
-                    <code className="font-mono text-sm">g1f3</code>
+                    <code className="font-mono text-sm">Nf3</code>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                    <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
+                    <code className="font-mono text-sm">O-O</code>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
@@ -117,11 +128,15 @@ Any output that is not a single 4-character move is considered an illegal move a
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
                     <Badge variant="outline" className="bg-red-100 dark:bg-red-900">✗ Invalid</Badge>
-                    <code className="font-mono text-sm">e4 (opening move)</code>
+                    <code className="font-mono text-sm">e4 (good opening move)</code>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
                     <Badge variant="outline" className="bg-red-100 dark:bg-red-900">✗ Invalid</Badge>
-                    <code className="font-mono text-sm">Nf3 - developing the knight</code>
+                    <code className="font-mono text-sm">Nf3!</code>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
+                    <Badge variant="outline" className="bg-red-100 dark:bg-red-900">✗ Invalid</Badge>
+                    <code className="font-mono text-sm">e2e4</code>
                   </div>
                 </div>
               </div>
@@ -145,13 +160,14 @@ Any output that is not a single 4-character move is considered an illegal move a
 
 Your job:
 - Analyze the current position in FEN format: {{ $json.FEN }}
-- Output ONE legal move for BLACK in coordinate notation: exactly 4 characters (e.g., e7e5, g8f6).
-- Never explain the move. Never add text. Never include SAN notation.
+- Output ONE legal move for BLACK in Standard Algebraic Notation (SAN).
+- Examples: e5, Nf6, Bxc4, O-O-O, d1=Q
+- Never explain the move. Never add commentary or reasoning.
 - If you have no legal move (checkmate or stalemate), output exactly: resign
-- Do not output punctuation, commentary, or multiple moves.
-- Format strictly: lowercase letters a–h, digits 1–8.
+- Do not include periods, exclamation marks, question marks, or multiple moves.
+- SAN is case-sensitive: use uppercase for pieces (N, B, R, Q, K), lowercase for files (a-h).
 
-Any output that is not a single 4-character move is considered an illegal move and loses the game.`}
+Any output that is not a valid SAN move or "resign" is considered an illegal move and loses the game.`}
                 </CodeBlock>
               </div>
 
@@ -161,7 +177,7 @@ Any output that is not a single 4-character move is considered an illegal move a
                   <div className="p-3 bg-muted rounded-lg">
                     <span className="font-semibold text-sm">Move Format:</span>
                     <span className="text-sm text-muted-foreground ml-2">
-                      Exactly 4 characters in coordinate notation (e.g., <code className="bg-background px-1.5 py-0.5 rounded">e7e5</code>)
+                      Standard Algebraic Notation (SAN) - case sensitive (e.g., <code className="bg-background px-1.5 py-0.5 rounded">e5</code>, <code className="bg-background px-1.5 py-0.5 rounded">Nf6</code>)
                     </span>
                   </div>
                   <div className="p-3 bg-muted rounded-lg">
@@ -176,6 +192,12 @@ Any output that is not a single 4-character move is considered an illegal move a
                       Output <code className="bg-background px-1.5 py-0.5 rounded">resign</code> if no legal moves available
                     </span>
                   </div>
+                  <div className="p-3 bg-muted rounded-lg">
+                    <span className="font-semibold text-sm">Case Sensitive:</span>
+                    <span className="text-sm text-muted-foreground ml-2">
+                      Pieces use uppercase (N, B, R, Q, K), pawns have no prefix, files use lowercase (a-h)
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -184,11 +206,15 @@ Any output that is not a single 4-character move is considered an illegal move a
                 <div className="space-y-2">
                   <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
-                    <code className="font-mono text-sm">e7e5</code>
+                    <code className="font-mono text-sm">e5</code>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
-                    <code className="font-mono text-sm">g8f6</code>
+                    <code className="font-mono text-sm">Nf6</code>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
+                    <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
+                    <code className="font-mono text-sm">O-O-O</code>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900">✓ Valid</Badge>
@@ -196,11 +222,15 @@ Any output that is not a single 4-character move is considered an illegal move a
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
                     <Badge variant="outline" className="bg-red-100 dark:bg-red-900">✗ Invalid</Badge>
-                    <code className="font-mono text-sm">e5 (responding with pawn)</code>
+                    <code className="font-mono text-sm">e5 (solid defense)</code>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
                     <Badge variant="outline" className="bg-red-100 dark:bg-red-900">✗ Invalid</Badge>
-                    <code className="font-mono text-sm">Nf6 - mirroring white</code>
+                    <code className="font-mono text-sm">Nf6?!</code>
+                  </div>
+                  <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
+                    <Badge variant="outline" className="bg-red-100 dark:bg-red-900">✗ Invalid</Badge>
+                    <code className="font-mono text-sm">e7e5</code>
                   </div>
                 </div>
               </div>
@@ -264,15 +294,16 @@ Any output that is not a single 4-character move is considered an illegal move a
               <h3 className="font-semibold mb-3 text-lg">Move Validation Logic</h3>
               <CodeBlock language="javascript">
 {`// In n8n, after getting LLM output
-const move = $json.llm_output.trim().toLowerCase();
+const move = $json.llm_output.trim();
 
 // Check for resignation
 if (move === "resign") {
   return { game_over: true, winner: opponent };
 }
 
-// Validate move format (4 characters, lowercase)
-if (!/^[a-h][1-8][a-h][1-8]$/.test(move)) {
+// Basic validation: check if move looks like SAN
+// (Note: chess.js will do full validation)
+if (!move || move.includes(" ") || /[.!?]/.test(move)) {
   return { invalid_move: true, reason: "Invalid format" };
 }
 
@@ -311,7 +342,16 @@ return {
                   <div>
                     <strong className="text-foreground">Invalid Format:</strong>
                     <span className="text-muted-foreground ml-2">
-                      If LLM outputs anything other than 4 characters or "resign", treat as illegal move and end game
+                      If LLM outputs commentary, punctuation, or non-SAN notation, treat as illegal move and end game
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                  <span className="text-yellow-600">⚠️</span>
+                  <div>
+                    <strong className="text-foreground">Case Sensitivity:</strong>
+                    <span className="text-muted-foreground ml-2">
+                      SAN is case-sensitive. <code className="bg-background px-1.5 py-0.5 rounded">nf3</code> is invalid, <code className="bg-background px-1.5 py-0.5 rounded">Nf3</code> is correct
                     </span>
                   </div>
                 </div>
@@ -339,7 +379,7 @@ return {
         </Card>
 
         <div className="mt-12 text-center text-sm text-muted-foreground">
-          <p>Coordinate notation only • No SAN • Strict 4-character format</p>
+          <p>Standard Algebraic Notation (SAN) • Case sensitive • No commentary</p>
         </div>
       </div>
     </div>
