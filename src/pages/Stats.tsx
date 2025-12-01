@@ -49,17 +49,30 @@ export default function Stats() {
     if (!player1 || !player2) return;
 
     setLoading(true);
-    const { data, error } = await supabase
-      .from("games")
-      .select("*")
-      .or(`and(white_player.eq.${player1},black_player.eq.${player2}),and(white_player.eq.${player2},black_player.eq.${player1})`)
-      .in("status", ["mate", "stalemate", "invalid_move"]);
+    
+    // Use two separate queries to avoid issues with special characters in player names
+    const [query1, query2] = await Promise.all([
+      supabase
+        .from("games")
+        .select("*")
+        .eq("white_player", player1)
+        .eq("black_player", player2)
+        .in("status", ["mate", "stalemate", "invalid_move"]),
+      supabase
+        .from("games")
+        .select("*")
+        .eq("white_player", player2)
+        .eq("black_player", player1)
+        .in("status", ["mate", "stalemate", "invalid_move"])
+    ]);
 
-    if (error) {
-      console.error("Error fetching stats:", error);
+    if (query1.error || query2.error) {
+      console.error("Error fetching stats:", query1.error || query2.error);
       setLoading(false);
       return;
     }
+
+    const data = [...(query1.data || []), ...(query2.data || [])];
 
     const p1Stats: PlayerStats = {
       player: player1,
