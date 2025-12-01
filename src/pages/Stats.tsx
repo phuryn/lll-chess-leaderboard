@@ -87,11 +87,15 @@ export default function Stats() {
     };
 
     data.forEach((game) => {
-      if (game.winner === player1) {
+      // Map winner color to actual player name
+      const winnerName = game.winner === "white" ? game.white_player : 
+                        game.winner === "black" ? game.black_player : null;
+      
+      if (winnerName === player1) {
         p1Stats.total++;
         if (game.status === "mate") p1Stats.wins.mate++;
         else if (game.status === "invalid_move") p1Stats.wins.invalid_move++;
-      } else if (game.winner === player2) {
+      } else if (winnerName === player2) {
         p2Stats.total++;
         if (game.status === "mate") p2Stats.wins.mate++;
         else if (game.status === "invalid_move") p2Stats.wins.invalid_move++;
