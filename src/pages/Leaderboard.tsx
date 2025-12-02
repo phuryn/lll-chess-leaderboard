@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Trophy, TrendingUp, TrendingDown } from "lucide-react";
 import Footer from "@/components/Footer";
 import { NavLink } from "@/components/NavLink";
-import siliconGambitHero from "@/assets/silicon-gambit-hero.png";
+import siliconGambitHero from "@/assets/silicon-gambit-hero-v2.png";
 
 interface PlayerStats {
   player: string;
