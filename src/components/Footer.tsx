@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="mt-auto bg-zinc-900 rounded-t-lg p-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <footer className="mt-auto bg-zinc-900 w-full">
+      <div className="max-w-6xl mx-auto px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h3 className="text-white font-semibold mb-4">The Benchmark</h3>
           <ul className="space-y-2 text-sm text-zinc-400">
@@ -56,6 +57,7 @@ export default function Footer() {
               </a>
             </li>
           </ul>
+        </div>
         </div>
       </div>
     </footer>

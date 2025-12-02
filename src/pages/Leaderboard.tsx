@@ -349,8 +349,8 @@ export default function Leaderboard() {
           </div>
         </Card>
 
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }

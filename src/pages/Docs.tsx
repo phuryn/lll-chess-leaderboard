@@ -443,9 +443,8 @@ const Docs = () => {
           </CardContent>
         </Card>
         </div>
-
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 };

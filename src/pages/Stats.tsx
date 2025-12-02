@@ -238,9 +238,8 @@ export default function Stats() {
           </div>
         )}
         </div>
-
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }
