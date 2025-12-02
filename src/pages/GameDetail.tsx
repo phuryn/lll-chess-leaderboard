@@ -2,13 +2,13 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Chess } from "chess.js";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import ChessBoard from "@/components/ChessBoard";
 import PlaybackControls from "@/components/PlaybackControls";
 import Footer from "@/components/Footer";
+import { NavLink } from "@/components/NavLink";
 import {
   Tooltip,
   TooltipContent,
@@ -167,7 +167,7 @@ export default function GameDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground">Loading game...</div>
+        <div className="text-slate-400">Loading game...</div>
       </div>
     );
   }
@@ -175,9 +175,9 @@ export default function GameDetail() {
   if (!game) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
-        <div className="text-muted-foreground">Game not found</div>
+        <div className="text-slate-400">Game not found</div>
         <Link to="/games">
-          <Button variant="outline">
+          <Button variant="outline" className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Games
           </Button>
@@ -203,15 +203,15 @@ export default function GameDetail() {
   const getStatusBadge = () => {
     switch (game.status) {
       case "mate":
-        return <Badge className="bg-green-600">Checkmate</Badge>;
+        return <Badge className="bg-green-600 text-white border-0" style={{ boxShadow: "0 0 10px rgba(34, 197, 94, 0.5)" }}>Checkmate</Badge>;
       case "invalid_move":
-        return <Badge className="bg-amber-600">Invalid Move</Badge>;
+        return <Badge className="bg-amber-600 text-white border-0" style={{ boxShadow: "0 0 10px rgba(245, 158, 11, 0.5)" }}>Invalid Move</Badge>;
       case "stalemate":
-        return <Badge variant="secondary">Stalemate</Badge>;
+        return <Badge className="bg-slate-600 text-slate-200 border-0">Stalemate</Badge>;
       case "draw":
-        return <Badge variant="secondary">Draw</Badge>;
+        return <Badge className="bg-slate-600 text-slate-200 border-0">Draw</Badge>;
       default:
-        return <Badge variant="outline">{game.status}</Badge>;
+        return <Badge variant="outline" className="border-slate-600 text-slate-300">{game.status}</Badge>;
     }
   };
 
@@ -249,44 +249,62 @@ export default function GameDetail() {
     <>
       <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col">
         <div className="max-w-5xl mx-auto space-y-6 flex-1 w-full">
+          {/* Navigation */}
+          <nav className="flex gap-4 text-sm">
+            <NavLink
+              to="/"
+              className="text-slate-400 hover:text-slate-100 transition-colors"
+              activeClassName="text-slate-100 font-medium"
+            >
+              Leaderboard
+            </NavLink>
+            <NavLink
+              to="/games"
+              className="text-slate-400 hover:text-slate-100 transition-colors"
+              activeClassName="text-slate-100 font-medium"
+            >
+              Game Browser
+            </NavLink>
+          </nav>
+
           {/* Back button */}
           <Link to="/games">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-slate-100 hover:bg-slate-800">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Games
             </Button>
           </Link>
 
           {/* Game Header */}
-          <Card className="p-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 md:p-6">
+            <div className="flex flex-col gap-4">
               <div>
-                <h1 className="text-2xl font-bold mb-2">
-                  {game.white_player} <span className="text-muted-foreground font-normal">(White)</span>
-                  {" vs "}
-                  {game.black_player} <span className="text-muted-foreground font-normal">(Black)</span>
+                <h1 className="text-xl md:text-2xl font-bold text-slate-100 mb-2">
+                  <span className="text-slate-100">{game.white_player}</span>
+                  <span className="text-slate-500 font-normal text-base md:text-lg"> (W)</span>
+                  <span className="text-slate-500 mx-2">vs</span>
+                  <span className="text-slate-100">{game.black_player}</span>
+                  <span className="text-slate-500 font-normal text-base md:text-lg"> (B)</span>
                 </h1>
                 <div className="flex flex-wrap gap-2 items-center">
                   {getStatusBadge()}
-                  <Badge variant="outline">{game.test_type}</Badge>
-                  <span className="text-sm text-muted-foreground">{formatDate(game.created_at)}</span>
+                  <Badge variant="outline" className="border-slate-600 text-slate-300 text-xs">{game.test_type}</Badge>
+                  <span className="text-sm text-slate-400">{formatDate(game.created_at)}</span>
                 </div>
               </div>
-              <div className="text-right">
-                {winnerName && (
-                  <div>
-                    <span className="text-sm text-muted-foreground">Winner: </span>
-                    <span className="font-semibold text-green-600 dark:text-green-400">{winnerName}</span>
-                  </div>
-                )}
-                {game.reason && (
-                  <div className="text-sm text-muted-foreground">
-                    Reason: {game.reason}
-                  </div>
-                )}
-              </div>
+              {winnerName && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                  <span className="text-sm text-slate-400">Winner:</span>
+                  <span className="font-semibold text-green-400" style={{ textShadow: "0 0 10px rgba(74, 222, 128, 0.5)" }}>
+                    {winnerName}
+                  </span>
+                  {game.reason && (
+                    <span className="text-sm text-slate-500">({game.reason})</span>
+                  )}
+                </div>
+              )}
             </div>
-          </Card>
+          </div>
 
           {/* Board and Controls */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -309,18 +327,22 @@ export default function GameDetail() {
             </div>
 
             {/* Move History */}
-            <Card className="p-4">
-              <h3 className="font-semibold mb-3">Move History</h3>
+            <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
+              <h3 className="font-semibold mb-3 text-slate-100">Move History</h3>
               <TooltipProvider>
-                <div className="max-h-80 overflow-y-auto">
-                  <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 gap-y-1 text-sm">
-                    <div className="font-medium text-muted-foreground">#</div>
-                    <div className="font-medium">{game.white_player} <span className="text-muted-foreground font-normal">(W)</span></div>
-                    <div className="font-medium">{game.black_player} <span className="text-muted-foreground font-normal">(B)</span></div>
+                <div className="max-h-60 md:max-h-80 overflow-y-auto">
+                  <div className="grid grid-cols-[auto_1fr_1fr] gap-x-2 md:gap-x-4 gap-y-1 text-sm">
+                    <div className="font-medium text-slate-500 text-xs uppercase tracking-wider">#</div>
+                    <div className="font-medium text-slate-300 text-xs uppercase tracking-wider truncate">
+                      {game.white_player} <span className="text-slate-500">(W)</span>
+                    </div>
+                    <div className="font-medium text-slate-300 text-xs uppercase tracking-wider truncate">
+                      {game.black_player} <span className="text-slate-500">(B)</span>
+                    </div>
                     
                     {moveHistory.map((move) => (
                       <>
-                        <div key={`num-${move.moveNum}`} className="text-muted-foreground">
+                        <div key={`num-${move.moveNum}`} className="text-slate-500">
                           {move.moveNum}.
                         </div>
                         {move.whiteIndex === invalidMoveIndex ? (
@@ -328,22 +350,22 @@ export default function GameDetail() {
                             <TooltipTrigger asChild>
                               <div
                                 key={`white-${move.moveNum}`}
-                                className="px-1 rounded text-red-600 dark:text-red-400 font-medium cursor-help"
+                                className="px-1 rounded text-red-400 font-medium cursor-help"
                               >
-                                Invalid move
+                                Invalid
                               </div>
                             </TooltipTrigger>
-                            <TooltipContent side="bottom" className="max-w-md max-h-60 overflow-auto">
-                              <pre className="font-mono text-xs whitespace-pre-wrap break-all">{move.whiteRaw}</pre>
+                            <TooltipContent side="bottom" className="max-w-md max-h-60 overflow-auto bg-slate-800 border-slate-600">
+                              <pre className="font-mono text-xs whitespace-pre-wrap break-all text-slate-200">{move.whiteRaw}</pre>
                             </TooltipContent>
                           </Tooltip>
                         ) : (
                           <div
                             key={`white-${move.moveNum}`}
-                            className={`cursor-pointer px-1 rounded ${
+                            className={`cursor-pointer px-1 rounded transition-colors ${
                               currentMoveIndex === move.whiteIndex
-                                ? "bg-primary text-primary-foreground"
-                                : "hover:bg-muted"
+                                ? "bg-cyan-500/20 text-cyan-400"
+                                : "text-slate-200 hover:bg-slate-800"
                             }`}
                             onClick={() => goToMove(move.whiteIndex)}
                           >
@@ -355,24 +377,24 @@ export default function GameDetail() {
                             <TooltipTrigger asChild>
                               <div
                                 key={`black-${move.moveNum}`}
-                                className="px-1 rounded text-red-600 dark:text-red-400 font-medium cursor-help"
+                                className="px-1 rounded text-red-400 font-medium cursor-help"
                               >
-                                Invalid move
+                                Invalid
                               </div>
                             </TooltipTrigger>
-                            <TooltipContent side="bottom" className="max-w-md max-h-60 overflow-auto">
-                              <pre className="font-mono text-xs whitespace-pre-wrap break-all">{move.blackRaw}</pre>
+                            <TooltipContent side="bottom" className="max-w-md max-h-60 overflow-auto bg-slate-800 border-slate-600">
+                              <pre className="font-mono text-xs whitespace-pre-wrap break-all text-slate-200">{move.blackRaw}</pre>
                             </TooltipContent>
                           </Tooltip>
                         ) : (
                           <div
                             key={`black-${move.moveNum}`}
-                            className={`cursor-pointer px-1 rounded ${
+                            className={`cursor-pointer px-1 rounded transition-colors ${
                               move.blackIndex === null
                                 ? ""
                                 : currentMoveIndex === move.blackIndex
-                                ? "bg-primary text-primary-foreground"
-                                : "hover:bg-muted"
+                                ? "bg-cyan-500/20 text-cyan-400"
+                                : "text-slate-200 hover:bg-slate-800"
                             }`}
                             onClick={() => move.blackIndex && goToMove(move.blackIndex)}
                           >
@@ -387,12 +409,12 @@ export default function GameDetail() {
 
               {game.status === "invalid_move" && (
                 <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-                  <p className="text-sm text-amber-600 dark:text-amber-400">
+                  <p className="text-sm text-amber-400">
                     <strong>{loserName}</strong> made an invalid move and lost the game.
                   </p>
                 </div>
               )}
-            </Card>
+            </div>
           </div>
         </div>
       </div>

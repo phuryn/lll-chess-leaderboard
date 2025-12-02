@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -143,15 +142,15 @@ export default function Games() {
           <nav className="flex gap-4 text-sm">
             <NavLink
               to="/"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              activeClassName="text-foreground font-medium"
+              className="text-slate-400 hover:text-slate-100 transition-colors"
+              activeClassName="text-slate-100 font-medium"
             >
               Leaderboard
             </NavLink>
             <NavLink
               to="/games"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              activeClassName="text-foreground font-medium"
+              className="text-slate-400 hover:text-slate-100 transition-colors"
+              activeClassName="text-slate-100 font-medium"
             >
               Game Browser
             </NavLink>
@@ -159,22 +158,22 @@ export default function Games() {
 
           {/* Header */}
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold tracking-tight">Game Browser</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-100">Game Browser</h1>
+            <p className="text-slate-400">
               Browse all completed games with filtering options
             </p>
           </div>
 
           {/* Filters */}
-          <Card className="p-4">
-            <div className="flex flex-wrap gap-4 items-center">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Winner:</span>
+          <div className="bg-slate-900 border border-slate-700 rounded-lg p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs text-slate-400 uppercase tracking-wider">Winner</label>
                 <Select value={winnerFilter || "all"} onValueChange={(v) => updateFilter("winner", v === "all" ? "" : v)}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
                     <SelectValue placeholder="All players" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-slate-800 border-slate-600">
                     <SelectItem value="all">All players</SelectItem>
                     {players.map((player) => (
                       <SelectItem key={player} value={player}>
@@ -185,13 +184,13 @@ export default function Games() {
                 </Select>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Loser:</span>
+              <div className="space-y-1.5">
+                <label className="text-xs text-slate-400 uppercase tracking-wider">Loser</label>
                 <Select value={loserFilter || "all"} onValueChange={(v) => updateFilter("loser", v === "all" ? "" : v)}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
                     <SelectValue placeholder="All players" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-slate-800 border-slate-600">
                     <SelectItem value="all">All players</SelectItem>
                     {players.map((player) => (
                       <SelectItem key={player} value={player}>
@@ -202,13 +201,13 @@ export default function Games() {
                 </Select>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Test Type:</span>
+              <div className="space-y-1.5">
+                <label className="text-xs text-slate-400 uppercase tracking-wider">Test Type</label>
                 <Select value={testTypeFilter || "all"} onValueChange={(v) => updateFilter("testType", v === "all" ? "" : v)}>
-                  <SelectTrigger className="w-48">
+                  <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-slate-800 border-slate-600">
                     <SelectItem value="all">All types</SelectItem>
                     {testTypes.map((type) => (
                       <SelectItem key={type} value={type}>
@@ -219,80 +218,85 @@ export default function Games() {
                 </Select>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="invalidMove"
-                  checked={invalidMoveFilter}
-                  onCheckedChange={(checked) => updateFilter("invalidMove", checked === true)}
-                />
-                <label htmlFor="invalidMove" className="text-sm text-muted-foreground cursor-pointer">
-                  Lost by invalid move
-                </label>
+              <div className="flex items-end">
+                <div className="flex items-center gap-2 h-10">
+                  <Checkbox
+                    id="invalidMove"
+                    checked={invalidMoveFilter}
+                    onCheckedChange={(checked) => updateFilter("invalidMove", checked === true)}
+                    className="border-slate-600 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
+                  />
+                  <label htmlFor="invalidMove" className="text-sm text-slate-300 cursor-pointer">
+                    Lost by invalid move
+                  </label>
+                </div>
               </div>
             </div>
-          </Card>
+          </div>
 
           {/* Games Table */}
           {loading ? (
-            <div className="text-center text-muted-foreground py-8">Loading games...</div>
+            <div className="text-center text-slate-400 py-8">Loading games...</div>
           ) : filteredGames.length === 0 ? (
-            <div className="text-center text-muted-foreground py-8">No games match the filters</div>
+            <div className="text-center text-slate-400 py-8">No games match the filters</div>
           ) : (
             <>
-              <Card className="overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Game</TableHead>
-                      <TableHead>White Player</TableHead>
-                      <TableHead>Black Player</TableHead>
-                      <TableHead>Winner</TableHead>
-                      <TableHead>Invalid Move</TableHead>
-                      <TableHead>Test Type</TableHead>
-                      <TableHead>Date</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedGames.map((game) => (
-                      <TableRow
-                        key={game.id}
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => window.location.href = `/games/${game.id}`}
-                      >
-                        <TableCell>
-                          <Link
-                            to={`/games/${game.id}`}
-                            className="text-primary hover:underline font-mono text-sm"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {game.id.slice(0, 8)}...
-                          </Link>
-                        </TableCell>
-                        <TableCell className="font-medium">{game.white_player || "-"}</TableCell>
-                        <TableCell className="font-medium">{game.black_player || "-"}</TableCell>
-                        <TableCell>
-                          <span className="text-green-600 dark:text-green-400 font-medium">
-                            {getWinnerName(game)}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <span className={game.status === "invalid_move" ? "text-amber-600 dark:text-amber-400 font-medium" : "text-muted-foreground"}>
-                            {getInvalidMovePlayer(game)}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="text-xs">
-                            {game.test_type}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground text-sm">
-                          {formatDate(game.created_at)}
-                        </TableCell>
+              <div className="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-slate-700 hover:bg-transparent">
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Game</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">White</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Black</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Winner</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden md:table-cell">Invalid</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden lg:table-cell">Test Type</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden sm:table-cell">Date</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Card>
+                    </TableHeader>
+                    <TableBody>
+                      {paginatedGames.map((game) => (
+                        <TableRow
+                          key={game.id}
+                          className="cursor-pointer border-slate-700 hover:bg-slate-800/50 transition-colors"
+                          onClick={() => window.location.href = `/games/${game.id}`}
+                        >
+                          <TableCell>
+                            <Link
+                              to={`/games/${game.id}`}
+                              className="text-cyan-400 hover:text-cyan-300 hover:underline font-mono text-sm"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {game.id.slice(0, 8)}...
+                            </Link>
+                          </TableCell>
+                          <TableCell className="font-medium text-slate-200">{game.white_player || "-"}</TableCell>
+                          <TableCell className="font-medium text-slate-200">{game.black_player || "-"}</TableCell>
+                          <TableCell>
+                            <span className="text-green-400 font-medium" style={{ textShadow: "0 0 10px rgba(74, 222, 128, 0.5)" }}>
+                              {getWinnerName(game)}
+                            </span>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <span className={game.status === "invalid_move" ? "text-amber-400 font-medium" : "text-slate-500"}>
+                              {getInvalidMovePlayer(game)}
+                            </span>
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            <Badge variant="outline" className="text-xs border-slate-600 text-slate-300">
+                              {game.test_type}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-slate-400 text-sm hidden sm:table-cell">
+                            {formatDate(game.created_at)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
 
               {/* Pagination */}
               {totalPages > 1 && (
@@ -302,11 +306,12 @@ export default function Games() {
                     size="sm"
                     onClick={() => goToPage(page - 1)}
                     disabled={page === 1}
+                    className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100 disabled:opacity-50"
                   >
                     <ChevronLeft className="h-4 w-4 mr-1" />
-                    Previous
+                    <span className="hidden sm:inline">Previous</span>
                   </Button>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-slate-400">
                     Page {page} of {totalPages}
                   </span>
                   <Button
@@ -314,8 +319,9 @@ export default function Games() {
                     size="sm"
                     onClick={() => goToPage(page + 1)}
                     disabled={page === totalPages}
+                    className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-slate-100 disabled:opacity-50"
                   >
-                    Next
+                    <span className="hidden sm:inline">Next</span>
                     <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 </div>
