@@ -153,7 +153,7 @@ export default function Games() {
               className="text-muted-foreground hover:text-foreground transition-colors"
               activeClassName="text-foreground font-medium"
             >
-              Games
+              Game Browser
             </NavLink>
           </nav>
 
