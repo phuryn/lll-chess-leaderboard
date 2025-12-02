@@ -313,19 +313,29 @@ export default function Leaderboard() {
           </div>
         )}
 
-        {/* Key Finding */}
-        <Card className="mt-12 p-6 border-border bg-muted/50">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <span>🔬</span> Key Finding: Blind Mode Outperforms FEN
+        {/* The Blindfold Paradox */}
+        <Card className="mt-12 p-6 border-l-4 border-l-primary bg-muted/50">
+          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+            <span>🎭</span> The Blindfold Paradox
           </h2>
-          <p className="text-sm text-muted-foreground mb-3">
-            Models perform better in blind mode than with FEN. I believe this is because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
+          <p className="text-base font-medium mb-4">Why LLMs play better when they can't see the board.</p>
+          
+          <p className="text-sm text-muted-foreground mb-4">
+            <strong className="text-foreground">The Discovery:</strong> Contrary to expectation, top models perform significantly better in <strong className="text-foreground">Blind Mode</strong> (conversation history only) than when given the exact board state (FEN).
           </p>
-          <p className="text-sm text-muted-foreground mb-3">
-            Reconstructing the position from move history triggers multi-step reasoning and forces the model to simulate board state explicitly in a scratchpad, which reduces illegal moves. When models see a FEN string, they rely more on surface-level pattern matching instead of internal board computation, leading to more errors.
-          </p>
-          <p className="text-sm text-muted-foreground font-medium">
-            As a result, blind mode is ironically closer to the model's strengths than giving the exact board position.
+          
+          <p className="text-sm font-medium mb-2">The Hypothesis:</p>
+          <ul className="list-disc list-inside space-y-3 text-sm text-muted-foreground mb-4 ml-2">
+            <li>
+              <strong className="text-foreground">Training Data Bias:</strong> LLMs are trained on millions of PGN files from chess databases. This is why they understand move sequences (narratives) better than static FEN positions (compressed snapshots).
+            </li>
+            <li>
+              <strong className="text-foreground">The "Scratchpad" Effect:</strong> Reconstructing the board from history forces the model to engage in multi-step reasoning. It must explicitly simulate the state to know where pieces are. In contrast, giving them the FEN encouraging lazy, surface-level pattern matching.
+            </li>
+          </ul>
+          
+          <p className="text-sm text-muted-foreground">
+            <strong className="text-foreground">The Verdict:</strong> Ironically, asking the AI to "imagine" the board aligns better with its training data than showing it the board directly.
           </p>
         </Card>
 
