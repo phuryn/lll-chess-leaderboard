@@ -201,8 +201,9 @@ export default function Leaderboard() {
           <p className="text-sm text-muted-foreground tracking-wide">
             Evaluation Criteria: Strategic Logic • Spatial Grounding • Instruction Adherence
           </p>
-          <p className="text-muted-foreground text-base mt-4 text-left max-w-2xl mx-auto">
-            Benchmark results based on Wins (+1) and Losses (-1). Note: Strict Rules in effect. Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
+          <p className="text-muted-foreground text-base mt-4 text-left">
+            Benchmark results based on Wins (+1) and Losses (-1). Note: Strict Rules in effect.<br />
+            Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
           </p>
         </div>
 
