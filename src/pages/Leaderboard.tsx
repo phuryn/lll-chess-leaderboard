@@ -14,8 +14,14 @@ interface PlayerStats {
   totalInvalidMoveRounds: number;
 }
 
+interface TestTypeLeaderboard {
+  testType: string;
+  testDesc: string;
+  players: PlayerStats[];
+}
+
 export default function Leaderboard() {
-  const [leaderboard, setLeaderboard] = useState<PlayerStats[]>([]);
+  const [leaderboards, setLeaderboards] = useState<TestTypeLeaderboard[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,74 +29,105 @@ export default function Leaderboard() {
   }, []);
 
   const fetchLeaderboard = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("games")
-      .select("*")
-      .in("status", ["mate", "stalemate", "invalid_move"]);
+    try {
+      const { data: games, error } = await supabase
+        .from('games')
+        .select('*')
+        .neq('status', 'continue')
+        .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error("Error fetching leaderboard:", error);
-      setLoading(false);
-      return;
-    }
-
-    // Calculate stats for each player
-    const playerStatsMap = new Map<string, PlayerStats>();
-
-    data.forEach((game) => {
-      const whitePlayer = game.white_player;
-      const blackPlayer = game.black_player;
-
-      // Initialize players if they don't exist
-      if (whitePlayer && !playerStatsMap.has(whitePlayer)) {
-        playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, totalInvalidMoveRounds: 0 });
-      }
-      if (blackPlayer && !playerStatsMap.has(blackPlayer)) {
-        playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, totalInvalidMoveRounds: 0 });
+      if (error) {
+        console.error('Error fetching games:', error);
+        return;
       }
 
-      // Update stats based on game outcome
-      if (game.status === "stalemate") {
-        // Stalemate is a draw - no points
-        if (whitePlayer) playerStatsMap.get(whitePlayer)!.draws++;
-        if (blackPlayer) playerStatsMap.get(blackPlayer)!.draws++;
-      } else {
-        // Someone won (mate or invalid_move)
-        const winnerColor = game.winner; // "white" or "black"
-        const winnerName = winnerColor === "white" ? whitePlayer : blackPlayer;
-        const loserName = winnerColor === "white" ? blackPlayer : whitePlayer;
+      if (!games || games.length === 0) {
+        setLeaderboards([]);
+        return;
+      }
 
-        if (winnerName && playerStatsMap.has(winnerName)) {
-          playerStatsMap.get(winnerName)!.wins++;
-          playerStatsMap.get(winnerName)!.points++;
+      // Group games by test_type
+      const testTypeGroups = new Map<string, { games: typeof games; testDesc: string }>();
+
+      games.forEach((game) => {
+        const testType = game.test_type || 'Unknown';
+        if (!testTypeGroups.has(testType)) {
+          testTypeGroups.set(testType, {
+            games: [],
+            testDesc: game.test_desc || 'Unknown',
+          });
         }
-        if (loserName && playerStatsMap.has(loserName)) {
-          playerStatsMap.get(loserName)!.losses++;
-          playerStatsMap.get(loserName)!.points--;
-          
-          // Track invalid move losses separately
-          if (game.status === "invalid_move") {
-            playerStatsMap.get(loserName)!.invalidMoveLosses++;
-            const round = Math.ceil(game.move_history.length / 2);
-            playerStatsMap.get(loserName)!.totalInvalidMoveRounds += round;
-          }
-        }
-      }
-    });
-
-    // Convert to array and sort by points (descending)
-    const sortedLeaderboard = Array.from(playerStatsMap.values())
-      .sort((a, b) => {
-        if (b.points !== a.points) return b.points - a.points;
-        // Tiebreaker: more wins
-        if (b.wins !== a.wins) return b.wins - a.wins;
-        // Tiebreaker: fewer losses
-        return a.losses - b.losses;
+        testTypeGroups.get(testType)!.games.push(game);
       });
 
-    setLeaderboard(sortedLeaderboard);
-    setLoading(false);
+      // Calculate stats for each test type
+      const leaderboardsByType: TestTypeLeaderboard[] = [];
+
+      testTypeGroups.forEach((groupData, testType) => {
+        const playerStatsMap = new Map<string, PlayerStats>();
+
+        groupData.games.forEach((game) => {
+          const whitePlayer = game.white_player;
+          const blackPlayer = game.black_player;
+
+          // Initialize players if they don't exist
+          if (whitePlayer && !playerStatsMap.has(whitePlayer)) {
+            playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, totalInvalidMoveRounds: 0 });
+          }
+          if (blackPlayer && !playerStatsMap.has(blackPlayer)) {
+            playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, totalInvalidMoveRounds: 0 });
+          }
+
+          // Update stats based on game outcome
+          if (game.status === "mate" || game.status === "invalid_move") {
+            const winner = game.winner;
+            const loser = winner === whitePlayer ? blackPlayer : whitePlayer;
+
+            if (winner && playerStatsMap.has(winner)) {
+              playerStatsMap.get(winner)!.wins++;
+              playerStatsMap.get(winner)!.points++;
+            }
+
+            if (loser && playerStatsMap.has(loser)) {
+              playerStatsMap.get(loser)!.losses++;
+              playerStatsMap.get(loser)!.points--;
+
+              // Track invalid move losses separately
+              if (game.status === "invalid_move") {
+                playerStatsMap.get(loser)!.invalidMoveLosses++;
+                const round = Math.ceil(game.move_history.length / 2);
+                playerStatsMap.get(loser)!.totalInvalidMoveRounds += round;
+              }
+            }
+          } else if (game.status === "draw" || game.status === "stalemate") {
+            if (whitePlayer && playerStatsMap.has(whitePlayer)) {
+              playerStatsMap.get(whitePlayer)!.draws++;
+            }
+            if (blackPlayer && playerStatsMap.has(blackPlayer)) {
+              playerStatsMap.get(blackPlayer)!.draws++;
+            }
+          }
+        });
+
+        // Convert to array and sort by points
+        const sortedPlayers = Array.from(playerStatsMap.values()).sort((a, b) => b.points - a.points);
+
+        leaderboardsByType.push({
+          testType,
+          testDesc: groupData.testDesc,
+          players: sortedPlayers,
+        });
+      });
+
+      // Sort test types alphabetically
+      leaderboardsByType.sort((a, b) => a.testType.localeCompare(b.testType));
+
+      setLeaderboards(leaderboardsByType);
+    } catch (error) {
+      console.error('Error in fetchLeaderboard:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getRankIcon = (rank: number) => {
@@ -110,76 +147,87 @@ export default function Leaderboard() {
           </p>
         </div>
 
-        <Card className="overflow-hidden">
-          {loading ? (
-            <div className="p-12 text-center text-muted-foreground">Loading leaderboard...</div>
-          ) : leaderboard.length === 0 ? (
-            <div className="p-12 text-center text-muted-foreground">No completed games yet</div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-20">Rank</TableHead>
-                  <TableHead>Player</TableHead>
-                  <TableHead className="text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <TrendingUp className="w-4 h-4" />
-                      Wins
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <TrendingDown className="w-4 h-4" />
-                      Losses
-                    </div>
-                  </TableHead>
-                  <TableHead className="text-center">Invalid Moves</TableHead>
-                  <TableHead className="text-center">Avg Invalid Round</TableHead>
-                  <TableHead className="text-center">Draws</TableHead>
-                  <TableHead className="text-center font-bold">Points</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {leaderboard.map((player, index) => (
-                  <TableRow key={player.player} className={index < 3 ? "bg-muted/50" : ""}>
-                    <TableCell>
-                      <div className="flex items-center justify-center">
-                        {getRankIcon(index + 1)}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{player.player}</TableCell>
-                    <TableCell className="text-center text-green-600 dark:text-green-400 font-semibold">
-                      {player.wins}
-                    </TableCell>
-                    <TableCell className="text-center text-red-600 dark:text-red-400 font-semibold">
-                      {player.losses}
-                    </TableCell>
-                    <TableCell className="text-center text-amber-600 dark:text-amber-400 font-semibold">
-                      {player.invalidMoveLosses}
-                    </TableCell>
-                    <TableCell className="text-center text-muted-foreground">
-                      {player.invalidMoveLosses > 0 
-                        ? (player.totalInvalidMoveRounds / player.invalidMoveLosses).toFixed(1) 
-                        : '-'}
-                    </TableCell>
-                    <TableCell className="text-center text-muted-foreground">
-                      {player.draws}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <span className={`text-lg font-bold ${
-                        player.points > 0 ? "text-green-600 dark:text-green-400" : 
-                        player.points < 0 ? "text-red-600 dark:text-red-400" : 
-                        "text-muted-foreground"
-                      }`}>
-                        {player.points > 0 ? "+" : ""}{player.points}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </Card>
+        {loading ? (
+          <div className="text-center text-muted-foreground">Loading leaderboard...</div>
+        ) : leaderboards.length === 0 ? (
+          <div className="text-center text-muted-foreground">No completed games yet</div>
+        ) : (
+          <div className="space-y-12">
+            {leaderboards.map((testLeaderboard) => (
+              <div key={testLeaderboard.testType}>
+                <div className="mb-4">
+                  <h2 className="text-2xl font-bold mb-2">🧪 {testLeaderboard.testType}</h2>
+                  <p className="text-sm text-muted-foreground">{testLeaderboard.testDesc}</p>
+                </div>
+
+                <Card className="overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-20">Rank</TableHead>
+                        <TableHead>Player</TableHead>
+                        <TableHead className="text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <TrendingUp className="w-4 h-4" />
+                            Wins
+                          </div>
+                        </TableHead>
+                        <TableHead className="text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <TrendingDown className="w-4 h-4" />
+                            Losses
+                          </div>
+                        </TableHead>
+                        <TableHead className="text-center">Invalid Moves</TableHead>
+                        <TableHead className="text-center">Avg Invalid Round</TableHead>
+                        <TableHead className="text-center">Draws</TableHead>
+                        <TableHead className="text-center font-bold">Points</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {testLeaderboard.players.map((player, index) => (
+                        <TableRow key={player.player} className={index < 3 ? "bg-muted/50" : ""}>
+                          <TableCell>
+                            <div className="flex items-center justify-center">
+                              {getRankIcon(index + 1)}
+                            </div>
+                          </TableCell>
+                          <TableCell className="font-medium">{player.player}</TableCell>
+                          <TableCell className="text-center text-green-600 dark:text-green-400 font-semibold">
+                            {player.wins}
+                          </TableCell>
+                          <TableCell className="text-center text-red-600 dark:text-red-400 font-semibold">
+                            {player.losses}
+                          </TableCell>
+                          <TableCell className="text-center text-amber-600 dark:text-amber-400 font-semibold">
+                            {player.invalidMoveLosses}
+                          </TableCell>
+                          <TableCell className="text-center text-muted-foreground">
+                            {player.invalidMoveLosses > 0 
+                              ? (player.totalInvalidMoveRounds / player.invalidMoveLosses).toFixed(1) 
+                              : '-'}
+                          </TableCell>
+                          <TableCell className="text-center text-muted-foreground">
+                            {player.draws}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <span className={`text-lg font-bold ${
+                              player.points > 0 ? "text-green-600 dark:text-green-400" : 
+                              player.points < 0 ? "text-red-600 dark:text-red-400" : 
+                              "text-muted-foreground"
+                            }`}>
+                              {player.points > 0 ? "+" : ""}{player.points}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Card>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

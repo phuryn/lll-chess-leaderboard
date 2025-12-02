@@ -16,9 +16,9 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Parse request body for optional player names
+    // Parse request body for optional player names and test info
     const body = await req.json().catch(() => ({}));
-    const { whitePlayer, blackPlayer } = body;
+    const { whitePlayer, blackPlayer, testType, testDescription } = body;
 
     // Create a new chess instance at starting position
     const chess = new Chess();
@@ -37,6 +37,8 @@ Deno.serve(async (req) => {
         legal_moves: legalMoves,
         white_player: whitePlayer || null,
         black_player: blackPlayer || null,
+        test_type: testType || 'Unknown',
+        test_desc: testDescription || 'Unknown',
       })
       .select()
       .single();
@@ -57,6 +59,8 @@ Deno.serve(async (req) => {
         status: game.status,
         whitePlayer: game.white_player,
         blackPlayer: game.black_player,
+        testType: game.test_type,
+        testDescription: game.test_desc,
       }),
       {
         status: 200,
