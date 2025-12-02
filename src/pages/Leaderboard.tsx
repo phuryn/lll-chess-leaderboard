@@ -315,7 +315,7 @@ export default function Leaderboard() {
             <span>🔬</span> Key Finding: Blind Mode Outperforms FEN
           </h2>
           <p className="text-sm text-muted-foreground mb-3">
-            Models perform better in blind mode than with FEN because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
+            Models perform better in blind mode than with FEN. I believe this is because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
           </p>
           <p className="text-sm text-muted-foreground mb-3">
             Reconstructing the position from move history triggers multi-step reasoning and forces the model to simulate board state explicitly in a scratchpad, which reduces illegal moves. When models see a FEN string, they rely more on surface-level pattern matching instead of internal board computation, leading to more errors.
