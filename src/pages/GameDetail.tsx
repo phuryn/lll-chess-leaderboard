@@ -23,13 +23,36 @@ interface Game {
   created_at: string;
 }
 
-// Clean move from move_history (remove tool usage brackets)
+// Clean move from move_history - extract only the SAN move
 const cleanMove = (move: string): string => {
+  const trimmed = move.trim();
+  
+  // If it's already a clean move (short string matching SAN pattern), return as-is
+  if (trimmed.length <= 10 && /^[a-hKQRBNO][a-h1-8x+#=QRBN\-O]*$/.test(trimmed)) {
+    return trimmed;
+  }
+  
   // Remove [Used tools: ...] or [Internal thought: ...] prefixes
-  const cleaned = move.replace(/^\[.*?\]\s*/s, "").trim();
-  // Also extract just the move if there's extra text
+  let cleaned = trimmed.replace(/^\[.*?\]\s*/s, "").trim();
+  
+  // Look for "Candidate Move:" pattern (common in LLM outputs)
+  const candidateMatch = cleaned.match(/\*?\*?Candidate Move[:\s]*\*?\*?\s*([A-Za-z][a-h1-8x+#=QRBN\-O]*)/i);
+  if (candidateMatch) return candidateMatch[1];
+  
+  // Look for "My move:" or "Move:" pattern
+  const moveMatch = cleaned.match(/(?:My move|Move|I play|I'll play)[:\s]+([A-Za-z][a-h1-8x+#=QRBN\-O]*)/i);
+  if (moveMatch) return moveMatch[1];
+  
+  // Try to extract any valid SAN move from the beginning
   const sanMatch = cleaned.match(/^([a-hKQRBNO][a-h1-8x+#=QRBN\-O]*)/);
-  return sanMatch ? sanMatch[1] : cleaned;
+  if (sanMatch) return sanMatch[1];
+  
+  // Last resort: find any SAN-like pattern in the string
+  const anyMoveMatch = cleaned.match(/\b([KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](?:=[QRBN])?[+#]?|O-O(?:-O)?)\b/);
+  if (anyMoveMatch) return anyMoveMatch[1];
+  
+  // If nothing matches, return truncated
+  return cleaned.substring(0, 15) + (cleaned.length > 15 ? "…" : "");
 };
 
 export default function GameDetail() {
@@ -223,7 +246,9 @@ export default function GameDetail() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold mb-2">
-                  {game.white_player} vs {game.black_player}
+                  {game.white_player} <span className="text-muted-foreground font-normal">(White)</span>
+                  {" vs "}
+                  {game.black_player} <span className="text-muted-foreground font-normal">(Black)</span>
                 </h1>
                 <div className="flex flex-wrap gap-2 items-center">
                   {getStatusBadge()}
@@ -273,8 +298,8 @@ export default function GameDetail() {
               <div className="max-h-80 overflow-y-auto">
                 <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 gap-y-1 text-sm">
                   <div className="font-medium text-muted-foreground">#</div>
-                  <div className="font-medium text-muted-foreground">White</div>
-                  <div className="font-medium text-muted-foreground">Black</div>
+                  <div className="font-medium">{game.white_player} <span className="text-muted-foreground font-normal">(W)</span></div>
+                  <div className="font-medium">{game.black_player} <span className="text-muted-foreground font-normal">(B)</span></div>
                   
                   {moveHistory.map((move) => (
                     <>

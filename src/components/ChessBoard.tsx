@@ -49,7 +49,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         {/* Rank labels (left side) */}
         <div className="flex flex-col justify-around bg-muted px-1 py-1">
           {ranks.map((rank) => (
-            <span key={rank} className="text-xs text-muted-foreground h-8 sm:h-10 md:h-12 flex items-center">
+            <span key={rank} className="text-xs text-muted-foreground h-10 sm:h-12 md:h-14 flex items-center">
               {rank}
             </span>
           ))}
@@ -68,14 +68,18 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
                   <div
                     key={`${file}${rank}`}
                     className={`
-                      w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center
-                      text-xl sm:text-2xl md:text-3xl select-none
-                      ${isLight ? "bg-amber-100 dark:bg-amber-200" : "bg-amber-700 dark:bg-amber-800"}
+                      w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center
+                      text-2xl sm:text-3xl md:text-4xl select-none
+                      ${isLight ? "bg-amber-100" : "bg-amber-700"}
                       ${highlighted ? "ring-2 ring-inset ring-primary" : ""}
                     `}
                   >
                     {piece && (
-                      <span className={piece === piece.toUpperCase() ? "text-slate-100 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]" : "text-slate-900"}>
+                      <span className={
+                        piece === piece.toUpperCase() 
+                          ? "text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]" 
+                          : "text-slate-900 drop-shadow-[0_0_1px_rgba(255,255,255,0.3)]"
+                      }>
                         {pieceUnicode[piece]}
                       </span>
                     )}
@@ -90,7 +94,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
             {files.map((file) => (
               <span
                 key={file}
-                className="w-8 sm:w-10 md:w-12 text-center text-xs text-muted-foreground py-1"
+                className="w-10 sm:w-12 md:w-14 text-center text-xs text-muted-foreground py-1"
               >
                 {file}
               </span>
