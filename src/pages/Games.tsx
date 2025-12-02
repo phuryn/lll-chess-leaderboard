@@ -18,6 +18,7 @@ interface Game {
   status: string;
   test_type: string;
   created_at: string;
+  move_history: string[];
 }
 
 const GAMES_PER_PAGE = 25;
@@ -43,7 +44,7 @@ export default function Games() {
     try {
       const { data, error } = await supabase
         .from("games")
-        .select("id, white_player, black_player, winner, status, test_type, created_at")
+        .select("id, white_player, black_player, winner, status, test_type, created_at, move_history")
         .neq("status", "continue")
         .order("created_at", { ascending: false });
 
@@ -250,7 +251,7 @@ export default function Games() {
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">White</TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Black</TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Winner</TableHead>
-                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden md:table-cell">Invalid</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden md:table-cell">#Moves</TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden lg:table-cell">Test Type</TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden sm:table-cell">Date</TableHead>
                       </TableRow>
@@ -278,10 +279,8 @@ export default function Games() {
                               {getWinnerName(game)}
                             </span>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <span className={game.status === "invalid_move" ? "text-amber-400 font-medium" : "text-slate-500"}>
-                              {getInvalidMovePlayer(game)}
-                            </span>
+                          <TableCell className="hidden md:table-cell text-slate-300 font-mono">
+                            {game.move_history?.length || 0}
                           </TableCell>
                           <TableCell className="hidden lg:table-cell">
                             <Badge variant="outline" className="text-xs border-slate-600 text-slate-300">
