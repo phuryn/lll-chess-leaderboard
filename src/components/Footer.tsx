@@ -22,6 +22,15 @@ export default function Footer() {
               </a>
             </li>
             <li>
+              Email:{" "}
+              <a 
+                href="mailto:pawel@productcompass.pm?subject=LLM%20Chess%20Leaderboard" 
+                className="text-zinc-300 hover:text-white transition-colors"
+              >
+                pawel@productcompass.pm
+              </a>
+            </li>
+            <li>
               Newsletter:{" "}
               <a 
                 href="https://www.productcompass.pm/" 
