@@ -367,51 +367,59 @@ export default function Leaderboard() {
           </div>
         </Card>
 
-        {/* Definitions & Standards */}
-        <Card className="p-6 border-border">
-          <h2 className="text-xl font-semibold mb-5">Definitions & Standards</h2>
-          <div className="space-y-5">
+        {/* Definitions & Standards - Terminal Style */}
+        <Card className="p-6 bg-slate-900 border-slate-700">
+          <h2 className="text-xl font-semibold mb-5 text-cyan-400 flex items-center gap-2">
+            <span className="text-slate-500">~/</span> Mission Briefing: Notation Standards
+          </h2>
+          <div className="space-y-6">
             <div>
-              <h3 className="text-base font-medium mb-2">FEN (Forsyth-Edwards Notation)</h3>
-              <p className="text-sm text-muted-foreground mb-2">
+              <h3 className="text-base font-medium mb-2 text-cyan-400">FEN (Forsyth-Edwards Notation)</h3>
+              <p className="text-sm text-slate-400 mb-3">
                 A compressed text string representing a static board state.
               </p>
-              <code className="text-sm font-mono text-primary block mb-2">
-                rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-              </code>
-              <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">Challenge:</strong> The model must parse this density to understand piece locations.
+              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700">
+                <code className="text-sm font-mono text-emerald-400">
+                  rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+                </code>
+              </div>
+              <p className="text-sm text-slate-400">
+                <strong className="text-slate-200">Challenge:</strong> The model must parse this density to understand piece locations.
               </p>
             </div>
 
             <div>
-              <h3 className="text-base font-medium mb-2">SAN (Standard Algebraic Notation)</h3>
-              <p className="text-sm text-muted-foreground mb-2">
+              <h3 className="text-base font-medium mb-2 text-cyan-400">SAN (Standard Algebraic Notation)</h3>
+              <p className="text-sm text-slate-400 mb-3">
                 The required output format for this benchmark.
               </p>
-              <div className="space-x-3 mb-2">
-                <code className="text-sm font-mono text-primary">e4</code>
-                <code className="text-sm font-mono text-primary">Nf3</code>
-                <code className="text-sm font-mono text-primary">O-O</code>
-                <span className="text-sm text-muted-foreground">(Castle)</span>
-                <code className="text-sm font-mono text-primary">Qh5+</code>
-                <span className="text-sm text-muted-foreground">(Check)</span>
+              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 flex flex-wrap gap-3 items-center">
+                <code className="text-sm font-mono text-emerald-400">e4</code>
+                <code className="text-sm font-mono text-emerald-400">Nf3</code>
+                <code className="text-sm font-mono text-emerald-400">O-O</code>
+                <span className="text-xs text-slate-500">(Castle)</span>
+                <code className="text-sm font-mono text-emerald-400">Qh5+</code>
+                <span className="text-xs text-slate-500">(Check)</span>
               </div>
-              <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">Strictness:</strong> Models failing to output clean SAN (e.g., adding conversational filler) are penalized with an <strong className="text-red-500">Automatic Loss</strong>.
-              </p>
+              <div className="border-l-2 border-red-500/70 pl-3 py-1 bg-red-500/5">
+                <p className="text-sm text-slate-300">
+                  <span className="text-red-400 font-semibold">⚠ STRICTNESS:</span> Models failing to output clean SAN (e.g., adding conversational filler) are penalized with an <strong className="text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">Automatic Loss</strong>.
+                </p>
+              </div>
             </div>
 
             <div>
-              <h3 className="text-base font-medium mb-2">PGN (Portable Game Notation)</h3>
-              <p className="text-sm text-muted-foreground mb-2">
+              <h3 className="text-base font-medium mb-2 text-cyan-400">PGN (Portable Game Notation)</h3>
+              <p className="text-sm text-slate-400 mb-3">
                 The file standard for recording full games.
               </p>
-              <code className="text-sm font-mono text-primary block mb-2">
-                1. e4 e5 2. Nf3 Nc6
-              </code>
-              <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">Relevance:</strong> This is the native "language" of LLM chess training data.
+              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700">
+                <code className="text-sm font-mono text-emerald-400">
+                  1. e4 e5 2. Nf3 Nc6
+                </code>
+              </div>
+              <p className="text-sm text-slate-400">
+                <strong className="text-slate-200">Relevance:</strong> This is the native "language" of LLM chess training data.
               </p>
             </div>
           </div>
