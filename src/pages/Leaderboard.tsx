@@ -518,7 +518,7 @@ export default function Leaderboard() {
         )}
 
         {/* Divider between leaderboards and info cards */}
-        <div className="mt-16 mb-8 border-t border-slate-700/50" />
+        <div className="mt-20 mb-12 border-t border-slate-700/50" />
 
         {/* Research Notes Section */}
         <h2 className="text-2xl font-bold mb-6">Research Notes</h2>
@@ -565,7 +565,7 @@ export default function Leaderboard() {
         {/* Definitions & Standards - Terminal Style */}
         <Card className="mt-8 mb-16 p-6 bg-slate-900 border-slate-700">
           <h2 className="text-xl font-semibold mb-5 text-cyan-400 flex items-center gap-2">
-            <span className="text-slate-500">~/</span> Mission Briefing: Notation Standards
+            <span className="text-slate-500">~/</span> Standards and Definitions
           </h2>
           <div className="space-y-6">
             <div>
