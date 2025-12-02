@@ -1,5 +1,6 @@
 import { Chess } from "chess.js";
 import pawnSvg from "@/assets/pawn.svg";
+import blackPawnSvg from "@/assets/black-pawn.svg";
 
 interface ChessBoardProps {
   fen: string;
@@ -42,15 +43,15 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
   };
 
   const renderPiece = (piece: string) => {
-    // Black pawn uses SVG
+    // Black pawn uses dedicated SVG
     if (piece === "p") {
       return (
         <img 
-          src={pawnSvg} 
+          src={blackPawnSvg} 
           alt="Black pawn" 
           className="h-[28px] w-auto"
           style={{ 
-            filter: "brightness(0) saturate(100%) drop-shadow(0 0 3px rgba(255,255,255,0.6))" 
+            filter: "drop-shadow(0 0 3px rgba(255,255,255,0.6))" 
           }}
         />
       );
