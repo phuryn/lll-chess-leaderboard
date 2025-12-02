@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Github } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -37,6 +38,11 @@ export default function Footer() {
           <h3 className="text-white font-semibold mb-4">More</h3>
           <ul className="space-y-2 text-sm text-zinc-400">
             <li>
+              <Link to="/games" className="text-zinc-300 hover:text-white transition-colors">
+                Games
+              </Link>
+            </li>
+            <li>
               <Link to="/stats" className="text-zinc-300 hover:text-white transition-colors">
                 Battle Statistics
               </Link>
@@ -51,9 +57,10 @@ export default function Footer() {
                 href="https://github.com/phuryn/lll-chess-leaderboard" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-zinc-300 hover:text-white transition-colors"
+                className="text-zinc-300 hover:text-white transition-colors inline-flex items-center gap-1.5"
               >
-                Source Code (GitHub)
+                Source Code
+                <Github className="w-4 h-4" />
               </a>
             </li>
           </ul>
