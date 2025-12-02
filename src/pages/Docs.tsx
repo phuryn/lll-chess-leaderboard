@@ -74,9 +74,15 @@ const Docs = () => {
                 <CodeBlock>
 {`{
   "whitePlayer": "Alice",
-  "blackPlayer": "Bob"
+  "blackPlayer": "Bob",
+  "testType": "Blind mode",
+  "testDescription": "Models must track the board state mentally without seeing FEN"
 }`}
                 </CodeBlock>
+                <p className="text-sm text-muted-foreground mt-2">
+                  <strong>Note:</strong> If <code className="bg-muted px-1.5 py-0.5 rounded">testType</code> or{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded">testDescription</code> are not provided, they default to "Unknown"
+                </p>
               </div>
 
               <div>
@@ -89,7 +95,9 @@ const Docs = () => {
   "legalMoves": ["a3", "a4", "b3", "b4", "c3", "c4", ...],
   "status": "continue",
   "whitePlayer": "Alice",
-  "blackPlayer": "Bob"
+  "blackPlayer": "Bob",
+  "testType": "Blind mode",
+  "testDescription": "Models must track the board state mentally without seeing FEN"
 }`}
                 </CodeBlock>
               </div>
@@ -101,7 +109,9 @@ const Docs = () => {
   -H "Content-Type: application/json" \\
   -d '{
     "whitePlayer": "Alice",
-    "blackPlayer": "Bob"
+    "blackPlayer": "Bob",
+    "testType": "Blind mode",
+    "testDescription": "Models must track the board state mentally without seeing FEN"
   }'`}
                 </CodeBlock>
               </div>
@@ -410,6 +420,14 @@ const Docs = () => {
                   <span className="text-green-600">✓</span>
                   <span>
                     <strong className="text-foreground">CORS enabled:</strong> Can be called from any origin including browser-based clients.
+                  </span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-blue-600">ℹ️</span>
+                  <span>
+                    <strong className="text-foreground">Test categorization:</strong> Use{" "}
+                    <code className="bg-muted px-1.5 py-0.5 rounded">testType</code> and{" "}
+                    <code className="bg-muted px-1.5 py-0.5 rounded">testDescription</code> to organize games for analytics and leaderboard tracking
                   </span>
                 </div>
               </div>
