@@ -349,7 +349,7 @@ export default function Leaderboard() {
 
   return (
     <>
-    <div className="min-h-screen bg-background p-8 flex flex-col">
+    <div className="min-h-screen bg-background p-8 flex flex-col overflow-x-hidden">
       <div className="max-w-6xl mx-auto space-y-8 flex-1">
         {/* Navigation */}
         <nav className="flex gap-4 text-sm">
@@ -405,8 +405,9 @@ export default function Leaderboard() {
                 </div>
 
 
-                <Card className="overflow-x-auto bg-slate-900 border-slate-700">
-                  <Table>
+                <Card className="overflow-hidden bg-slate-900 border-slate-700 min-w-0">
+                  <div className="overflow-x-auto">
+                    <Table>
                     <TableHeader>
                       <TableRow className="border-slate-700 hover:bg-transparent">
                         <TableHead className="w-20 text-slate-400 uppercase text-xs tracking-wider">Rank</TableHead>
@@ -506,7 +507,8 @@ export default function Leaderboard() {
                         </TableRow>
                       ))}
                     </TableBody>
-                  </Table>
+                    </Table>
+                  </div>
                 </Card>
               </div>
             ))}
