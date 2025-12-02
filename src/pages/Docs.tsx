@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import PageHeader from "@/components/PageHeader";
+import Footer from "@/components/Footer";
 
 const CodeBlock = ({ children, language = "json" }: { children: string; language?: string }) => (
   <div className="relative">
@@ -19,6 +21,7 @@ const Docs = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12 max-w-5xl">
+        <PageHeader />
         <div className="mb-12">
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Chess Engine API
@@ -438,6 +441,8 @@ const Docs = () => {
             </div>
           </CardContent>
         </Card>
+
+        <Footer />
 
         <div className="mt-12 text-center text-sm text-muted-foreground">
           <p>Built with chess.js • Powered by Lovable Cloud</p>

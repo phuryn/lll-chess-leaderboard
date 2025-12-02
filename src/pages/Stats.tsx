@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trophy, Swords, Handshake, AlertTriangle } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import Footer from "@/components/Footer";
 
 interface PlayerStats {
   player: string;
@@ -122,6 +124,7 @@ export default function Stats() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto space-y-8">
+        <PageHeader />
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tight">Battle Statistics</h1>
           <p className="text-muted-foreground text-lg">Compare player performance across finished games</p>
@@ -233,6 +236,8 @@ export default function Stats() {
             </Card>
           </div>
         )}
+
+        <Footer />
       </div>
     </div>
   );
