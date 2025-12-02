@@ -352,52 +352,51 @@ export default function Leaderboard() {
           </div>
         </Card>
 
-        {/* Definitions */}
+        {/* Definitions & Standards */}
         <Card className="p-6 border-border">
-          <h2 className="text-xl font-semibold mb-4">Definitions</h2>
+          <h2 className="text-xl font-semibold mb-5">Definitions & Standards</h2>
           <div className="space-y-5">
             <div>
-              <h3 className="text-base font-medium mb-2">What is FEN?</h3>
+              <h3 className="text-base font-medium mb-2">FEN (Forsyth-Edwards Notation)</h3>
               <p className="text-sm text-muted-foreground mb-2">
-                FEN (Forsyth-Edwards Notation) is a standard text format for describing chess positions. It represents the board state in a compact string.
-              </p>
-              <code className="text-sm font-mono text-primary">
-                rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-              </code>
-              <p className="text-sm text-muted-foreground mt-1">
-                This FEN string represents the starting position of a chess game.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-base font-medium mb-2">What is SAN?</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                SAN (Standard Algebraic Notation) is the standard for recording chess moves. LLMs must output moves in this format.
-              </p>
-              <div className="space-y-1.5 text-sm text-muted-foreground">
-                <div><code className="font-mono text-primary">e4</code> — Pawn to e4</div>
-                <div><code className="font-mono text-primary">Nf3</code> — Knight to f3</div>
-                <div><code className="font-mono text-primary">Bxc6</code> — Bishop captures c6</div>
-                <div><code className="font-mono text-primary">O-O</code> — Kingside castle</div>
-                <div><code className="font-mono text-primary">O-O-O</code> — Queenside castle</div>
-                <div><code className="font-mono text-primary">Qh5+</code> — Queen to h5 (check)</div>
-                <div><code className="font-mono text-primary">e8=Q</code> — Pawn promotes to Queen</div>
-                <div><code className="font-mono text-primary">Rd1#</code> — Rook to d1 (checkmate)</div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-base font-medium mb-2">What is PGN?</h3>
-              <p className="text-sm text-muted-foreground mb-2">
-                PGN (Portable Game Notation) is the standard file format for recording entire chess games. 
-                While SAN describes individual moves, PGN wraps a sequence of SAN moves along with game metadata.
+                A compressed text string representing a static board state.
               </p>
               <code className="text-sm font-mono text-primary block mb-2">
-                1. e4 e5 2. Nf3 Nc6 3. Bb5 a6
+                rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
               </code>
               <p className="text-sm text-muted-foreground">
-                LLMs are trained on millions of PGN files from chess databases, which is why they understand 
-                move sequences better than static FEN positions.
+                <strong className="text-foreground">Challenge:</strong> The model must parse this density to understand piece locations.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-base font-medium mb-2">SAN (Standard Algebraic Notation)</h3>
+              <p className="text-sm text-muted-foreground mb-2">
+                The required output format for this benchmark.
+              </p>
+              <div className="space-x-3 mb-2">
+                <code className="text-sm font-mono text-primary">e4</code>
+                <code className="text-sm font-mono text-primary">Nf3</code>
+                <code className="text-sm font-mono text-primary">O-O</code>
+                <span className="text-sm text-muted-foreground">(Castle)</span>
+                <code className="text-sm font-mono text-primary">Qh5+</code>
+                <span className="text-sm text-muted-foreground">(Check)</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                <strong className="text-foreground">Strictness:</strong> Models failing to output clean SAN (e.g., adding conversational filler) are penalized with an <strong className="text-red-500">Automatic Loss</strong>.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-base font-medium mb-2">PGN (Portable Game Notation)</h3>
+              <p className="text-sm text-muted-foreground mb-2">
+                The file standard for recording full games.
+              </p>
+              <code className="text-sm font-mono text-primary block mb-2">
+                1. e4 e5 2. Nf3 Nc6
+              </code>
+              <p className="text-sm text-muted-foreground">
+                <strong className="text-foreground">Relevance:</strong> This is the native "language" of LLM chess training data.
               </p>
             </div>
           </div>
