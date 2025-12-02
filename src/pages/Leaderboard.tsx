@@ -373,7 +373,7 @@ export default function Leaderboard() {
           <img 
             src={siliconGambitHero} 
             alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" 
-            className="w-full rounded-lg shadow-lg object-contain"
+            className="w-full rounded-lg shadow-lg"
           />
           <p className="text-muted-foreground text-base mt-4 text-left">
             Benchmark results based on Wins (+1) and Losses (-1). In each experiment, every model plays against every other model 6 times (3 as White, 3 as Black). Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
