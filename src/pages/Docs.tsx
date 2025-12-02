@@ -19,6 +19,7 @@ const Docs = () => {
   const baseUrl = "https://csdagwvbuurumpgrqweh.supabase.co";
 
   return (
+    <>
     <div className="min-h-screen bg-background flex flex-col">
       <div className="container mx-auto px-4 py-12 max-w-5xl flex-1">
         <PageHeader />
@@ -444,8 +445,9 @@ const Docs = () => {
         </Card>
         </div>
       </div>
-      <Footer />
     </div>
+    <Footer />
+    </>
   );
 };
 

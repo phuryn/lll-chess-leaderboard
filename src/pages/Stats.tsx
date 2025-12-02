@@ -122,6 +122,7 @@ export default function Stats() {
   );
 
   return (
+    <>
     <div className="min-h-screen bg-background p-8 flex flex-col">
       <div className="max-w-6xl mx-auto space-y-8 flex-1 w-full">
         <PageHeader />
@@ -239,7 +240,8 @@ export default function Stats() {
         )}
         </div>
       </div>
-      <Footer />
     </div>
+    <Footer />
+    </>
   );
 }
