@@ -63,8 +63,8 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={pawnSvg} 
           alt="White pawn" 
-          className="h-[28px] w-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-          style={{ filter: "brightness(0) saturate(100%) invert(93%) sepia(5%) saturate(200%) hue-rotate(180deg)" }}
+          className="h-[28px] w-auto"
+          style={{ filter: "brightness(0) saturate(100%) invert(93%) sepia(5%) saturate(200%) hue-rotate(180deg) drop-shadow(0 2px 4px rgba(0,0,0,0.8))" }}
         />
       );
     }
@@ -75,7 +75,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
       <span className={
         isWhite 
           ? "text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
-          : "text-slate-950 drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+          : "text-slate-950 drop-shadow-[0_0_3px_rgba(255,255,255,0.6)]"
       }>
         {pieceUnicode[piece]}
       </span>
