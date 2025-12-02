@@ -49,7 +49,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={blackPawnSvg} 
           alt="Black pawn" 
-          className="h-6 sm:h-7 md:h-8 w-auto"
+          className="h-[22px] sm:h-[26px] md:h-[31px] w-auto"
           style={{ 
             filter: "drop-shadow(0 0 3px rgba(255,255,255,0.6))" 
           }}
@@ -63,7 +63,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={pawnSvg} 
           alt="White pawn" 
-          className="h-6 sm:h-7 md:h-8 w-auto"
+          className="h-[22px] sm:h-[26px] md:h-[31px] w-auto"
           style={{ filter: "brightness(0) saturate(100%) invert(93%) sepia(5%) saturate(200%) hue-rotate(180deg) drop-shadow(0 2px 4px rgba(0,0,0,0.8))" }}
         />
       );
