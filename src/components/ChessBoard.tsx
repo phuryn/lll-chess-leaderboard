@@ -48,8 +48,10 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={pawnSvg} 
           alt="Black pawn" 
-          className="h-[30px] w-auto drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
-          style={{ filter: "brightness(0) saturate(100%)" }}
+          className="h-[28px] w-auto"
+          style={{ 
+            filter: "brightness(0) saturate(100%) drop-shadow(0 0 3px rgba(255,255,255,0.6))" 
+          }}
         />
       );
     }
@@ -60,7 +62,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={pawnSvg} 
           alt="White pawn" 
-          className="h-[30px] w-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+          className="h-[28px] w-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
           style={{ filter: "brightness(0) saturate(100%) invert(93%) sepia(5%) saturate(200%) hue-rotate(180deg)" }}
         />
       );
