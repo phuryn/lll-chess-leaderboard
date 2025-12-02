@@ -278,7 +278,26 @@ export default function Leaderboard() {
             <div>
               <h2 className="text-xl font-semibold mb-4">About the Benchmark</h2>
               <p className="text-sm text-muted-foreground">
-                LLM agents perform chess moves using the SAN (Standard Algebraic Notation) standard. Depending on the test type, they might receive the current board state as FEN notation, or they might only see the starting position and must track the game from move history alone.
+                LLM agents play chess by outputting moves in SAN (Standard Algebraic Notation). Depending on the test type:
+              </p>
+              <ul className="text-sm text-muted-foreground mt-2 ml-4 space-y-1 list-disc">
+                <li><strong>FEN mode:</strong> Models receive the exact board position as a FEN string before each move</li>
+                <li><strong>Blind mode:</strong> Models only see their conversation history (all previous prompts they received and moves they output) — they must mentally reconstruct the board state</li>
+              </ul>
+            </div>
+
+            <div className="bg-muted/50 rounded-lg p-4 border border-border">
+              <h3 className="text-base font-medium mb-2 flex items-center gap-2">
+                <span>🔬</span> Key Finding: Blind Mode Outperforms FEN
+              </h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Models perform better in blind mode than with FEN because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
+              </p>
+              <p className="text-sm text-muted-foreground mb-3">
+                Reconstructing the position from move history triggers multi-step reasoning and forces the model to simulate board state explicitly in a scratchpad, which reduces illegal moves. When models see a FEN string, they rely more on surface-level pattern matching instead of internal board computation, leading to more errors.
+              </p>
+              <p className="text-sm text-muted-foreground font-medium">
+                As a result, blind mode is ironically closer to the model's strengths than giving the exact board position.
               </p>
             </div>
 
