@@ -521,7 +521,7 @@ export default function Leaderboard() {
         <div className="mt-8 mb-8 border-t border-slate-700/50" />
 
         {/* Research Notes Section */}
-        <h2 className="text-2xl font-bold mb-3">Research Notes</h2>
+        <h2 className="text-2xl font-bold mb-1">Research Notes</h2>
 
         {/* The Blindfold Paradox */}
         <Card className="mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
