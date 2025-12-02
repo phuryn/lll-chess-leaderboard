@@ -43,13 +43,13 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
   };
 
   return (
-    <div className="inline-block border-2 border-border rounded-lg overflow-hidden shadow-lg">
+    <div className="inline-block rounded-lg overflow-hidden border border-slate-600 shadow-[0_0_30px_rgba(34,211,238,0.15)]">
       {/* Board with coordinates */}
       <div className="flex">
         {/* Rank labels (left side) */}
-        <div className="flex flex-col justify-around bg-muted px-1 py-1">
+        <div className="flex flex-col justify-around bg-slate-900 px-2 py-1">
           {ranks.map((rank) => (
-            <span key={rank} className="text-xs text-muted-foreground h-10 sm:h-12 md:h-14 flex items-center">
+            <span key={rank} className="text-xs text-slate-500 font-mono h-10 sm:h-12 md:h-14 flex items-center justify-center">
               {rank}
             </span>
           ))}
@@ -69,16 +69,16 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
                     key={`${file}${rank}`}
                     className={`
                       w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center
-                      text-2xl sm:text-3xl md:text-4xl select-none
-                      ${isLight ? "bg-amber-100" : "bg-amber-700"}
-                      ${highlighted ? "ring-2 ring-inset ring-primary" : ""}
+                      text-2xl sm:text-3xl md:text-4xl select-none transition-all duration-200
+                      ${isLight ? "bg-slate-600" : "bg-slate-800"}
+                      ${highlighted ? "ring-2 ring-inset ring-cyan-400 shadow-[inset_0_0_12px_rgba(34,211,238,0.4)]" : ""}
                     `}
                   >
                     {piece && (
                       <span className={
                         piece === piece.toUpperCase() 
-                          ? "text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]" 
-                          : "text-slate-900 drop-shadow-[0_0_1px_rgba(255,255,255,0.3)]"
+                          ? "text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
+                          : "text-slate-950 drop-shadow-[0_0_2px_rgba(255,255,255,0.3)]"
                       }>
                         {pieceUnicode[piece]}
                       </span>
@@ -90,17 +90,20 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
           </div>
 
           {/* File labels (bottom) */}
-          <div className="flex bg-muted">
+          <div className="flex bg-slate-900">
             {files.map((file) => (
               <span
                 key={file}
-                className="w-10 sm:w-12 md:w-14 text-center text-xs text-muted-foreground py-1"
+                className="w-10 sm:w-12 md:w-14 text-center text-xs text-slate-500 font-mono py-1"
               >
                 {file}
               </span>
             ))}
           </div>
         </div>
+
+        {/* Right side spacer for symmetry */}
+        <div className="bg-slate-900 px-2" />
       </div>
     </div>
   );
