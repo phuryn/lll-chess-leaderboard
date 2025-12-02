@@ -80,23 +80,24 @@ export default function Leaderboard() {
 
           // Update stats based on game outcome
           if (game.status === "mate" || game.status === "invalid_move") {
-            const winner = game.winner;
-            const loser = winner === whitePlayer ? blackPlayer : whitePlayer;
+            // Map winner side ("white" or "black") to actual player name
+            const winningPlayer = game.winner === 'white' ? whitePlayer : blackPlayer;
+            const losingPlayer = game.winner === 'white' ? blackPlayer : whitePlayer;
 
-            if (winner && playerStatsMap.has(winner)) {
-              playerStatsMap.get(winner)!.wins++;
-              playerStatsMap.get(winner)!.points++;
+            if (winningPlayer && playerStatsMap.has(winningPlayer)) {
+              playerStatsMap.get(winningPlayer)!.wins++;
+              playerStatsMap.get(winningPlayer)!.points++;
             }
 
-            if (loser && playerStatsMap.has(loser)) {
-              playerStatsMap.get(loser)!.losses++;
-              playerStatsMap.get(loser)!.points--;
+            if (losingPlayer && playerStatsMap.has(losingPlayer)) {
+              playerStatsMap.get(losingPlayer)!.losses++;
+              playerStatsMap.get(losingPlayer)!.points--;
 
               // Track invalid move losses separately
               if (game.status === "invalid_move") {
-                playerStatsMap.get(loser)!.invalidMoveLosses++;
+                playerStatsMap.get(losingPlayer)!.invalidMoveLosses++;
                 const round = Math.ceil(game.move_history.length / 2);
-                playerStatsMap.get(loser)!.totalInvalidMoveRounds += round;
+                playerStatsMap.get(losingPlayer)!.totalInvalidMoveRounds += round;
               }
             }
           } else if (game.status === "draw" || game.status === "stalemate") {
