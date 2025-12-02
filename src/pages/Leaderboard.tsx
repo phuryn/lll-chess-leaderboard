@@ -274,20 +274,8 @@ export default function Leaderboard() {
           </div>
         )}
 
-        {/* About the Benchmark */}
-        <Card className="mt-12 p-6 border-border">
-          <h2 className="text-xl font-semibold mb-4">About the Benchmark</h2>
-          <p className="text-sm text-muted-foreground">
-            LLM agents play chess by outputting moves in SAN (Standard Algebraic Notation). Depending on the test type:
-          </p>
-          <ul className="text-sm text-muted-foreground mt-2 ml-4 space-y-1 list-disc">
-            <li><strong>FEN mode:</strong> Models receive the exact board position as a FEN string before each move</li>
-            <li><strong>Blind mode:</strong> Models only see their conversation history (all previous prompts they received and moves they output) — they must mentally reconstruct the board state</li>
-          </ul>
-        </Card>
-
         {/* Key Finding */}
-        <Card className="p-6 border-border bg-muted/50">
+        <Card className="mt-12 p-6 border-border bg-muted/50">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <span>🔬</span> Key Finding: Blind Mode Outperforms FEN
           </h2>
