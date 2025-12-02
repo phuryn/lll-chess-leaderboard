@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trophy, TrendingUp, TrendingDown } from "lucide-react";
 import Footer from "@/components/Footer";
+import { NavLink } from "@/components/NavLink";
 
 interface PlayerStats {
   player: string;
@@ -175,6 +177,31 @@ export default function Leaderboard() {
     <>
     <div className="min-h-screen bg-background p-8 flex flex-col">
       <div className="max-w-6xl mx-auto space-y-8 flex-1">
+        {/* Navigation */}
+        <nav className="flex gap-4 text-sm">
+          <NavLink
+            to="/"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            activeClassName="text-foreground font-medium"
+          >
+            Leaderboard
+          </NavLink>
+          <NavLink
+            to="/games"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            activeClassName="text-foreground font-medium"
+          >
+            Games
+          </NavLink>
+          <NavLink
+            to="/docs"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            activeClassName="text-foreground font-medium"
+          >
+            API Docs
+          </NavLink>
+        </nav>
+
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tight">LLM Chess Leaderboard</h1>
           <p className="text-muted-foreground text-lg">
@@ -230,14 +257,29 @@ export default function Leaderboard() {
                             </div>
                           </TableCell>
                           <TableCell className="font-medium">{player.player}</TableCell>
-                          <TableCell className="text-center text-green-600 dark:text-green-400 font-semibold">
-                            {player.wins}
+                          <TableCell className="text-center">
+                            <Link
+                              to={`/games?winner=${encodeURIComponent(player.player)}&testType=${encodeURIComponent(testLeaderboard.testType)}`}
+                              className="text-green-600 dark:text-green-400 font-semibold hover:underline"
+                            >
+                              {player.wins}
+                            </Link>
                           </TableCell>
-                          <TableCell className="text-center text-red-600 dark:text-red-400 font-semibold">
-                            {player.losses}
+                          <TableCell className="text-center">
+                            <Link
+                              to={`/games?loser=${encodeURIComponent(player.player)}&testType=${encodeURIComponent(testLeaderboard.testType)}`}
+                              className="text-red-600 dark:text-red-400 font-semibold hover:underline"
+                            >
+                              {player.losses}
+                            </Link>
                           </TableCell>
-                          <TableCell className="text-center text-amber-600 dark:text-amber-400 font-semibold">
-                            {player.invalidMoveLosses}
+                          <TableCell className="text-center">
+                            <Link
+                              to={`/games?loser=${encodeURIComponent(player.player)}&invalidMove=true&testType=${encodeURIComponent(testLeaderboard.testType)}`}
+                              className="text-amber-600 dark:text-amber-400 font-semibold hover:underline"
+                            >
+                              {player.invalidMoveLosses}
+                            </Link>
                           </TableCell>
                           <TableCell className="text-center text-muted-foreground">
                             {player.invalidMoveRounds.length > 0 
