@@ -217,12 +217,17 @@ export default function Leaderboard() {
                 <div className="mb-4">
                   <h2 className="text-2xl font-bold mb-2">🧪 {testLeaderboard.testType}</h2>
                   <p className="text-sm text-muted-foreground">
-                    {testLeaderboard.testDesc.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
-                      if (part.startsWith('**') && part.endsWith('**')) {
-                        return <strong key={i} className="text-foreground font-semibold">{part.slice(2, -2)}</strong>;
-                      }
-                      return part;
-                    })}
+                    {testLeaderboard.testDesc.split(/<br\s*\/?>/).map((segment, segIndex) => (
+                      <span key={segIndex}>
+                        {segIndex > 0 && <br />}
+                        {segment.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
+                          if (part.startsWith('**') && part.endsWith('**')) {
+                            return <strong key={i} className="text-foreground font-semibold">{part.slice(2, -2)}</strong>;
+                          }
+                          return part;
+                        })}
+                      </span>
+                    ))}
                   </p>
                 </div>
 
