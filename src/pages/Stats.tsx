@@ -122,9 +122,10 @@ export default function Stats() {
   );
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background p-8 flex flex-col">
+      <div className="max-w-6xl mx-auto space-y-8 flex-1 w-full">
         <PageHeader />
+        <div className="min-h-[600px] md:min-h-[600px]">
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tight">Battle Statistics</h1>
           <p className="text-muted-foreground text-lg">Compare player performance across finished games</p>
@@ -236,6 +237,7 @@ export default function Stats() {
             </Card>
           </div>
         )}
+        </div>
 
         <Footer />
       </div>
