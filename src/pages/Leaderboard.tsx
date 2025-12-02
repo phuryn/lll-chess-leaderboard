@@ -197,12 +197,10 @@ export default function Leaderboard() {
         </nav>
 
         <div className="text-center space-y-3">
-          <h1 className="text-5xl font-bold tracking-tight">The Silicon Gambit</h1>
-          <p className="text-xl text-foreground/80 font-medium">High-Stakes LLM Chess Benchmark</p>
           <img 
             src={siliconGambitHero} 
-            alt="The Silicon Gambit - AI robots playing chess" 
-            className="w-full max-w-4xl mx-auto rounded-lg shadow-lg mt-4"
+            alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" 
+            className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
           />
           <p className="text-sm text-muted-foreground tracking-wide">
             Evaluation Criteria: Strategic Logic • Spatial Grounding • Instruction Adherence
