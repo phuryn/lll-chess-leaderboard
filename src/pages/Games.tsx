@@ -158,8 +158,8 @@ export default function Games() {
 
           {/* Header */}
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-100">Game Browser</h1>
-            <p className="text-slate-400">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Game Browser</h1>
+            <p className="text-muted-foreground">
               Browse all completed games with filtering options
             </p>
           </div>
