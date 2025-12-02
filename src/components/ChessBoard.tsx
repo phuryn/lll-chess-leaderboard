@@ -49,7 +49,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={blackPawn} 
           alt="Black pawn" 
-          className="h-[36px] w-auto drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+          className="h-[30px] w-auto drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
         />
       );
     }
