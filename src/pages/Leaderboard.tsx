@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Trophy, TrendingUp, TrendingDown } from "lucide-react";
+import Footer from "@/components/Footer";
 
 interface PlayerStats {
   player: string;
@@ -348,64 +349,7 @@ export default function Leaderboard() {
           </div>
         </Card>
 
-        {/* Dark Footer */}
-        <footer className="mt-16 bg-zinc-900 rounded-lg p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-white font-semibold mb-4">The Benchmark</h3>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li>Published: 12/2/2025 (v1.0)</li>
-                <li>
-                  Author:{" "}
-                  <a 
-                    href="https://www.linkedin.com/in/pawel-huryn/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-zinc-300 hover:text-white transition-colors"
-                  >
-                    Paweł Huryn
-                  </a>
-                </li>
-                <li>
-                  Newsletter:{" "}
-                  <a 
-                    href="https://www.productcompass.pm/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-zinc-300 hover:text-white transition-colors"
-                  >
-                    The Product Compass
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">More</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="/stats" className="text-zinc-400 hover:text-white transition-colors">
-                    Battle Statistics
-                  </a>
-                </li>
-                <li>
-                  <a href="/docs" className="text-zinc-400 hover:text-white transition-colors">
-                    Chess Engine API
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    href="https://github.com/phuryn/lll-chess-leaderboard" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-zinc-400 hover:text-white transition-colors"
-                  >
-                    Source Code
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );
