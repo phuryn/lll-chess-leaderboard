@@ -11,7 +11,7 @@ interface PlayerStats {
   draws: number;
   points: number;
   invalidMoveLosses: number;
-  totalInvalidMoveRounds: number;
+  invalidMoveRounds: number[];
 }
 
 interface TestTypeLeaderboard {
@@ -19,6 +19,15 @@ interface TestTypeLeaderboard {
   testDesc: string;
   players: PlayerStats[];
 }
+
+const calculateMedian = (values: number[]): number | null => {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 
+    ? sorted[mid] 
+    : (sorted[mid - 1] + sorted[mid]) / 2;
+};
 
 export default function Leaderboard() {
   const [leaderboards, setLeaderboards] = useState<TestTypeLeaderboard[]>([]);
@@ -72,10 +81,10 @@ export default function Leaderboard() {
 
           // Initialize players if they don't exist
           if (whitePlayer && !playerStatsMap.has(whitePlayer)) {
-            playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, totalInvalidMoveRounds: 0 });
+            playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, invalidMoveRounds: [] });
           }
           if (blackPlayer && !playerStatsMap.has(blackPlayer)) {
-            playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, totalInvalidMoveRounds: 0 });
+            playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, invalidMoveRounds: [] });
           }
 
           // Update stats based on game outcome
@@ -97,7 +106,7 @@ export default function Leaderboard() {
               if (game.status === "invalid_move") {
                 playerStatsMap.get(losingPlayer)!.invalidMoveLosses++;
                 const round = Math.ceil(game.move_history.length / 2);
-                playerStatsMap.get(losingPlayer)!.totalInvalidMoveRounds += round;
+                playerStatsMap.get(losingPlayer)!.invalidMoveRounds.push(round);
               }
             }
           } else if (game.status === "draw" || game.status === "stalemate") {
@@ -181,6 +190,7 @@ export default function Leaderboard() {
                         </TableHead>
                         <TableHead className="text-center">Invalid Moves</TableHead>
                         <TableHead className="text-center">Avg Invalid Round</TableHead>
+                        <TableHead className="text-center">Median Invalid Round</TableHead>
                         <TableHead className="text-center">Draws</TableHead>
                         <TableHead className="text-center font-bold">Points</TableHead>
                       </TableRow>
@@ -204,8 +214,13 @@ export default function Leaderboard() {
                             {player.invalidMoveLosses}
                           </TableCell>
                           <TableCell className="text-center text-muted-foreground">
-                            {player.invalidMoveLosses > 0 
-                              ? (player.totalInvalidMoveRounds / player.invalidMoveLosses).toFixed(1) 
+                            {player.invalidMoveRounds.length > 0 
+                              ? (player.invalidMoveRounds.reduce((a, b) => a + b, 0) / player.invalidMoveRounds.length).toFixed(1) 
+                              : '-'}
+                          </TableCell>
+                          <TableCell className="text-center text-muted-foreground">
+                            {player.invalidMoveRounds.length > 0 
+                              ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) 
                               : '-'}
                           </TableCell>
                           <TableCell className="text-center text-muted-foreground">
