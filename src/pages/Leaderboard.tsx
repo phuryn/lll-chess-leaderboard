@@ -535,7 +535,7 @@ export default function Leaderboard() {
         )}
 
         {/* The Blindfold Paradox */}
-        <Card className="mt-12 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
+        <Card className="mt-16 mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
           <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
             <span>🦄</span> The Blindfold Paradox
           </h2>
@@ -574,7 +574,7 @@ export default function Leaderboard() {
         </Card>
 
         {/* Definitions & Standards - Terminal Style */}
-        <Card className="p-6 bg-slate-900 border-slate-700">
+        <Card className="mt-8 mb-16 p-6 bg-slate-900 border-slate-700">
           <h2 className="text-xl font-semibold mb-5 text-cyan-400 flex items-center gap-2">
             <span className="text-slate-500">~/</span> Mission Briefing: Notation Standards
           </h2>
