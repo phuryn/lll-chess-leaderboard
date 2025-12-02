@@ -350,7 +350,7 @@ export default function Leaderboard() {
   return (
     <>
     <div className="min-h-screen bg-background p-8 flex flex-col overflow-x-hidden">
-      <div className="max-w-6xl mx-auto space-y-8 flex-1">
+      <div className="max-w-6xl mx-auto space-y-8 flex-1 w-full">
         {/* Navigation */}
         <nav className="flex gap-4 text-sm">
           <NavLink
@@ -369,7 +369,7 @@ export default function Leaderboard() {
           </NavLink>
         </nav>
 
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-3 max-w-full overflow-hidden">
           <img 
             src={siliconGambitHero} 
             alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" 
@@ -387,10 +387,10 @@ export default function Leaderboard() {
         ) : (
           <div className="space-y-12">
             {leaderboards.map((testLeaderboard, testIndex) => (
-              <div key={testLeaderboard.testType}>
+              <div key={testLeaderboard.testType} className="max-w-full">
                 <div className="mb-4">
                   <h2 className="text-2xl font-bold mb-2">🧪 Experiment {testIndex + 1}: {testLeaderboard.testType}</h2>
-                  <div className="text-sm text-muted-foreground space-y-2">
+                  <div className="text-sm text-muted-foreground space-y-2 break-words">
                     {testLeaderboard.testDesc.split(/<br\s*\/?>/).map((segment, segIndex) => (
                       <p key={segIndex}>
                         {segment.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
@@ -407,7 +407,7 @@ export default function Leaderboard() {
 
                 <Card className="overflow-hidden bg-slate-900 border-slate-700 min-w-0">
                   <div className="overflow-x-auto">
-                    <Table>
+                    <Table className="min-w-[800px]">
                     <TableHeader>
                       <TableRow className="border-slate-700 hover:bg-transparent">
                         <TableHead className="w-20 text-slate-400 uppercase text-xs tracking-wider">Rank</TableHead>
