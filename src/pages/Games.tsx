@@ -155,13 +155,6 @@ export default function Games() {
             >
               Games
             </NavLink>
-            <NavLink
-              to="/docs"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              activeClassName="text-foreground font-medium"
-            >
-              API Docs
-            </NavLink>
           </nav>
 
           {/* Header */}
