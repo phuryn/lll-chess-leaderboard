@@ -1,0 +1,10 @@
+{
+  "_comment": "This is a placeholder file. Replace with your actual n8n workflow export.",
+  "name": "LLM Chess - FEN Mode", 
+  "description": "Models receive the exact board position as a FEN string before each move.",
+  "instructions": [
+    "1. Export your actual workflow from n8n (Workflows → Export)",
+    "2. Replace this file with the exported JSON",
+    "3. The workflow should use OpenRouter API keys for LLM calls"
+  ]
+}
