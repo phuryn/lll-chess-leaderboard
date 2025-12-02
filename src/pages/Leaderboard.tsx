@@ -471,7 +471,7 @@ export default function Leaderboard() {
                           <TableCell>
                             <Link
                               to={`/games?loser=${encodeURIComponent(player.player)}&invalidMove=true&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="hover:opacity-80 hover:underline transition-opacity"
+                              className="hover:opacity-80 hover:underline decoration-slate-400 transition-opacity"
                             >
                               {getComplianceBar(player.invalidMoveLosses, player.wins + player.losses)}
                             </Link>
