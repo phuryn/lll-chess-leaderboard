@@ -314,29 +314,46 @@ export default function Leaderboard() {
         )}
 
         {/* The Blindfold Paradox */}
-        <Card className="mt-12 p-6 border-l-4 border-l-primary bg-muted/50">
-          <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+        <Card className="mt-12 p-8 border-l-4 border-l-primary bg-muted/30">
+          <h2 className="text-2xl font-bold mb-1 flex items-center gap-2">
             <span>🎭</span> The Blindfold Paradox
           </h2>
-          <p className="text-base font-medium mb-4">Why LLMs play better when they can't see the board.</p>
+          <p className="text-lg text-foreground/70 italic mb-6">Why LLMs play better when they can't see the board.</p>
           
-          <p className="text-sm text-muted-foreground mb-4">
-            <strong className="text-foreground">The Discovery:</strong> Contrary to expectation, top models perform significantly better in <strong className="text-foreground">Blind Mode</strong> (conversation history only) than when given the exact board state (FEN).
-          </p>
-          
-          <p className="text-sm font-medium mb-2">The Hypothesis:</p>
-          <ul className="list-disc list-inside space-y-3 text-sm text-muted-foreground mb-4 ml-2">
-            <li>
-              <strong className="text-foreground">Training Data Bias:</strong> LLMs are trained on millions of PGN files from chess databases. This is why they understand move sequences (narratives) better than static FEN positions (compressed snapshots).
-            </li>
-            <li>
-              <strong className="text-foreground">The "Scratchpad" Effect:</strong> Reconstructing the board from history forces the model to engage in multi-step reasoning. It must explicitly simulate the state to know where pieces are. In contrast, giving them the FEN encouraging lazy, surface-level pattern matching.
-            </li>
-          </ul>
-          
-          <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">The Verdict:</strong> Ironically, asking the AI to "imagine" the board aligns better with its training data than showing it the board directly.
-          </p>
+          <div className="space-y-6">
+            {/* The Discovery */}
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-2">The Discovery</h3>
+              <p className="text-foreground/80 leading-relaxed">
+                Contrary to expectation, top models perform significantly better in <strong className="text-foreground font-semibold">Blind Mode</strong> (conversation history only) than when given the exact board state (FEN).
+              </p>
+            </div>
+            
+            {/* The Hypothesis */}
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-3">The Hypothesis</h3>
+              <div className="space-y-4 pl-4 border-l-2 border-border">
+                <div>
+                  <p className="text-foreground/80 leading-relaxed">
+                    <strong className="text-primary font-semibold">Training Data Bias:</strong> LLMs are trained on millions of PGN files from chess databases. This is why they understand move sequences (<em>narratives</em>) better than static FEN positions (<em>compressed snapshots</em>).
+                  </p>
+                </div>
+                <div>
+                  <p className="text-foreground/80 leading-relaxed">
+                    <strong className="text-primary font-semibold">The "Scratchpad" Effect:</strong> Reconstructing the board from history forces the model to engage in multi-step reasoning. It must explicitly simulate the state to know where pieces are. In contrast, giving them the FEN encourages lazy, surface-level pattern matching.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* The Verdict */}
+            <div className="bg-primary/10 rounded-lg p-4 border border-primary/20">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-primary mb-2">The Verdict</h3>
+              <p className="text-foreground font-medium leading-relaxed">
+                Ironically, asking the AI to "imagine" the board aligns better with its training data than showing it the board directly.
+              </p>
+            </div>
+          </div>
         </Card>
 
         {/* Definitions */}
