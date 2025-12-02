@@ -54,8 +54,9 @@ const getProviderFromModel = (modelName: string): { provider: string; logo: Reac
     return {
       provider: 'Anthropic',
       logo: (
-        <svg viewBox="0 0 46 32" className="w-5 h-5" fill="currentColor">
-          <path d="M23.0094 0L32.4969 32H26.1625L23.0094 21.9187L19.8375 32H13.5765L23.0094 0ZM39.6 32L30.1125 0H36.4469L42.7969 21.5375L42.8156 21.5938L46 32H39.6Z"/>
+        <svg viewBox="0 0 96 96" className="w-4 h-4" fill="currentColor">
+          <path d="m55.1553 15.728 25.733 64.5443h14.1116L69.2669 15.728H55.1553Z"/>
+          <path d="m25.3015 54.7311 8.805 -22.6826 8.8051 22.6826H25.3015ZM26.729 15.728 1 80.2723h14.3861l5.262 -13.5544h26.9177l5.2611 13.5544h14.3862L41.484 15.728H26.729Z"/>
         </svg>
       )
     };
