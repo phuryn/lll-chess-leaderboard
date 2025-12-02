@@ -380,7 +380,7 @@ export default function Leaderboard() {
             Evaluation Criteria: Strategic Logic • Spatial Grounding • Instruction Adherence
           </p>
           <p className="text-muted-foreground text-base mt-4 text-left">
-            Benchmark results based on Wins (+1) and Losses (-1). Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
+            Benchmark results based on Wins (+1) and Losses (-1). In each experiment, every model plays against every other model 6 times (3 as White, 3 as Black). Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
           </p>
         </div>
 
