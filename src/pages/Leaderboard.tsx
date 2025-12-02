@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Trophy, TrendingUp, TrendingDown } from "lucide-react";
 import Footer from "@/components/Footer";
 import { NavLink } from "@/components/NavLink";
+import siliconGambitHero from "@/assets/silicon-gambit-hero.png";
 
 interface PlayerStats {
   player: string;
@@ -198,6 +199,11 @@ export default function Leaderboard() {
         <div className="text-center space-y-3">
           <h1 className="text-5xl font-bold tracking-tight">The Silicon Gambit</h1>
           <p className="text-xl text-foreground/80 font-medium">High-Stakes LLM Chess Benchmark</p>
+          <img 
+            src={siliconGambitHero} 
+            alt="The Silicon Gambit - AI robots playing chess" 
+            className="w-full max-w-4xl mx-auto rounded-lg shadow-lg mt-4"
+          />
           <p className="text-sm text-muted-foreground tracking-wide">
             Evaluation Criteria: Strategic Logic • Spatial Grounding • Instruction Adherence
           </p>
