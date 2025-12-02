@@ -8,7 +8,6 @@ import { ArrowLeft } from "lucide-react";
 import ChessBoard from "@/components/ChessBoard";
 import PlaybackControls from "@/components/PlaybackControls";
 import Footer from "@/components/Footer";
-import { NavLink } from "@/components/NavLink";
 import {
   Tooltip,
   TooltipContent,
@@ -249,27 +248,9 @@ export default function GameDetail() {
     <>
       <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col">
         <div className="max-w-5xl mx-auto space-y-6 flex-1 w-full">
-          {/* Navigation */}
-          <nav className="flex gap-4 text-sm">
-            <NavLink
-              to="/"
-              className="text-slate-400 hover:text-slate-100 transition-colors"
-              activeClassName="text-slate-100 font-medium"
-            >
-              Leaderboard
-            </NavLink>
-            <NavLink
-              to="/games"
-              className="text-slate-400 hover:text-slate-100 transition-colors"
-              activeClassName="text-slate-100 font-medium"
-            >
-              Game Browser
-            </NavLink>
-          </nav>
-
           {/* Back button */}
           <Link to="/games">
-            <Button variant="ghost" size="sm" className="text-slate-400 hover:text-slate-100 hover:bg-slate-800">
+            <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Games
             </Button>
