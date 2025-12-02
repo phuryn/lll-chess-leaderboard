@@ -142,15 +142,15 @@ export default function Games() {
           <nav className="flex gap-4 text-sm">
             <NavLink
               to="/"
-              className="text-slate-400 hover:text-slate-100 transition-colors"
-              activeClassName="text-slate-100 font-medium"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              activeClassName="text-foreground font-medium"
             >
               Leaderboard
             </NavLink>
             <NavLink
               to="/games"
-              className="text-slate-400 hover:text-slate-100 transition-colors"
-              activeClassName="text-slate-100 font-medium"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              activeClassName="text-foreground font-medium"
             >
               Game Browser
             </NavLink>
@@ -173,10 +173,10 @@ export default function Games() {
                   <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
                     <SelectValue placeholder="All players" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600">
-                    <SelectItem value="all">All players</SelectItem>
+                  <SelectContent className="bg-slate-800 border-slate-600 text-slate-100">
+                    <SelectItem value="all" className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">All players</SelectItem>
                     {players.map((player) => (
-                      <SelectItem key={player} value={player}>
+                      <SelectItem key={player} value={player} className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">
                         {player}
                       </SelectItem>
                     ))}
@@ -190,10 +190,10 @@ export default function Games() {
                   <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
                     <SelectValue placeholder="All players" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600">
-                    <SelectItem value="all">All players</SelectItem>
+                  <SelectContent className="bg-slate-800 border-slate-600 text-slate-100">
+                    <SelectItem value="all" className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">All players</SelectItem>
                     {players.map((player) => (
-                      <SelectItem key={player} value={player}>
+                      <SelectItem key={player} value={player} className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">
                         {player}
                       </SelectItem>
                     ))}
@@ -207,10 +207,10 @@ export default function Games() {
                   <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600">
-                    <SelectItem value="all">All types</SelectItem>
+                  <SelectContent className="bg-slate-800 border-slate-600 text-slate-100">
+                    <SelectItem value="all" className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">All types</SelectItem>
                     {testTypes.map((type) => (
-                      <SelectItem key={type} value={type}>
+                      <SelectItem key={type} value={type} className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">
                         {type}
                       </SelectItem>
                     ))}
