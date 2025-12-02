@@ -415,13 +415,15 @@ export default function Leaderboard() {
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">
                           <div className="flex items-center justify-center gap-1">
                             <TrendingUp className="w-3 h-3" />
-                            W
+                            <span className="md:hidden">W</span>
+                            <span className="hidden md:inline">Won</span>
                           </div>
                         </TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">
                           <div className="flex items-center justify-center gap-1">
                             <TrendingDown className="w-3 h-3" />
-                            L
+                            <span className="md:hidden">L</span>
+                            <span className="hidden md:inline">Lost</span>
                           </div>
                         </TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Invalid Moves</TableHead>
