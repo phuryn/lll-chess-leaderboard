@@ -78,7 +78,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
                       <span className={
                         piece === piece.toUpperCase() 
                           ? "text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
-                          : "text-slate-950 drop-shadow-[0_0_2px_rgba(255,255,255,0.5)]"
+                          : "text-slate-950 drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
                       }>
                         {pieceUnicode[piece]}
                       </span>
