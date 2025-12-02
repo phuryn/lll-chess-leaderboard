@@ -1,5 +1,5 @@
 import { Chess } from "chess.js";
-import blackPawn from "@/assets/black-pawn.svg";
+import pawnSvg from "@/assets/pawn.svg";
 
 interface ChessBoardProps {
   fen: string;
@@ -12,7 +12,6 @@ const pieceUnicode: Record<string, string> = {
   R: "♖",
   B: "♗",
   N: "♘",
-  P: "♙",
   k: "♚",
   q: "♛",
   r: "♜",
@@ -47,9 +46,22 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
     if (piece === "p") {
       return (
         <img 
-          src={blackPawn} 
+          src={pawnSvg} 
           alt="Black pawn" 
           className="h-[30px] w-auto drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+          style={{ filter: "brightness(0) saturate(100%)" }}
+        />
+      );
+    }
+    
+    // White pawn uses SVG
+    if (piece === "P") {
+      return (
+        <img 
+          src={pawnSvg} 
+          alt="White pawn" 
+          className="h-[30px] w-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+          style={{ filter: "brightness(0) saturate(100%) invert(93%) sepia(5%) saturate(200%) hue-rotate(180deg)" }}
         />
       );
     }
