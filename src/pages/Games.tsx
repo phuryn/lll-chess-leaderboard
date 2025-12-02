@@ -177,12 +177,12 @@ export default function Games() {
             <div className="flex flex-wrap gap-4 items-center">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Winner:</span>
-                <Select value={winnerFilter} onValueChange={(v) => updateFilter("winner", v)}>
+                <Select value={winnerFilter || "all"} onValueChange={(v) => updateFilter("winner", v === "all" ? "" : v)}>
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="All players" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All players</SelectItem>
+                    <SelectItem value="all">All players</SelectItem>
                     {players.map((player) => (
                       <SelectItem key={player} value={player}>
                         {player}
@@ -194,12 +194,12 @@ export default function Games() {
 
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Loser:</span>
-                <Select value={loserFilter} onValueChange={(v) => updateFilter("loser", v)}>
+                <Select value={loserFilter || "all"} onValueChange={(v) => updateFilter("loser", v === "all" ? "" : v)}>
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="All players" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All players</SelectItem>
+                    <SelectItem value="all">All players</SelectItem>
                     {players.map((player) => (
                       <SelectItem key={player} value={player}>
                         {player}
@@ -211,12 +211,12 @@ export default function Games() {
 
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Test Type:</span>
-                <Select value={testTypeFilter} onValueChange={(v) => updateFilter("testType", v)}>
+                <Select value={testTypeFilter || "all"} onValueChange={(v) => updateFilter("testType", v === "all" ? "" : v)}>
                   <SelectTrigger className="w-48">
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All types</SelectItem>
+                    <SelectItem value="all">All types</SelectItem>
                     {testTypes.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
