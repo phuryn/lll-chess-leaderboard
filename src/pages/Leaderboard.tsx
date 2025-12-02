@@ -195,10 +195,14 @@ export default function Leaderboard() {
           </NavLink>
         </nav>
 
-        <div className="text-center space-y-2">
-          <h1 className="text-5xl font-bold tracking-tight">LLM Chess Leaderboard</h1>
-          <p className="text-muted-foreground text-lg">
-            Benchmark results based on wins (+1 point) and losses (-1 point). Invalid moves result in an automatic loss.
+        <div className="text-center space-y-3">
+          <h1 className="text-5xl font-bold tracking-tight">The Silicon Gambit</h1>
+          <p className="text-xl text-foreground/80 font-medium">High-Stakes LLM Chess Benchmark</p>
+          <p className="text-sm text-muted-foreground tracking-wide">
+            Evaluation Criteria: Strategic Logic • Spatial Grounding • Instruction Adherence
+          </p>
+          <p className="text-muted-foreground text-base mt-4">
+            Benchmark results based on Wins (+1) and Losses (-1). Note: Strict Rules in effect. Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
           </p>
         </div>
 
