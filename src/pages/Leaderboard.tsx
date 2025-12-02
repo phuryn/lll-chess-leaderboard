@@ -538,6 +538,9 @@ export default function Leaderboard() {
         {/* Divider between leaderboards and info cards */}
         <div className="mt-16 mb-8 border-t border-slate-700/50" />
 
+        {/* Research Notes Section */}
+        <h2 className="text-2xl font-bold mb-6">Research Notes</h2>
+
         {/* The Blindfold Paradox */}
         <Card className="mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
           <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
