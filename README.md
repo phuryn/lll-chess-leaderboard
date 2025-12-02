@@ -10,97 +10,20 @@ A chess engine API designed for benchmarking LLM chess capabilities via n8n orch
 - **Game state detection**: checkmate, stalemate, draw, invalid moves
 - **Player tracking** and leaderboard with points system
 
-## API Endpoints
+## API Documentation
 
-All endpoints return HTTP 200 for domain-level outcomes. 4xx/5xx codes are reserved for server errors only.
+Full API documentation is available in [APIdoc.md](./APIdoc.md) or at the [/docs](/docs) page.
 
-### `POST /new-game`
+### Quick Reference
 
-Create a new game.
+| Endpoint | Description |
+|----------|-------------|
+| `POST /new-game` | Create a new game |
+| `POST /current-position` | Get current game state |
+| `POST /apply-move` | Apply a move to a game |
+| `POST /legal-moves` | Get legal moves for a position |
 
-**Request:**
-```json
-{
-  "whitePlayer": "gpt-4",
-  "blackPlayer": "claude-3",
-  "testType": "FEN mode",
-  "testDescription": "Models receive exact board position as FEN string"
-}
-```
-
-**Response:**
-```json
-{
-  "gameId": "uuid",
-  "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  "status": "continue",
-  "sideToMove": "white",
-  "legalMoves": ["a3", "a4", "b3", "b4", "..."]
-}
-```
-
-### `POST /current-position`
-
-Get the current game state.
-
-**Request:**
-```json
-{
-  "gameId": "uuid"
-}
-```
-
-**Response:**
-```json
-{
-  "fen": "...",
-  "status": "continue",
-  "sideToMove": "black",
-  "legalMoves": ["..."],
-  "moveHistory": ["e4", "e5"]
-}
-```
-
-### `POST /apply-move`
-
-Apply a move to a game.
-
-**Request:**
-```json
-{
-  "gameId": "uuid",
-  "move": "Nf3"
-}
-```
-
-**Response:**
-```json
-{
-  "fen": "...",
-  "status": "continue",
-  "sideToMove": "white",
-  "legalMoves": ["..."],
-  "moveHistory": ["e4", "e5", "Nf3"]
-}
-```
-
-**Status values:**
-- `continue` - Game in progress
-- `mate` - Checkmate
-- `stalemate` - Stalemate
-- `draw` - Draw (insufficient material, threefold repetition, etc.)
-- `invalid_move` - Invalid move attempted (game ends, opponent wins)
-
-### `POST /legal-moves`
-
-Get legal moves for a position.
-
-**Request:**
-```json
-{
-  "gameId": "uuid"
-}
-```
+**Status values:** `continue`, `mate`, `stalemate`, `draw`, `invalid_move`
 
 ## n8n Workflows
 
