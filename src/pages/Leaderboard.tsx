@@ -437,7 +437,7 @@ export default function Leaderboard() {
                             L
                           </div>
                         </TableHead>
-                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Illegal Moves</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Invalid Moves</TableHead>
                         {showAdvancedStats && (
                           <>
                             <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Avg Fail</TableHead>
