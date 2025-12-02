@@ -518,7 +518,7 @@ export default function Leaderboard() {
         )}
 
         {/* Divider between leaderboards and info cards */}
-        <div className="mt-20 mb-12 border-t border-slate-700/50" />
+        <div className="mt-8 mb-8 border-t border-slate-700/50" />
 
         {/* Research Notes Section */}
         <h2 className="text-2xl font-bold mb-6">Research Notes</h2>
