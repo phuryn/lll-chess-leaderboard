@@ -316,7 +316,7 @@ export default function Leaderboard() {
         {/* The Blindfold Paradox */}
         <Card className="mt-12 p-6 border-l-4 border-l-blue-500 bg-muted/30">
           <h2 className="text-xl font-semibold mb-1 flex items-center gap-2">
-            <span>🎭</span> The Blindfold Paradox
+            <span>🦄</span> The Blindfold Paradox
           </h2>
           <p className="text-base text-foreground/60 italic mb-5">Why LLMs play better when they can't see the board.</p>
           
