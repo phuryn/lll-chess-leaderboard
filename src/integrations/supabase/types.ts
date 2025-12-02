@@ -25,6 +25,8 @@ export type Database = {
           reason: string | null
           side_to_move: string
           status: string
+          test_desc: string
+          test_type: string
           updated_at: string
           white_player: string | null
           winner: string | null
@@ -39,6 +41,8 @@ export type Database = {
           reason?: string | null
           side_to_move: string
           status?: string
+          test_desc?: string
+          test_type?: string
           updated_at?: string
           white_player?: string | null
           winner?: string | null
@@ -53,6 +57,8 @@ export type Database = {
           reason?: string | null
           side_to_move?: string
           status?: string
+          test_desc?: string
+          test_type?: string
           updated_at?: string
           white_player?: string | null
           winner?: string | null
