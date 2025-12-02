@@ -159,8 +159,6 @@ const getProviderFromModel = (modelName: string): { provider: string; logo: Reac
 export default function Leaderboard() {
   const [leaderboards, setLeaderboards] = useState<TestTypeLeaderboard[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAdvancedStats, setShowAdvancedStats] = useState(false);
-
   useEffect(() => {
     fetchLeaderboard();
   }, []);
@@ -406,15 +404,6 @@ export default function Leaderboard() {
                   </div>
                 </div>
 
-                {/* Advanced Stats Toggle */}
-                <div className="flex justify-end mb-2">
-                  <button
-                    onClick={() => setShowAdvancedStats(!showAdvancedStats)}
-                    className="text-xs text-slate-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
-                  >
-                    {showAdvancedStats ? '− Hide' : '+ Show'} Advanced Stats
-                  </button>
-                </div>
 
                 <Card className="overflow-hidden bg-slate-900 border-slate-700">
                   <Table>
@@ -435,14 +424,10 @@ export default function Leaderboard() {
                           </div>
                         </TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Invalid Moves</TableHead>
-                        {showAdvancedStats && (
-                          <>
-                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Avg Fail</TableHead>
-                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Med Fail</TableHead>
-                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Moves</TableHead>
-                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
-                          </>
-                        )}
+                        <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Avg Fail</TableHead>
+                        <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Med Fail</TableHead>
+                        <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Moves</TableHead>
+                        <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Score</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -491,26 +476,22 @@ export default function Leaderboard() {
                               {getComplianceBar(player.invalidMoveLosses, player.wins + player.losses)}
                             </Link>
                           </TableCell>
-                          {showAdvancedStats && (
-                            <>
-                              <TableCell className="text-center text-slate-400 text-sm">
-                                {player.invalidMoveRounds.length > 0 
-                                  ? (player.invalidMoveRounds.reduce((a, b) => a + b, 0) / player.invalidMoveRounds.length).toFixed(1) 
-                                  : '-'}
-                              </TableCell>
-                              <TableCell className="text-center text-slate-400 text-sm">
-                                {player.invalidMoveRounds.length > 0 
-                                  ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) 
-                                  : '-'}
-                              </TableCell>
-                              <TableCell className="text-center text-slate-400 text-sm">
-                                {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
-                              </TableCell>
-                              <TableCell className="text-center text-slate-400 text-sm">
-                                {player.draws}
-                              </TableCell>
-                            </>
-                          )}
+                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
+                            {player.invalidMoveRounds.length > 0 
+                              ? (player.invalidMoveRounds.reduce((a, b) => a + b, 0) / player.invalidMoveRounds.length).toFixed(1) 
+                              : '-'}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
+                            {player.invalidMoveRounds.length > 0 
+                              ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) 
+                              : '-'}
+                          </TableCell>
+                          <TableCell className="text-center text-slate-400 text-sm">
+                            {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
+                            {player.draws}
+                          </TableCell>
                           <TableCell className="text-center">
                             <span className={`text-xl font-black ${
                               player.points > 0 
