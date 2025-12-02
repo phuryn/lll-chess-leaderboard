@@ -1,0 +1,10 @@
+{
+  "_comment": "This is a placeholder file. Replace with your actual n8n workflow export.",
+  "name": "LLM Chess - Blind Mode",
+  "description": "Models reconstruct board state from move history only. They do not receive FEN positions.",
+  "instructions": [
+    "1. Export your actual workflow from n8n (Workflows → Export)",
+    "2. Replace this file with the exported JSON",
+    "3. The workflow should use OpenRouter API keys for LLM calls"
+  ]
+}

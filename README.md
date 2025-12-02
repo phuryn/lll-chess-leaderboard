@@ -1,73 +1,147 @@
-# Welcome to your Lovable project
+# LLM Chess Benchmark
 
-## Project info
+A chess engine API designed for benchmarking LLM chess capabilities via n8n orchestration. Models play chess by outputting moves in Standard Algebraic Notation (SAN), and invalid moves result in automatic losses.
 
-**URL**: https://lovable.dev/projects/9be4322e-b930-4526-9177-eb900dd1364b
+## Overview
 
-## How can I edit this code?
+- **Stateful HTTP JSON API** using [chess.js](https://github.com/jhlywa/chess.js)
+- **Game persistence** with PostgreSQL (via Supabase)
+- **Move validation** using Standard Algebraic Notation (SAN)
+- **Game state detection**: checkmate, stalemate, draw, invalid moves
+- **Player tracking** and leaderboard with points system
 
-There are several ways of editing your application.
+## API Endpoints
 
-**Use Lovable**
+All endpoints return HTTP 200 for domain-level outcomes. 4xx/5xx codes are reserved for server errors only.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/9be4322e-b930-4526-9177-eb900dd1364b) and start prompting.
+### `POST /new-game`
 
-Changes made via Lovable will be committed automatically to this repo.
+Create a new game.
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+**Request:**
+```json
+{
+  "whitePlayer": "gpt-4",
+  "blackPlayer": "claude-3",
+  "testType": "FEN mode",
+  "testDescription": "Models receive exact board position as FEN string"
+}
 ```
 
-**Edit a file directly in GitHub**
+**Response:**
+```json
+{
+  "gameId": "uuid",
+  "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "status": "continue",
+  "sideToMove": "white",
+  "legalMoves": ["a3", "a4", "b3", "b4", "..."]
+}
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### `POST /current-position`
 
-**Use GitHub Codespaces**
+Get the current game state.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Request:**
+```json
+{
+  "gameId": "uuid"
+}
+```
 
-## What technologies are used for this project?
+**Response:**
+```json
+{
+  "fen": "...",
+  "status": "continue",
+  "sideToMove": "black",
+  "legalMoves": ["..."],
+  "moveHistory": ["e4", "e5"]
+}
+```
 
-This project is built with:
+### `POST /apply-move`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Apply a move to a game.
 
-## How can I deploy this project?
+**Request:**
+```json
+{
+  "gameId": "uuid",
+  "move": "Nf3"
+}
+```
 
-Simply open [Lovable](https://lovable.dev/projects/9be4322e-b930-4526-9177-eb900dd1364b) and click on Share -> Publish.
+**Response:**
+```json
+{
+  "fen": "...",
+  "status": "continue",
+  "sideToMove": "white",
+  "legalMoves": ["..."],
+  "moveHistory": ["e4", "e5", "Nf3"]
+}
+```
 
-## Can I connect a custom domain to my Lovable project?
+**Status values:**
+- `continue` - Game in progress
+- `mate` - Checkmate
+- `stalemate` - Stalemate
+- `draw` - Draw (insufficient material, threefold repetition, etc.)
+- `invalid_move` - Invalid move attempted (game ends, opponent wins)
 
-Yes, you can!
+### `POST /legal-moves`
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Get legal moves for a position.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+**Request:**
+```json
+{
+  "gameId": "uuid"
+}
+```
+
+## n8n Workflows
+
+Pre-built n8n workflows are available in the `/n8n` folder:
+
+| File | Description |
+|------|-------------|
+| `blind_mode.json` | Models reconstruct board state from move history only |
+| `FEN_mode.json` | Models receive exact board position as FEN string |
+
+### How to Import
+
+1. Open your n8n instance
+2. Go to **Workflows → Import from file**
+3. Select the JSON file (`blind_mode.json` or `FEN_mode.json`)
+4. Configure the HTTP Request nodes with your API endpoint URL
+5. Add your **OpenRouter API keys** to the AI/LLM nodes
+6. Activate the workflow
+
+### Key Finding: Blind Mode Outperforms FEN
+
+Models perform better in blind mode than with FEN because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
+
+Reconstructing the position from move history triggers multi-step reasoning and forces the model to simulate board state explicitly, which reduces illegal moves.
+
+## Scoring System
+
+- **Win**: +1 point
+- **Loss**: -1 point
+- **Draw**: 0 points
+- **Invalid move**: Automatic loss (-1 point)
+
+## Technology Stack
+
+- React + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Supabase (PostgreSQL + Edge Functions)
+- chess.js for move validation
+
+## Links
+
+- **Live Leaderboard**: [View benchmark results](/)
+- **Battle Statistics**: [/stats](/stats)
+- **API Documentation**: [/docs](/docs)
