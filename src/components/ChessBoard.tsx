@@ -49,7 +49,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={blackPawnSvg} 
           alt="Black pawn" 
-          className="h-7 sm:h-8 md:h-10 w-auto"
+          className="h-6 sm:h-7 md:h-8 w-auto"
           style={{ 
             filter: "drop-shadow(0 0 3px rgba(255,255,255,0.6))" 
           }}
@@ -63,7 +63,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
         <img 
           src={pawnSvg} 
           alt="White pawn" 
-          className="h-7 sm:h-8 md:h-10 w-auto"
+          className="h-6 sm:h-7 md:h-8 w-auto"
           style={{ filter: "brightness(0) saturate(100%) invert(93%) sepia(5%) saturate(200%) hue-rotate(180deg) drop-shadow(0 2px 4px rgba(0,0,0,0.8))" }}
         />
       );
@@ -84,10 +84,13 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
 
   return (
     <div className="inline-block rounded-lg overflow-hidden border border-slate-600 shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+      {/* Top spacer */}
+      <div className="bg-slate-900 py-2" />
+      
       {/* Board with coordinates */}
       <div className="flex">
         {/* Rank labels (left side) */}
-        <div className="flex flex-col justify-around bg-slate-900 px-2 py-1">
+        <div className="flex flex-col justify-around bg-slate-900 px-2">
           {ranks.map((rank) => (
             <span key={rank} className="text-xs text-slate-500 font-mono h-10 sm:h-12 md:h-14 flex items-center justify-center">
               {rank}
