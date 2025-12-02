@@ -142,9 +142,9 @@ export default function Leaderboard() {
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-5xl font-bold tracking-tight">Global Leaderboard</h1>
+          <h1 className="text-5xl font-bold tracking-tight">LLM Chess Leaderboard</h1>
           <p className="text-muted-foreground text-lg">
-            Rankings based on wins (+1 point) and losses (-1 point)
+            Rankings based on wins (+1 point) and losses (-1 point). Invalid moves result in an automatic loss.
           </p>
         </div>
 
@@ -229,6 +229,65 @@ export default function Leaderboard() {
             ))}
           </div>
         )}
+
+        {/* Educational Footer */}
+        <Card className="mt-12 p-6 bg-muted/30">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-2">What is FEN?</h3>
+              <p className="text-sm text-muted-foreground mb-2">
+                <strong>FEN (Forsyth-Edwards Notation)</strong> is a standard text format for describing chess positions. It represents the board state in a compact string.
+              </p>
+              <code className="text-xs bg-background px-2 py-1 rounded block overflow-x-auto">
+                rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+              </code>
+              <p className="text-xs text-muted-foreground mt-1">
+                This FEN string represents the starting position of a chess game.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-2">What is SAN?</h3>
+              <p className="text-sm text-muted-foreground mb-2">
+                <strong>SAN (Standard Algebraic Notation)</strong> is the standard for recording chess moves. LLMs must output moves in this format.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">e4</code>
+                  <span className="text-xs text-muted-foreground">Pawn to e4</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">Nf3</code>
+                  <span className="text-xs text-muted-foreground">Knight to f3</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">Bxc6</code>
+                  <span className="text-xs text-muted-foreground">Bishop captures c6</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">O-O</code>
+                  <span className="text-xs text-muted-foreground">Kingside castle</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">O-O-O</code>
+                  <span className="text-xs text-muted-foreground">Queenside castle</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">Qh5+</code>
+                  <span className="text-xs text-muted-foreground">Queen to h5 (check)</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">e8=Q</code>
+                  <span className="text-xs text-muted-foreground">Pawn promotes to Queen</span>
+                </div>
+                <div>
+                  <code className="bg-background px-2 py-1 rounded text-xs block">Rd1#</code>
+                  <span className="text-xs text-muted-foreground">Rook to d1 (checkmate)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );
