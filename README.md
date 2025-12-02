@@ -12,7 +12,7 @@ A chess engine API designed for benchmarking LLM chess capabilities via n8n orch
 
 ## API Documentation
 
-Full API documentation is available in [APIdoc.md](./APIdoc.md) or at the [/docs](/docs) page.
+Full API documentation is available in [APIdoc.md](./APIdoc.md) or at the [/docs](https://chess.productcompass.pm/docs) page.
 
 ### Quick Reference
 
@@ -45,7 +45,7 @@ Pre-built n8n workflows are available in the `/n8n` folder:
 
 ### Key Finding: Blind Mode Outperforms FEN
 
-Models perform better in blind mode than with FEN because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
+I believe models perform better in blind mode than with FEN because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
 
 Reconstructing the position from move history triggers multi-step reasoning and forces the model to simulate board state explicitly, which reduces illegal moves.
 
@@ -65,6 +65,6 @@ Reconstructing the position from move history triggers multi-step reasoning and 
 
 ## Links
 
-- **Live Leaderboard**: [View benchmark results](/)
-- **Battle Statistics**: [/stats](/stats)
-- **API Documentation**: [/docs](/docs)
+- **Live Leaderboard**: [View benchmark results](https://chess.productcompass.pm/)
+- **Battle Statistics**: [/stats](https://chess.productcompass.pm/stats)
+- **API Documentation**: [/docs](https://chess.productcompass.pm/docs)

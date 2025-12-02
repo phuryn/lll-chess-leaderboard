@@ -50,8 +50,8 @@ const Docs = () => {
                   This database is currently read-only and intended for viewing benchmark results only. 
                   To run your own experiments, see the{" "}
                   <a 
-                    href="https://github.com" 
-                    target="_blank" 
+                    href="https://github.com/phuryn/llm-chess-leaderboard" 
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary underline hover:no-underline"
                   >
