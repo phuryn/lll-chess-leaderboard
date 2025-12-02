@@ -49,13 +49,13 @@ const getProviderFromModel = (modelName: string): { provider: string; logo: Reac
     };
   }
   
-  // Anthropic models
+  // Anthropic models (Claude)
   if (name.includes('claude') || name.includes('anthropic')) {
     return {
       provider: 'Anthropic',
       logo: (
-        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-          <path d="M17.304 3.541l-5.476 16.918h-3.393L13.909 3.54h3.395zm-10.608 0L12.17 20.46H8.778L3.303 3.541h3.393z"/>
+        <svg viewBox="0 0 46 32" className="w-5 h-5" fill="currentColor">
+          <path d="M32.73 0l-6.06 32h-5.67l6.06-32h5.67zM13.27 0L7.21 32h5.67l6.06-32h-5.67zM0 26.5h20.45v5.5H0v-5.5z"/>
         </svg>
       )
     };
@@ -76,13 +76,13 @@ const getProviderFromModel = (modelName: string): { provider: string; logo: Reac
     };
   }
   
-  // Moonshot/Kimi models
+  // Moonshot/Kimi models (crescent moon logo)
   if (name.includes('kimi') || name.includes('moonshot')) {
     return {
-      provider: 'Moonshot',
+      provider: 'Kimi',
       logo: (
         <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
         </svg>
       )
     };
