@@ -216,19 +216,18 @@ export default function Leaderboard() {
               <div key={testLeaderboard.testType}>
                 <div className="mb-4">
                   <h2 className="text-2xl font-bold mb-2">🧪 {testLeaderboard.testType}</h2>
-                  <p className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground space-y-2">
                     {testLeaderboard.testDesc.split(/<br\s*\/?>/).map((segment, segIndex) => (
-                      <span key={segIndex}>
-                        {segIndex > 0 && <br />}
+                      <p key={segIndex}>
                         {segment.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
                           if (part.startsWith('**') && part.endsWith('**')) {
                             return <strong key={i} className="text-foreground font-semibold">{part.slice(2, -2)}</strong>;
                           }
                           return part;
                         })}
-                      </span>
+                      </p>
                     ))}
-                  </p>
+                  </div>
                 </div>
 
                 <Card className="overflow-hidden">
