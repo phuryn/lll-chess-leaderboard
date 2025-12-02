@@ -231,59 +231,35 @@ export default function Leaderboard() {
         )}
 
         {/* Educational Footer */}
-        <Card className="mt-12 p-6 bg-muted/30">
-          <div className="space-y-6">
+        <Card className="mt-12 p-6 border-border">
+          <div className="space-y-5">
             <div>
-              <h3 className="text-lg font-semibold mb-2">What is FEN?</h3>
+              <h3 className="text-base font-medium mb-2">What is FEN?</h3>
               <p className="text-sm text-muted-foreground mb-2">
-                <strong>FEN (Forsyth-Edwards Notation)</strong> is a standard text format for describing chess positions. It represents the board state in a compact string.
+                FEN (Forsyth-Edwards Notation) is a standard text format for describing chess positions. It represents the board state in a compact string.
               </p>
-              <code className="text-xs bg-background px-2 py-1 rounded block overflow-x-auto">
+              <code className="text-sm font-mono text-primary">
                 rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
               </code>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 This FEN string represents the starting position of a chess game.
               </p>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-2">What is SAN?</h3>
-              <p className="text-sm text-muted-foreground mb-2">
-                <strong>SAN (Standard Algebraic Notation)</strong> is the standard for recording chess moves. LLMs must output moves in this format.
+              <h3 className="text-base font-medium mb-2">What is SAN?</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                SAN (Standard Algebraic Notation) is the standard for recording chess moves. LLMs must output moves in this format.
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">e4</code>
-                  <span className="text-xs text-muted-foreground">Pawn to e4</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">Nf3</code>
-                  <span className="text-xs text-muted-foreground">Knight to f3</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">Bxc6</code>
-                  <span className="text-xs text-muted-foreground">Bishop captures c6</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">O-O</code>
-                  <span className="text-xs text-muted-foreground">Kingside castle</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">O-O-O</code>
-                  <span className="text-xs text-muted-foreground">Queenside castle</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">Qh5+</code>
-                  <span className="text-xs text-muted-foreground">Queen to h5 (check)</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">e8=Q</code>
-                  <span className="text-xs text-muted-foreground">Pawn promotes to Queen</span>
-                </div>
-                <div>
-                  <code className="bg-background px-2 py-1 rounded text-xs block">Rd1#</code>
-                  <span className="text-xs text-muted-foreground">Rook to d1 (checkmate)</span>
-                </div>
+              <div className="space-y-1.5 text-sm text-muted-foreground">
+                <div><code className="font-mono text-primary">e4</code> — Pawn to e4</div>
+                <div><code className="font-mono text-primary">Nf3</code> — Knight to f3</div>
+                <div><code className="font-mono text-primary">Bxc6</code> — Bishop captures c6</div>
+                <div><code className="font-mono text-primary">O-O</code> — Kingside castle</div>
+                <div><code className="font-mono text-primary">O-O-O</code> — Queenside castle</div>
+                <div><code className="font-mono text-primary">Qh5+</code> — Queen to h5 (check)</div>
+                <div><code className="font-mono text-primary">e8=Q</code> — Pawn promotes to Queen</div>
+                <div><code className="font-mono text-primary">Rd1#</code> — Rook to d1 (checkmate)</div>
               </div>
             </div>
           </div>
