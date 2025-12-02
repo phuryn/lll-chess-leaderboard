@@ -330,6 +330,21 @@ export default function Leaderboard() {
                 <div><code className="font-mono text-primary">Rd1#</code> — Rook to d1 (checkmate)</div>
               </div>
             </div>
+
+            <div>
+              <h3 className="text-base font-medium mb-2">What is PGN?</h3>
+              <p className="text-sm text-muted-foreground mb-2">
+                PGN (Portable Game Notation) is the standard file format for recording entire chess games. 
+                While SAN describes individual moves, PGN wraps a sequence of SAN moves along with game metadata.
+              </p>
+              <code className="text-sm font-mono text-primary block mb-2">
+                1. e4 e5 2. Nf3 Nc6 3. Bb5 a6
+              </code>
+              <p className="text-sm text-muted-foreground">
+                LLMs are trained on millions of PGN files from chess databases, which is why they understand 
+                move sequences better than static FEN positions.
+              </p>
+            </div>
           </div>
         </Card>
       </div>
