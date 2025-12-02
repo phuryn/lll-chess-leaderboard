@@ -12,6 +12,7 @@ interface PlayerStats {
   points: number;
   invalidMoveLosses: number;
   invalidMoveRounds: number[];
+  maxValidMoves: number;
 }
 
 interface TestTypeLeaderboard {
@@ -81,10 +82,10 @@ export default function Leaderboard() {
 
           // Initialize players if they don't exist
           if (whitePlayer && !playerStatsMap.has(whitePlayer)) {
-            playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, invalidMoveRounds: [] });
+            playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, invalidMoveRounds: [], maxValidMoves: 0 });
           }
           if (blackPlayer && !playerStatsMap.has(blackPlayer)) {
-            playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, invalidMoveRounds: [] });
+            playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0, invalidMoveRounds: [], maxValidMoves: 0 });
           }
 
           // Update stats based on game outcome
@@ -116,6 +117,28 @@ export default function Leaderboard() {
             if (blackPlayer && playerStatsMap.has(blackPlayer)) {
               playerStatsMap.get(blackPlayer)!.draws++;
             }
+          }
+
+          // Calculate valid moves for each player in this game
+          const whiteValidMoves = Math.ceil(game.move_history.length / 2);
+          const blackValidMoves = Math.floor(game.move_history.length / 2);
+          
+          // If player lost due to invalid move, subtract 1 (their last move was invalid)
+          const whiteAdjusted = (game.status === "invalid_move" && game.winner === "black") 
+            ? whiteValidMoves - 1 
+            : whiteValidMoves;
+          const blackAdjusted = (game.status === "invalid_move" && game.winner === "white") 
+            ? blackValidMoves - 1 
+            : blackValidMoves;
+          
+          // Update max for each player
+          if (whitePlayer && playerStatsMap.has(whitePlayer)) {
+            const stats = playerStatsMap.get(whitePlayer)!;
+            stats.maxValidMoves = Math.max(stats.maxValidMoves, whiteAdjusted);
+          }
+          if (blackPlayer && playerStatsMap.has(blackPlayer)) {
+            const stats = playerStatsMap.get(blackPlayer)!;
+            stats.maxValidMoves = Math.max(stats.maxValidMoves, blackAdjusted);
           }
         });
 
@@ -191,6 +214,7 @@ export default function Leaderboard() {
                         <TableHead className="text-center">Invalid Moves</TableHead>
                         <TableHead className="text-center">Avg Invalid Round</TableHead>
                         <TableHead className="text-center">Median Invalid Round</TableHead>
+                        <TableHead className="text-center">Max Valid Moves</TableHead>
                         <TableHead className="text-center">Draws</TableHead>
                         <TableHead className="text-center font-bold">Points</TableHead>
                       </TableRow>
@@ -222,6 +246,9 @@ export default function Leaderboard() {
                             {player.invalidMoveRounds.length > 0 
                               ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) 
                               : '-'}
+                          </TableCell>
+                          <TableCell className="text-center text-muted-foreground">
+                            {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
                           </TableCell>
                           <TableCell className="text-center text-muted-foreground">
                             {player.draws}
