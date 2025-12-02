@@ -144,7 +144,7 @@ export default function Leaderboard() {
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tight">LLM Chess Leaderboard</h1>
           <p className="text-muted-foreground text-lg">
-            Rankings based on wins (+1 point) and losses (-1 point). Invalid moves result in an automatic loss.
+            Benchmark results based on wins (+1 point) and losses (-1 point). Invalid moves result in an automatic loss.
           </p>
         </div>
 
@@ -234,6 +234,7 @@ export default function Leaderboard() {
         <Card className="mt-12 p-6 border-border">
           <div className="space-y-5">
             <div>
+              <h2 className="text-xl font-semibold mb-4">About the Benchmark</h2>
               <p className="text-sm text-muted-foreground">
                 LLM agents perform chess moves using the SAN (Standard Algebraic Notation) standard. Depending on the test type, they might receive the current board state as FEN notation, or they might only see the starting position and must track the game from move history alone.
               </p>
