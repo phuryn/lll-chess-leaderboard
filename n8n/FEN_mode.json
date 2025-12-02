@@ -1,10 +1,1070 @@
 {
-  "_comment": "This is a placeholder file. Replace with your actual n8n workflow export.",
-  "name": "LLM Chess - FEN Mode", 
-  "description": "Models receive the exact board position as a FEN string before each move.",
-  "instructions": [
-    "1. Export your actual workflow from n8n (Workflows → Export)",
-    "2. Replace this file with the exported JSON",
-    "3. The workflow should use OpenRouter API keys for LLM calls"
-  ]
+  "name": "[Chess] Can see the board (FEN)",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a chess engine playing as WHITE.\n\nYour job:\n- Analyze the current position in FEN format: {{ $json.fen }}\n- Output ONE legal move for WHITE in Standard Algebraic Notation (SAN).\n- Examples: e4, Nf3, Bxe5, O-O, e8=Q\n- Never explain the move. Never add commentary or reasoning.\n- If you have no legal move (checkmate or stalemate), output exactly: resign\n- Do not include periods, exclamation marks, question marks, or multiple moves.\n- SAN is case-sensitive: use uppercase for pieces (N, B, R, Q, K), lowercase for files (a-h).\n\nAny output that is not a valid SAN move or \"resign\" is considered an illegal move and loses the game.\n\n## Key Requirements\n\n- Move Format: Standard Algebraic Notation (SAN) - case sensitive (e.g., e4, Nf3)\n- No Explanation: Output only the move, no commentary or reasoning\n- Terminal Position: Output resign if no legal moves available\n- Case Sensitive: Pieces use uppercase (N, B, R, Q, K), pawns have no prefix, files use lowercase (a-h)\n\nExample Outputs\n✓ Valid: e4\n✓ Valid: Nf3\n✓ Valid: O-O\n✓ Valid: resign\n✗ Invalid: e4 (good opening move)\n✗ Invalid: Nf3!\n✗ Invalid: e2e4\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        848,
+        64
+      ],
+      "id": "14160264-697c-4abb-9019-733683aa5a6b",
+      "name": "White Player Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a chess engine playing as BLACK.\n\nYour job:\n- Analyze the current position in FEN format: {{ $('/api/apply-move (White)').item.json.fen }}\n- Output ONE legal move for BLACK in Standard Algebraic Notation (SAN).\n- Examples: e5, Nf6, Bxc4, O-O-O, d1=Q\n- Never explain the move. Never add commentary or reasoning.\n- If you have no legal move (checkmate or stalemate), output exactly: resign\n- Do not include periods, exclamation marks, question marks, or multiple moves.\n- SAN is case-sensitive: use uppercase for pieces (N, B, R, Q, K), lowercase for files (a-h).\n\nAny output that is not a valid SAN move or \"resign\" is considered an illegal move and loses the game.\n\n## Key Requirements\n- Move Format: Standard Algebraic Notation (SAN) - case sensitive (e.g., e5, Nf6)\n- No Explanation: Output only the move, no commentary or reasoning\n- Terminal Position: Output resign if no legal moves available\n- Case Sensitive:Pieces use uppercase (N, B, R, Q, K), pawns have no prefix, files use lowercase (a-h)\n\n## Example Valid Outputs\n✓ Valid: e5\n✓ Valid: Nf6\n✓ Valid: O-O-O\n✓ Valid: resign\n✗ Invalid: e5 (solid defense)\n✗ Invalid: Nf6?!\n✗ Invalid: e7e5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1664,
+        64
+      ],
+      "id": "f79f3a7f-7d58-4ea3-96d0-3355460be813",
+      "name": "Black Player Agent",
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/new-game",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "whitePlayer",
+              "value": "={{ $json.model_w }}"
+            },
+            {
+              "name": "blackPlayer",
+              "value": "={{ $json.model_b }}"
+            },
+            {
+              "name": "testType",
+              "value": "Can see the board (FEN)"
+            },
+            {
+              "name": "testDescription",
+              "value": "Models receive the current board position as a FEN string (Forsyth-Edwards Notation), a standard text representation of chess positions. This tests whether models can interpret board state from text and produce valid moves."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        352,
+        64
+      ],
+      "id": "eac5759d-243a-4443-a369-f9cc20bee565",
+      "name": "/api/new-game"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/current-position",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $json.gameId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        592,
+        64
+      ],
+      "id": "e17a9681-7e4e-40a8-9ff8-20193d7135d8",
+      "name": "/api/current-position"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "547e23cd-bcb0-4897-84e2-5707c16d1875",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "continue",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1424,
+        64
+      ],
+      "id": "d7e79fd4-e474-4c19-8ad3-a570fd92ae22",
+      "name": "Stop?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/apply-move",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $('/api/new-game').item.json.gameId }}"
+            },
+            {
+              "name": "move",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1232,
+        64
+      ],
+      "id": "bd26ccde-6708-4103-b6c2-c1e0a8832644",
+      "name": "/api/apply-move (White)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/apply-move",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $('/api/apply-move (White)').item.json.gameId }}"
+            },
+            {
+              "name": "move",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1984,
+        64
+      ],
+      "id": "9a93373f-a018-4d74-84af-d268db113ec5",
+      "name": "/api/apply-move (Black)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "547e23cd-bcb0-4897-84e2-5707c16d1875",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "continue",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2176,
+        64
+      ],
+      "id": "a12a1ef8-e02e-4287-b5c2-022959417cac",
+      "name": "Stop?1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 5,
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0120f418-9292-4171-9cd1-379a7568d25d",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_w }}",
+                    "rightValue": "gpt-5.1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 2,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b2874380-c89a-4faf-9fa0-f94e1e40db55",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_w }}",
+                    "rightValue": "gpt-4.1-mini",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 3,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "546add6f-655e-4673-b291-5a827d6a8fb3",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_w }}",
+                    "rightValue": "gemini-3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 4,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "62c9f586-a1db-438e-acdf-9888b3792509",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_w }}",
+                    "rightValue": "claude-opus-4.5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 5,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1d4d56bd-28e3-44d2-86ab-750ce39f5d43",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_w }}",
+                    "rightValue": "kimi-k2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        800,
+        368
+      ],
+      "id": "88132e9d-dc73-4b56-8152-f6aea0b6ff7f",
+      "name": "Model Selector"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        64,
+        64
+      ],
+      "id": "c70b0119-6d4f-4a23-a7f9-2ec1ba54c37f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        608,
+        592
+      ],
+      "id": "fdb312af-4849-47da-ad48-7b79ca3a8719",
+      "name": "gpt-5.1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        752,
+        592
+      ],
+      "id": "a2d9959d-caa1-4758-ba67-744295c1d7d7",
+      "name": "gpt-4.1-mini",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        896,
+        592
+      ],
+      "id": "42ee187d-cae0-4050-a31d-e543e3245bac",
+      "name": "gemini-3-pro",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        592
+      ],
+      "id": "5bcf804b-15c1-49b8-abf5-db7b2508d564",
+      "name": "claude-opus-4.5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "db9c4730-9397-4209-b6d5-48a3d8de3d1c",
+              "leftValue": "={{ $('Black Player Agent').all().length > 300 }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2384,
+        608
+      ],
+      "id": "311ea308-40e9-42c1-aee2-ab3287efa42d",
+      "name": "If > 300 moves"
+    },
+    {
+      "parameters": {
+        "jsCode": "const models = [\n  \"gpt-5.1\",\n  \"gpt-4.1-mini\",\n  \"gemini-3\",\n  \"claude-opus-4.5\",\n  \"kimi-k2\"\n];\n\nlet out = [];\n\nfor (const w of models) {\n  for (const b of models) {\n    if (w === b) continue; // skip self-play unless you want it\n    for (let i = 0; i < 1; i++) {\n      out.push({ json: { model_w: w, model_b: b } });\n    }\n  }\n}\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        64
+      ],
+      "id": "85e0eb93-24c3-493e-b41e-d55c7c22c69b",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1888,
+        592
+      ],
+      "id": "f08a7047-3d53-447d-8a15-58985f5feee1",
+      "name": "claude-opus-4.5 (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        592
+      ],
+      "id": "b20eb4e0-2412-48e4-80df-2e390de64525",
+      "name": "gemini-3-pro (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        592
+      ],
+      "id": "2e797227-1a14-46fd-9d3b-67598cd3eb44",
+      "name": "gpt-4.1-mini (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        592
+      ],
+      "id": "c3fa9a3d-5c5f-47a2-8788-0497a71e6aac",
+      "name": "gpt-5.1 (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 5,
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0120f418-9292-4171-9cd1-379a7568d25d",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_b }}",
+                    "rightValue": "gpt-5.1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 2,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b2874380-c89a-4faf-9fa0-f94e1e40db55",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_b }}",
+                    "rightValue": "gpt-4.1-mini",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 3,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "546add6f-655e-4673-b291-5a827d6a8fb3",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_b }}",
+                    "rightValue": "gemini-3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 4,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "62c9f586-a1db-438e-acdf-9888b3792509",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_b }}",
+                    "rightValue": "claude-opus-4.5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 5,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a9cc1c9c-d4c2-4294-826b-5715c416d935",
+                    "leftValue": "={{ $('Loop Over Items').item.json.model_b }}",
+                    "rightValue": "=kimi-k2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        368
+      ],
+      "id": "20f2e8da-811a-488c-b0bb-ce8959d67575",
+      "name": "Model Selector (2)"
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        592
+      ],
+      "id": "cfd3dbb0-607c-4223-9981-40a1947b30f8",
+      "name": "kimi-k2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2032,
+        592
+      ],
+      "id": "fcc18906-26d4-4960-aa98-c4259e04aa81",
+      "name": "kimi-k2 (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "ec14ceb9-09f3-42c1-a43a-e8f356049446",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        64
+      ],
+      "id": "723bde17-c183-4111-8829-4133793c1110",
+      "name": "Webhook",
+      "webhookId": "ec14ceb9-09f3-42c1-a43a-e8f356049446"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "White Player Agent": {
+      "main": [
+        [
+          {
+            "node": "/api/apply-move (White)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Black Player Agent": {
+      "main": [
+        [
+          {
+            "node": "/api/apply-move (Black)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/new-game": {
+      "main": [
+        [
+          {
+            "node": "/api/current-position",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/current-position": {
+      "main": [
+        [
+          {
+            "node": "White Player Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stop?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Black Player Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/apply-move (White)": {
+      "main": [
+        [
+          {
+            "node": "Stop?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/apply-move (Black)": {
+      "main": [
+        [
+          {
+            "node": "Stop?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stop?1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If > 300 moves",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Selector": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "White Player Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "/api/new-game",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gpt-5.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gpt-4.1-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "gemini-3-pro": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "claude-opus-4.5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "If > 300 moves": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "/api/current-position",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "claude-opus-4.5 (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "gemini-3-pro (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "gpt-4.1-mini (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "gpt-5.1 (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Selector (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Black Player Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "kimi-k2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "kimi-k2 (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0d98b61f-e7e7-4781-a022-f927f6b79a8a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1a7cd903a84ca6d830f645402f1446f90708abab485aa87ea6b4388ed84e1a84"
+  },
+  "id": "HLdv0JAULQJTfpCO",
+  "tags": []
 }

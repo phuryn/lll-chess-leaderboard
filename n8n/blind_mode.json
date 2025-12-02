@@ -1,10 +1,1204 @@
 {
-  "_comment": "This is a placeholder file. Replace with your actual n8n workflow export.",
-  "name": "LLM Chess - Blind Mode",
-  "description": "Models reconstruct board state from move history only. They do not receive FEN positions.",
-  "instructions": [
-    "1. Export your actual workflow from n8n (Workflows → Export)",
-    "2. Replace this file with the exported JSON",
-    "3. The workflow should use OpenRouter API keys for LLM calls"
-  ]
+  "name": "[Chess] Blind test (no FEN)",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a chess engine playing as WHITE.\n\nThe game may or may not still be in the initial position.\nThe current board state must always be reconstructed from the full move history in this conversation.\n\nThe last move performed by the opponent was:\n{{ $json.lastMove }}\n\nYour last output was your previous move.\nYour opponent has now played {{ $json.lastMove }}.\nIt is your turn.\n\n## Your Task\n- Output ONE legal move for WHITE in Standard Algebraic Notation (SAN).\n- Examples: e4, e5, Nf3, Nf6, Bxc4, O-O-O, d1=Q\n- Output only the move. No explanation or commentary.\n- If you have no legal move (checkmate or stalemate), output exactly: resign\n- SAN rules: \n-- Uppercase pieces (N, B, R, Q, K)\n-- Lowercase files (a–h)\n-- Pawns have no letter prefix\n\nInvalid SAN or anything other than one legal move = automatic loss.\n\n## Important\n- Never assume the starting FEN unless the move history indicates it.\n- The real position is determined only by the moves exchanged earlier, including your own previous replies.\n- Track the board step by step based on the complete conversation.\n- You may use the Think tool as scratchpad to maintain board state.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        848,
+        64
+      ],
+      "id": "bc712903-c08a-4eea-a2f8-1a6b73c826bd",
+      "name": "White Player Agent",
+      "retryOnFail": true,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a chess engine playing as BLACK.\n\nThe game may or may not still be in the initial position.\nThe current board state must always be reconstructed from the full move history in this conversation.\n\nThe last move performed by the opponent was:\n{{ $json.lastMove }}\n\nYour last output was your previous move.\nYour opponent has now played {{ $json.lastMove }}.\nIt is your turn.\n\n## Your Task\n- Output ONE legal move for BLACK in Standard Algebraic Notation (SAN).\n- Examples: e5, Nf6, Bxc4, O-O-O, d1=Q\n- Never explain the move or add commentary.\n- If you have no legal move (checkmate or stalemate), output exactly: resign\n- SAN rules: \n-- Uppercase pieces (N, B, R, Q, K)\n-- Lowercase files (a–h)\n-- Pawns have no letter prefix\n\nInvalid SAN or anything other than one legal move = automatic loss.\n\n## Important\n- Never assume the starting FEN unless the move history indicates it.\n- The real position is determined only by the moves exchanged earlier, including your own previous replies.\n- Track the board step by step based on the complete conversation.\n- You may use the Think tool as scratchpad to maintain board state.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1824,
+        64
+      ],
+      "id": "75970f2f-354b-4a1d-a62b-4c7c9c77db9b",
+      "name": "Black Player Agent",
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/new-game",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "whitePlayer",
+              "value": "={{ $json.model_w }}"
+            },
+            {
+              "name": "blackPlayer",
+              "value": "={{ $json.model_b }}"
+            },
+            {
+              "name": "testType",
+              "value": "Blind mode"
+            },
+            {
+              "name": "testDescription",
+              "value": "Models must track the state with a scratchpad without seeing the board (no FEN)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        352,
+        64
+      ],
+      "id": "916cf523-4e76-440f-a65d-4d8e7f7feeb6",
+      "name": "/api/new-game"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/current-position",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $json.gameId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        592,
+        64
+      ],
+      "id": "3c79ab60-0f39-4f58-9ede-90baa54d4278",
+      "name": "/api/current-position"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "547e23cd-bcb0-4897-84e2-5707c16d1875",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "continue",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1392,
+        64
+      ],
+      "id": "a6569d9c-7ea6-41ed-bbe9-79017c54b28e",
+      "name": "Stop?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/apply-move",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $('/api/new-game').item.json.gameId }}"
+            },
+            {
+              "name": "move",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1184,
+        64
+      ],
+      "id": "e4954d90-2de4-4f5c-9f65-2e8637e77e88",
+      "name": "/api/apply-move (White)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/apply-move",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $('/api/new-game').item.json.gameId }}"
+            },
+            {
+              "name": "move",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2144,
+        64
+      ],
+      "id": "8a72ba58-97b6-4799-89ab-e8cd9100a8bc",
+      "name": "/api/apply-move (Black)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "547e23cd-bcb0-4897-84e2-5707c16d1875",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "continue",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2336,
+        64
+      ],
+      "id": "2723159a-19af-4c9d-b4f6-a54b86b1bc3d",
+      "name": "Stop?1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 5,
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0120f418-9292-4171-9cd1-379a7568d25d",
+                    "leftValue": "={{ $json.whitePlayer }}",
+                    "rightValue": "gpt-5.1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 2,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b2874380-c89a-4faf-9fa0-f94e1e40db55",
+                    "leftValue": "={{ $json.whitePlayer }}",
+                    "rightValue": "gpt-4.1-mini",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 3,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "546add6f-655e-4673-b291-5a827d6a8fb3",
+                    "leftValue": "={{ $json.whitePlayer }}",
+                    "rightValue": "gemini-3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 4,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "62c9f586-a1db-438e-acdf-9888b3792509",
+                    "leftValue": "={{ $json.whitePlayer }}",
+                    "rightValue": "claude-opus-4.5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 5,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1d4d56bd-28e3-44d2-86ab-750ce39f5d43",
+                    "leftValue": "={{ $json.whitePlayer }}",
+                    "rightValue": "kimi-k2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        624,
+        352
+      ],
+      "id": "b0f98437-ee5b-4c5a-88ac-a4b1bbabd381",
+      "name": "Model Selector"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        64,
+        64
+      ],
+      "id": "500f4938-446a-4fb9-a7b2-28c5b7c4aa70",
+      "name": "Loop Over Items",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        432,
+        576
+      ],
+      "id": "c8cae79e-ae24-4fea-b2cc-8f0e28ef1f2f",
+      "name": "gpt-5.1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        576,
+        576
+      ],
+      "id": "22726860-2391-42ec-9a4c-3fc62e1f6863",
+      "name": "gpt-4.1-mini",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        720,
+        576
+      ],
+      "id": "a79ab59c-68c0-4ff9-869a-0fd3f13eed40",
+      "name": "gemini-3-pro",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        880,
+        576
+      ],
+      "id": "c5a2ab8c-e1f6-496b-bd8a-c9c10a2423ec",
+      "name": "claude-opus-4.5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "db9c4730-9397-4209-b6d5-48a3d8de3d1c",
+              "leftValue": "={{ $('Black Player Agent').all().length > 300 }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2544,
+        608
+      ],
+      "id": "08198d31-2e98-4286-b3fd-ae721dcf659e",
+      "name": "If > 300 moves"
+    },
+    {
+      "parameters": {
+        "jsCode": "const models = [\n  \"gpt-5.1\",\n  \"gpt-4.1-mini\",\n  \"gemini-3\",\n  \"claude-opus-4.5\",\n  \"kimi-k2\"\n];\n\nlet out = [];\n\nfor (const w of models) {\n  for (const b of models) {\n    if (w === b) continue; // skip self-play unless you want it\n    for (let i = 0; i < 1; i++) {\n      out.push({ json: { model_w: w, model_b: b } });\n    }\n  }\n}\n\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        64
+      ],
+      "id": "2986e967-7a7c-42d7-ae7d-f537645e6672",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-opus-4.5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        576
+      ],
+      "id": "a7a64e43-72a2-4653-a7fe-b14b8b1e06d0",
+      "name": "claude-opus-4.5 (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-3-pro-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1712,
+        576
+      ],
+      "id": "dbba1d94-c2b9-49a7-aa53-3aebb13a05e8",
+      "name": "gemini-3-pro (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        576
+      ],
+      "id": "8c641d84-aacc-44be-8803-1fd1d02f41d3",
+      "name": "gpt-4.1-mini (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        576
+      ],
+      "id": "0c3933af-b4f4-4d1d-b55b-c3736a2e5dff",
+      "name": "gpt-5.1 (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 5,
+        "rules": {
+          "rule": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0120f418-9292-4171-9cd1-379a7568d25d",
+                    "leftValue": "={{ $json.blackPlayer }}",
+                    "rightValue": "gpt-5.1",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 2,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b2874380-c89a-4faf-9fa0-f94e1e40db55",
+                    "leftValue": "={{ $json.blackPlayer }}",
+                    "rightValue": "gpt-4.1-mini",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 3,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "546add6f-655e-4673-b291-5a827d6a8fb3",
+                    "leftValue": "={{ $json.blackPlayer }}",
+                    "rightValue": "gemini-3",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 4,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "62c9f586-a1db-438e-acdf-9888b3792509",
+                    "leftValue": "={{ $json.blackPlayer }}",
+                    "rightValue": "claude-opus-4.5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "modelIndex": 5,
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a9cc1c9c-d4c2-4294-826b-5715c416d935",
+                    "leftValue": "={{ $json.blackPlayer }}",
+                    "rightValue": "=kimi-k2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.modelSelector",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        352
+      ],
+      "id": "759c19ed-b797-447f-9a4a-f3ed41fc33bb",
+      "name": "Model Selector (2)"
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        576
+      ],
+      "id": "3e25b9e9-ab3e-472c-87e3-5709c2e40f72",
+      "name": "kimi-k2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        576
+      ],
+      "id": "af59dc6a-b147-4147-83ff-bc8e70e23aa5",
+      "name": "kimi-k2 (2)",
+      "credentials": {
+        "openRouterApi": {
+          "id": "7LwSq82WuxZfWccW",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "8a14334a-3d5f-4853-b2fa-1f3f72a00861",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -400,
+        64
+      ],
+      "id": "ed15f5a6-2f43-4e89-82bb-64248fc48d9d",
+      "name": "Webhook",
+      "webhookId": "8a14334a-3d5f-4853-b2fa-1f3f72a00861"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/current-position",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "gameId",
+              "value": "={{ $json.gameId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1632,
+        64
+      ],
+      "id": "e121b640-18ab-41cc-a920-dd6fb472207a",
+      "name": "/api/current-position1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('/api/new-game').item.json.gameId }}_w",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        992,
+        352
+      ],
+      "id": "b1c25c09-c642-419f-bf7b-989ef164736f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('/api/new-game').item.json.gameId }}_b",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        352
+      ],
+      "id": "946f446e-ce8a-41b9-99fd-f83300ab0ee8",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        2144,
+        352
+      ],
+      "id": "a0288747-695f-401d-b004-156a75df7514",
+      "name": "Think (2)"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1152,
+        352
+      ],
+      "id": "70014d49-5c79-469e-958b-bfacd6f4cf42",
+      "name": "Think (1)"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "White Player Agent": {
+      "main": [
+        [
+          {
+            "node": "/api/apply-move (White)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Black Player Agent": {
+      "main": [
+        [
+          {
+            "node": "/api/apply-move (Black)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/new-game": {
+      "main": [
+        [
+          {
+            "node": "/api/current-position",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/current-position": {
+      "main": [
+        [
+          {
+            "node": "White Player Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stop?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "/api/current-position1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/apply-move (White)": {
+      "main": [
+        [
+          {
+            "node": "Stop?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/apply-move (Black)": {
+      "main": [
+        [
+          {
+            "node": "Stop?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stop?1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If > 300 moves",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Selector": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "White Player Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "/api/new-game",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gpt-5.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gpt-4.1-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "gemini-3-pro": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "claude-opus-4.5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "If > 300 moves": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "/api/current-position",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "claude-opus-4.5 (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "gemini-3-pro (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "gpt-4.1-mini (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "gpt-5.1 (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Selector (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Black Player Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "kimi-k2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector",
+            "type": "ai_languageModel",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "kimi-k2 (2)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Model Selector (2)",
+            "type": "ai_languageModel",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/api/current-position1": {
+      "main": [
+        [
+          {
+            "node": "Black Player Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "White Player Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Black Player Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think (2)": {
+      "ai_tool": [
+        [
+          {
+            "node": "Black Player Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think (1)": {
+      "ai_tool": [
+        [
+          {
+            "node": "White Player Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "68813374-34b1-42c1-b568-c9d6395c66cc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1a7cd903a84ca6d830f645402f1446f90708abab485aa87ea6b4388ed84e1a84"
+  },
+  "id": "BtXSvdFQjK88NCHF",
+  "tags": []
 }
