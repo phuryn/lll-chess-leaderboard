@@ -10,6 +10,7 @@ interface PlayerStats {
   losses: number;
   draws: number;
   points: number;
+  invalidMoveLosses: number;
 }
 
 export default function Leaderboard() {
@@ -42,10 +43,10 @@ export default function Leaderboard() {
 
       // Initialize players if they don't exist
       if (whitePlayer && !playerStatsMap.has(whitePlayer)) {
-        playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0 });
+        playerStatsMap.set(whitePlayer, { player: whitePlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0 });
       }
       if (blackPlayer && !playerStatsMap.has(blackPlayer)) {
-        playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0 });
+        playerStatsMap.set(blackPlayer, { player: blackPlayer, wins: 0, losses: 0, draws: 0, points: 0, invalidMoveLosses: 0 });
       }
 
       // Update stats based on game outcome
@@ -66,6 +67,11 @@ export default function Leaderboard() {
         if (loserName && playerStatsMap.has(loserName)) {
           playerStatsMap.get(loserName)!.losses++;
           playerStatsMap.get(loserName)!.points--;
+          
+          // Track invalid move losses separately
+          if (game.status === "invalid_move") {
+            playerStatsMap.get(loserName)!.invalidMoveLosses++;
+          }
         }
       }
     });
@@ -124,6 +130,7 @@ export default function Leaderboard() {
                       Losses
                     </div>
                   </TableHead>
+                  <TableHead className="text-center">Invalid Moves</TableHead>
                   <TableHead className="text-center">Draws</TableHead>
                   <TableHead className="text-center font-bold">Points</TableHead>
                 </TableRow>
@@ -142,6 +149,9 @@ export default function Leaderboard() {
                     </TableCell>
                     <TableCell className="text-center text-red-600 dark:text-red-400 font-semibold">
                       {player.losses}
+                    </TableCell>
+                    <TableCell className="text-center text-amber-600 dark:text-amber-400 font-semibold">
+                      {player.invalidMoveLosses}
                     </TableCell>
                     <TableCell className="text-center text-muted-foreground">
                       {player.draws}
