@@ -153,8 +153,8 @@ export default function Leaderboard() {
         });
       });
 
-      // Sort test types alphabetically
-      leaderboardsByType.sort((a, b) => a.testType.localeCompare(b.testType));
+      // Sort test types in reverse alphabetical order
+      leaderboardsByType.sort((a, b) => b.testType.localeCompare(a.testType));
 
       setLeaderboards(leaderboardsByType);
     } catch (error) {
@@ -172,8 +172,8 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-background p-8 flex flex-col">
+      <div className="max-w-6xl mx-auto space-y-8 flex-1">
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tight">LLM Chess Leaderboard</h1>
           <p className="text-muted-foreground text-lg">
