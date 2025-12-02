@@ -573,8 +573,8 @@ export default function Leaderboard() {
               <p className="text-sm text-slate-400 mb-3">
                 A compressed text string representing a static board state.
               </p>
-              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700">
-                <code className="text-sm font-mono text-emerald-400">
+              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 overflow-x-auto">
+                <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
                   rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
                 </code>
               </div>
@@ -608,8 +608,8 @@ export default function Leaderboard() {
               <p className="text-sm text-slate-400 mb-3">
                 The file standard for recording full games.
               </p>
-              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700">
-                <code className="text-sm font-mono text-emerald-400">
+              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 overflow-x-auto">
+                <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
                   1. e4 e5 2. Nf3 Nc6
                 </code>
               </div>
