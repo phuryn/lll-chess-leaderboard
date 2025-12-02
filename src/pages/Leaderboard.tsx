@@ -329,38 +329,38 @@ export default function Leaderboard() {
         )}
 
         {/* The Blindfold Paradox */}
-        <Card className="mt-12 p-6 border-l-4 border-l-blue-500 bg-muted/30">
-          <h2 className="text-xl font-semibold mb-1 flex items-center gap-2">
+        <Card className="mt-12 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
+          <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
             <span>🦄</span> The Blindfold Paradox
           </h2>
-          <p className="text-base text-foreground/60 italic mb-5">Why LLMs play better when they can't see the board.</p>
+          <p className="text-base text-slate-400 italic mb-5">Why LLMs play better when they can't see the board.</p>
           
           <div className="space-y-5">
             {/* The Discovery */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-blue-500 mb-2">The Discovery</h3>
-              <p className="text-sm text-foreground/80 leading-relaxed">
-                Contrary to expectation, top models perform significantly better in <strong className="text-foreground font-semibold">Blind Mode</strong> (conversation history only) than when given the exact board state (FEN).
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">The Discovery</h3>
+              <p className="text-sm text-slate-300 leading-relaxed">
+                Contrary to expectation, top models perform significantly better in <strong className="text-white font-semibold">Blind Mode</strong> (conversation history only) than when given the exact board state (FEN).
               </p>
             </div>
             
             {/* The Hypothesis */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-blue-500 mb-3">The Hypothesis</h3>
-              <div className="space-y-3 pl-4 border-l-2 border-blue-500/30">
-                <p className="text-sm text-foreground/80 leading-relaxed">
-                  <strong className="text-blue-500 font-semibold">Training Data Bias:</strong> LLMs are trained on millions of PGN files from chess databases. This is why they understand move sequences (<em>narratives</em>) better than static FEN positions (<em>compressed snapshots</em>).
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-3">The Hypothesis</h3>
+              <div className="space-y-3 pl-4 border-l-2 border-cyan-400/40">
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <strong className="text-cyan-400 font-semibold">Training Data Bias:</strong> LLMs are trained on millions of PGN files from chess databases. This is why they understand move sequences (<em className="text-slate-400">narratives</em>) better than static FEN positions (<em className="text-slate-400">compressed snapshots</em>).
                 </p>
-                <p className="text-sm text-foreground/80 leading-relaxed">
-                  <strong className="text-blue-500 font-semibold">The "Scratchpad" Effect:</strong> Reconstructing the board from history forces the model to engage in multi-step reasoning. It must explicitly simulate the state to know where pieces are. In contrast, giving them the FEN encourages lazy, surface-level pattern matching.
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <strong className="text-cyan-400 font-semibold">The "Scratchpad" Effect:</strong> Reconstructing the board from history forces the model to engage in multi-step reasoning. It must explicitly simulate the state to know where pieces are. In contrast, giving them the FEN encourages lazy, surface-level pattern matching.
                 </p>
               </div>
             </div>
             
             {/* The Verdict */}
-            <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/20">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-blue-500 mb-2">The Verdict</h3>
-              <p className="text-sm text-foreground font-medium leading-relaxed">
+            <div className="rounded-lg p-4 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">The Verdict</h3>
+              <p className="text-sm text-white font-medium leading-relaxed">
                 Ironically, asking the AI to "imagine" the board aligns better with its training data than showing it the board directly.
               </p>
             </div>
