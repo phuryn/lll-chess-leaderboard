@@ -37,6 +37,7 @@ const calculateMedian = (values: number[]): number | null => {
 export default function Leaderboard() {
   const [leaderboards, setLeaderboards] = useState<TestTypeLeaderboard[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAdvancedStats, setShowAdvancedStats] = useState(false);
 
   useEffect(() => {
     fetchLeaderboard();
@@ -167,11 +168,63 @@ export default function Leaderboard() {
     }
   };
 
-  const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Trophy className="w-5 h-5 text-yellow-500" />;
-    if (rank === 2) return <Trophy className="w-5 h-5 text-gray-400" />;
-    if (rank === 3) return <Trophy className="w-5 h-5 text-amber-600" />;
-    return <span className="w-5 h-5 flex items-center justify-center text-sm font-medium text-muted-foreground">#{rank}</span>;
+  const getRankBadge = (rank: number) => {
+    if (rank === 1) {
+      return (
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+          <Trophy className="w-5 h-5 text-yellow-900" />
+        </div>
+      );
+    }
+    if (rank === 2) {
+      return (
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-300 to-slate-500 flex items-center justify-center shadow-[0_0_10px_rgba(148,163,184,0.4)]">
+          <Trophy className="w-5 h-5 text-slate-700" />
+        </div>
+      );
+    }
+    if (rank === 3) {
+      return (
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-600 to-amber-800 flex items-center justify-center shadow-[0_0_10px_rgba(180,83,9,0.4)]">
+          <Trophy className="w-5 h-5 text-amber-200" />
+        </div>
+      );
+    }
+    return (
+      <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center">
+        <span className="text-sm font-bold text-slate-400">#{rank}</span>
+      </div>
+    );
+  };
+
+  const getComplianceBar = (invalidMoves: number, totalGames: number) => {
+    const maxInvalid = 25;
+    const percentage = Math.min((invalidMoves / maxInvalid) * 100, 100);
+    const isCritical = invalidMoves >= 15;
+    const isWarning = invalidMoves >= 5 && invalidMoves < 15;
+    
+    return (
+      <div className="flex items-center gap-2">
+        <div className="w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
+          <div 
+            className={`h-full rounded-full transition-all ${
+              isCritical ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' : 
+              isWarning ? 'bg-amber-500' : 
+              'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]'
+            }`}
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+        <span className={`text-sm font-bold ${
+          isCritical ? 'text-red-400' : 
+          isWarning ? 'text-amber-400' : 
+          'text-emerald-400'
+        }`}>
+          {invalidMoves}
+        </span>
+        {isCritical && <span className="text-xs text-red-400">💀</span>}
+      </div>
+    );
   };
 
   return (
@@ -234,45 +287,64 @@ export default function Leaderboard() {
                   </div>
                 </div>
 
-                <Card className="overflow-hidden">
+                {/* Advanced Stats Toggle */}
+                <div className="flex justify-end mb-2">
+                  <button
+                    onClick={() => setShowAdvancedStats(!showAdvancedStats)}
+                    className="text-xs text-slate-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+                  >
+                    {showAdvancedStats ? '− Hide' : '+ Show'} Advanced Stats
+                  </button>
+                </div>
+
+                <Card className="overflow-hidden bg-slate-900 border-slate-700">
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-20">Rank</TableHead>
-                        <TableHead>Player</TableHead>
-                        <TableHead className="text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <TrendingUp className="w-4 h-4" />
-                            Wins
+                      <TableRow className="border-slate-700 hover:bg-transparent">
+                        <TableHead className="w-20 text-slate-400 uppercase text-xs tracking-wider">Rank</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Model</TableHead>
+                        <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">
+                          <div className="flex items-center justify-center gap-1">
+                            <TrendingUp className="w-3 h-3" />
+                            W
                           </div>
                         </TableHead>
-                        <TableHead className="text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <TrendingDown className="w-4 h-4" />
-                            Losses
+                        <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">
+                          <div className="flex items-center justify-center gap-1">
+                            <TrendingDown className="w-3 h-3" />
+                            L
                           </div>
                         </TableHead>
-                        <TableHead className="text-center">Invalid Moves</TableHead>
-                        <TableHead className="text-center">Avg Invalid Round</TableHead>
-                        <TableHead className="text-center">Median Invalid Round</TableHead>
-                        <TableHead className="text-center">Max Valid Moves</TableHead>
-                        <TableHead className="text-center">Draws</TableHead>
-                        <TableHead className="text-center font-bold">Points</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Sanity</TableHead>
+                        {showAdvancedStats && (
+                          <>
+                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Avg Fail</TableHead>
+                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Med Fail</TableHead>
+                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Moves</TableHead>
+                            <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
+                          </>
+                        )}
+                        <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Score</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {testLeaderboard.players.map((player, index) => (
-                        <TableRow key={player.player} className={index < 3 ? "bg-muted/50" : ""}>
-                          <TableCell>
+                        <TableRow 
+                          key={player.player} 
+                          className={`border-slate-700/50 transition-colors hover:bg-slate-800 ${
+                            index < 3 ? 'bg-slate-800/30' : ''
+                          }`}
+                        >
+                          <TableCell className="py-4">
                             <div className="flex items-center justify-center">
-                              {getRankIcon(index + 1)}
+                              {getRankBadge(index + 1)}
                             </div>
                           </TableCell>
-                          <TableCell className="font-medium">{player.player}</TableCell>
+                          <TableCell className="font-semibold text-slate-100 text-base">{player.player}</TableCell>
                           <TableCell className="text-center">
                             <Link
                               to={`/games?winner=${encodeURIComponent(player.player)}&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="text-green-600 dark:text-green-400 font-semibold hover:underline"
+                              className="text-emerald-400 font-bold hover:text-emerald-300 transition-colors"
                             >
                               {player.wins}
                             </Link>
@@ -280,40 +352,46 @@ export default function Leaderboard() {
                           <TableCell className="text-center">
                             <Link
                               to={`/games?loser=${encodeURIComponent(player.player)}&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="text-red-600 dark:text-red-400 font-semibold hover:underline"
+                              className="text-red-400 font-bold hover:text-red-300 transition-colors"
                             >
                               {player.losses}
                             </Link>
                           </TableCell>
-                          <TableCell className="text-center">
+                          <TableCell>
                             <Link
                               to={`/games?loser=${encodeURIComponent(player.player)}&invalidMove=true&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="text-amber-600 dark:text-amber-400 font-semibold hover:underline"
+                              className="hover:opacity-80 transition-opacity"
                             >
-                              {player.invalidMoveLosses}
+                              {getComplianceBar(player.invalidMoveLosses, player.wins + player.losses)}
                             </Link>
                           </TableCell>
-                          <TableCell className="text-center text-muted-foreground">
-                            {player.invalidMoveRounds.length > 0 
-                              ? (player.invalidMoveRounds.reduce((a, b) => a + b, 0) / player.invalidMoveRounds.length).toFixed(1) 
-                              : '-'}
-                          </TableCell>
-                          <TableCell className="text-center text-muted-foreground">
-                            {player.invalidMoveRounds.length > 0 
-                              ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) 
-                              : '-'}
-                          </TableCell>
-                          <TableCell className="text-center text-muted-foreground">
-                            {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
-                          </TableCell>
-                          <TableCell className="text-center text-muted-foreground">
-                            {player.draws}
-                          </TableCell>
+                          {showAdvancedStats && (
+                            <>
+                              <TableCell className="text-center text-slate-400 text-sm">
+                                {player.invalidMoveRounds.length > 0 
+                                  ? (player.invalidMoveRounds.reduce((a, b) => a + b, 0) / player.invalidMoveRounds.length).toFixed(1) 
+                                  : '-'}
+                              </TableCell>
+                              <TableCell className="text-center text-slate-400 text-sm">
+                                {player.invalidMoveRounds.length > 0 
+                                  ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) 
+                                  : '-'}
+                              </TableCell>
+                              <TableCell className="text-center text-slate-400 text-sm">
+                                {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
+                              </TableCell>
+                              <TableCell className="text-center text-slate-400 text-sm">
+                                {player.draws}
+                              </TableCell>
+                            </>
+                          )}
                           <TableCell className="text-center">
-                            <span className={`text-lg font-bold ${
-                              player.points > 0 ? "text-green-600 dark:text-green-400" : 
-                              player.points < 0 ? "text-red-600 dark:text-red-400" : 
-                              "text-muted-foreground"
+                            <span className={`text-xl font-black ${
+                              player.points > 0 
+                                ? "text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]" 
+                                : player.points < 0 
+                                ? "text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]" 
+                                : "text-slate-400"
                             }`}>
                               {player.points > 0 ? "+" : ""}{player.points}
                             </span>
