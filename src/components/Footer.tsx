@@ -59,8 +59,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-zinc-300 hover:text-white transition-colors inline-flex items-center gap-1.5"
               >
-                Source Code
-                <Github className="w-4 h-4" />
+                Source Code (<Github className="w-4 h-4 inline" />)
               </a>
             </li>
           </ul>
