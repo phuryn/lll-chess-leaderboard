@@ -1,4 +1,5 @@
 import { Chess } from "chess.js";
+import blackPawn from "@/assets/black-pawn.svg";
 
 interface ChessBoardProps {
   fen: string;
@@ -17,7 +18,6 @@ const pieceUnicode: Record<string, string> = {
   r: "♜",
   b: "♝",
   n: "♞",
-  p: "♙",
 };
 
 const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -40,6 +40,31 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
     if (!lastMove) return false;
     const square = file + rank;
     return square === lastMove.from || square === lastMove.to;
+  };
+
+  const renderPiece = (piece: string) => {
+    // Black pawn uses SVG
+    if (piece === "p") {
+      return (
+        <img 
+          src={blackPawn} 
+          alt="Black pawn" 
+          className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+        />
+      );
+    }
+    
+    // All other pieces use unicode
+    const isWhite = piece === piece.toUpperCase();
+    return (
+      <span className={
+        isWhite 
+          ? "text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
+          : "text-slate-950 drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
+      }>
+        {pieceUnicode[piece]}
+      </span>
+    );
   };
 
   return (
@@ -74,15 +99,7 @@ export default function ChessBoard({ fen, lastMove }: ChessBoardProps) {
                       ${highlighted ? "ring-2 ring-inset ring-cyan-400 shadow-[inset_0_0_12px_rgba(34,211,238,0.4)]" : ""}
                     `}
                   >
-                    {piece && (
-                      <span className={
-                        piece === piece.toUpperCase() 
-                          ? "text-slate-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
-                          : "text-slate-950 drop-shadow-[0_0_2px_rgba(255,255,255,0.8)]"
-                      }>
-                        {pieceUnicode[piece]}
-                      </span>
-                    )}
+                    {piece && renderPiece(piece)}
                   </div>
                 );
               })
