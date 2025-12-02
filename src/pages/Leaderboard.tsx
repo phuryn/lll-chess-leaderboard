@@ -473,7 +473,7 @@ export default function Leaderboard() {
                           <TableCell className="text-center">
                             <Link
                               to={`/games?winner=${encodeURIComponent(player.player)}&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="text-emerald-400 font-bold hover:text-emerald-300 transition-colors"
+                              className="text-emerald-400 font-bold hover:text-emerald-300 hover:underline transition-colors"
                             >
                               {player.wins}
                             </Link>
@@ -481,7 +481,7 @@ export default function Leaderboard() {
                           <TableCell className="text-center">
                             <Link
                               to={`/games?loser=${encodeURIComponent(player.player)}&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="text-red-400 font-bold hover:text-red-300 transition-colors"
+                              className="text-red-400 font-bold hover:text-red-300 hover:underline transition-colors"
                             >
                               {player.losses}
                             </Link>
@@ -489,7 +489,7 @@ export default function Leaderboard() {
                           <TableCell>
                             <Link
                               to={`/games?loser=${encodeURIComponent(player.player)}&invalidMove=true&testType=${encodeURIComponent(testLeaderboard.testType)}`}
-                              className="hover:opacity-80 transition-opacity"
+                              className="hover:opacity-80 hover:underline transition-opacity"
                             >
                               {getComplianceBar(player.invalidMoveLosses, player.wins + player.losses)}
                             </Link>
