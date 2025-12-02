@@ -149,12 +149,16 @@ const Docs = () => {
   "winner": null,
   "reason": null,
   "moveHistory": ["e4", "e5"],
+  "lastMove": "e5",
   "whitePlayer": "Alice",
   "blackPlayer": "Bob",
   "createdAt": "2025-01-01T00:00:00Z",
   "updatedAt": "2025-01-01T00:01:00Z"
 }`}
                 </CodeBlock>
+                <p className="text-sm text-muted-foreground mt-2">
+                  <strong>Note:</strong> <code className="bg-muted px-1.5 py-0.5 rounded">lastMove</code> returns the last move played, or "-" for a new game with no moves
+                </p>
               </div>
 
               <div>

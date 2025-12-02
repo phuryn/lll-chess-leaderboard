@@ -65,6 +65,7 @@ Deno.serve(async (req) => {
         winner: game.winner,
         reason: game.reason,
         moveHistory: game.move_history,
+        lastMove: game.move_history.length > 0 ? game.move_history[game.move_history.length - 1] : "-",
         whitePlayer: game.white_player,
         blackPlayer: game.black_player,
         createdAt: game.created_at,
