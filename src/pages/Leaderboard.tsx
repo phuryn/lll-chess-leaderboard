@@ -534,15 +534,8 @@ export default function Leaderboard() {
           </div>
         )}
 
-        {/* Divider */}
-        <div className="mt-16 mb-8 flex items-center gap-4">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
-          <span className="text-xs uppercase tracking-widest text-slate-500">Research Notes</span>
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-slate-600 to-transparent" />
-        </div>
-
         {/* The Blindfold Paradox */}
-        <Card className="mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
+        <Card className="mt-16 mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
           <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
             <span>🦄</span> The Blindfold Paradox
           </h2>
