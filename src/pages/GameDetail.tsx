@@ -9,6 +9,12 @@ import { ArrowLeft } from "lucide-react";
 import ChessBoard from "@/components/ChessBoard";
 import PlaybackControls from "@/components/PlaybackControls";
 import Footer from "@/components/Footer";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Game {
   id: string;
@@ -211,7 +217,15 @@ export default function GameDetail() {
 
   // Format move history for display
   const formatMoveHistory = () => {
-    const moves: { moveNum: number; white: string; black: string | null; whiteIndex: number; blackIndex: number | null }[] = [];
+    const moves: { 
+      moveNum: number; 
+      white: string; 
+      black: string | null; 
+      whiteIndex: number; 
+      blackIndex: number | null;
+      whiteRaw: string;
+      blackRaw: string | null;
+    }[] = [];
     
     for (let i = 0; i < game.move_history.length; i += 2) {
       moves.push({
@@ -220,6 +234,8 @@ export default function GameDetail() {
         black: game.move_history[i + 1] ? cleanMove(game.move_history[i + 1]) : null,
         whiteIndex: i + 1,
         blackIndex: game.move_history[i + 1] ? i + 2 : null,
+        whiteRaw: game.move_history[i],
+        blackRaw: game.move_history[i + 1] || null,
       });
     }
     
@@ -295,51 +311,79 @@ export default function GameDetail() {
             {/* Move History */}
             <Card className="p-4">
               <h3 className="font-semibold mb-3">Move History</h3>
-              <div className="max-h-80 overflow-y-auto">
-                <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 gap-y-1 text-sm">
-                  <div className="font-medium text-muted-foreground">#</div>
-                  <div className="font-medium">{game.white_player} <span className="text-muted-foreground font-normal">(W)</span></div>
-                  <div className="font-medium">{game.black_player} <span className="text-muted-foreground font-normal">(B)</span></div>
-                  
-                  {moveHistory.map((move) => (
-                    <>
-                      <div key={`num-${move.moveNum}`} className="text-muted-foreground">
-                        {move.moveNum}.
-                      </div>
-                      <div
-                        key={`white-${move.moveNum}`}
-                        className={`cursor-pointer px-1 rounded ${
-                          currentMoveIndex === move.whiteIndex
-                            ? "bg-primary text-primary-foreground"
-                            : move.whiteIndex === invalidMoveIndex
-                            ? "text-red-600 dark:text-red-400 font-medium"
-                            : "hover:bg-muted"
-                        }`}
-                        onClick={() => goToMove(move.whiteIndex)}
-                      >
-                        {move.white}
-                        {move.whiteIndex === invalidMoveIndex && " ??"}
-                      </div>
-                      <div
-                        key={`black-${move.moveNum}`}
-                        className={`cursor-pointer px-1 rounded ${
-                          move.blackIndex === null
-                            ? ""
-                            : currentMoveIndex === move.blackIndex
-                            ? "bg-primary text-primary-foreground"
-                            : move.blackIndex === invalidMoveIndex
-                            ? "text-red-600 dark:text-red-400 font-medium"
-                            : "hover:bg-muted"
-                        }`}
-                        onClick={() => move.blackIndex && goToMove(move.blackIndex)}
-                      >
-                        {move.black || ""}
-                        {move.blackIndex === invalidMoveIndex && " ??"}
-                      </div>
-                    </>
-                  ))}
+              <TooltipProvider>
+                <div className="max-h-80 overflow-y-auto">
+                  <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 gap-y-1 text-sm">
+                    <div className="font-medium text-muted-foreground">#</div>
+                    <div className="font-medium">{game.white_player} <span className="text-muted-foreground font-normal">(W)</span></div>
+                    <div className="font-medium">{game.black_player} <span className="text-muted-foreground font-normal">(B)</span></div>
+                    
+                    {moveHistory.map((move) => (
+                      <>
+                        <div key={`num-${move.moveNum}`} className="text-muted-foreground">
+                          {move.moveNum}.
+                        </div>
+                        {move.whiteIndex === invalidMoveIndex ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div
+                                key={`white-${move.moveNum}`}
+                                className="px-1 rounded text-red-600 dark:text-red-400 font-medium cursor-help"
+                              >
+                                Invalid move
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="max-w-md max-h-60 overflow-auto">
+                              <pre className="font-mono text-xs whitespace-pre-wrap break-all">{move.whiteRaw}</pre>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <div
+                            key={`white-${move.moveNum}`}
+                            className={`cursor-pointer px-1 rounded ${
+                              currentMoveIndex === move.whiteIndex
+                                ? "bg-primary text-primary-foreground"
+                                : "hover:bg-muted"
+                            }`}
+                            onClick={() => goToMove(move.whiteIndex)}
+                          >
+                            {move.white}
+                          </div>
+                        )}
+                        {move.blackIndex === invalidMoveIndex ? (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div
+                                key={`black-${move.moveNum}`}
+                                className="px-1 rounded text-red-600 dark:text-red-400 font-medium cursor-help"
+                              >
+                                Invalid move
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="max-w-md max-h-60 overflow-auto">
+                              <pre className="font-mono text-xs whitespace-pre-wrap break-all">{move.blackRaw}</pre>
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          <div
+                            key={`black-${move.moveNum}`}
+                            className={`cursor-pointer px-1 rounded ${
+                              move.blackIndex === null
+                                ? ""
+                                : currentMoveIndex === move.blackIndex
+                                ? "bg-primary text-primary-foreground"
+                                : "hover:bg-muted"
+                            }`}
+                            onClick={() => move.blackIndex && goToMove(move.blackIndex)}
+                          >
+                            {move.black || ""}
+                          </div>
+                        )}
+                      </>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </TooltipProvider>
 
               {game.status === "invalid_move" && (
                 <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
