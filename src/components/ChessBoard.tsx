@@ -8,11 +8,11 @@ interface ChessBoardProps {
 }
 
 const pieceUnicode: Record<string, string> = {
-  K: "♔",
-  Q: "♕",
-  R: "♖",
-  B: "♗",
-  N: "♘",
+  K: "♚",
+  Q: "♛",
+  R: "♜",
+  B: "♝",
+  N: "♞",
   k: "♚",
   q: "♛",
   r: "♜",
