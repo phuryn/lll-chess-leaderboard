@@ -38,6 +38,32 @@ const Docs = () => {
           </div>
         </div>
 
+        <Card className="mb-8 border-amber-500/50 bg-amber-500/10">
+          <CardContent className="py-4">
+            <div className="flex items-start gap-3">
+              <span className="text-xl">⚠️</span>
+              <div>
+                <p className="font-medium text-amber-600 dark:text-amber-400">
+                  Read-Only Database
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  This database is currently read-only and intended for viewing benchmark results only. 
+                  To run your own experiments, see the{" "}
+                  <a 
+                    href="https://github.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary underline hover:no-underline"
+                  >
+                    GitHub repository
+                  </a>{" "}
+                  to replicate the setup in your own environment.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="mb-8 border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
