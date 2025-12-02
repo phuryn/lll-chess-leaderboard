@@ -172,6 +172,7 @@ export default function Leaderboard() {
   };
 
   return (
+    <>
     <div className="min-h-screen bg-background p-8 flex flex-col">
       <div className="max-w-6xl mx-auto space-y-8 flex-1">
         <div className="text-center space-y-2">
@@ -350,7 +351,8 @@ export default function Leaderboard() {
         </Card>
 
       </div>
-      <Footer />
     </div>
+    <Footer />
+    </>
   );
 }
