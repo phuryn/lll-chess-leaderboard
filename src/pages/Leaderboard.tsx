@@ -390,10 +390,10 @@ export default function Leaderboard() {
           <div className="text-center text-muted-foreground">No completed games yet</div>
         ) : (
           <div className="space-y-12">
-            {leaderboards.map((testLeaderboard) => (
+            {leaderboards.map((testLeaderboard, testIndex) => (
               <div key={testLeaderboard.testType}>
                 <div className="mb-4">
-                  <h2 className="text-2xl font-bold mb-2">🧪 {testLeaderboard.testType}</h2>
+                  <h2 className="text-2xl font-bold mb-2">🧪 Experiment {testIndex + 1}: {testLeaderboard.testType}</h2>
                   <div className="text-sm text-muted-foreground space-y-2">
                     {testLeaderboard.testDesc.split(/<br\s*\/?>/).map((segment, segIndex) => (
                       <p key={segIndex}>
