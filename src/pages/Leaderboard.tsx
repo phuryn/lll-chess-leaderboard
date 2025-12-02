@@ -234,6 +234,12 @@ export default function Leaderboard() {
         <Card className="mt-12 p-6 border-border">
           <div className="space-y-5">
             <div>
+              <p className="text-sm text-muted-foreground">
+                LLM agents perform chess moves using the SAN (Standard Algebraic Notation) standard. Depending on the test type, they might receive the current board state as FEN notation, or they might only see the starting position and must track the game from move history alone.
+              </p>
+            </div>
+
+            <div>
               <h3 className="text-base font-medium mb-2">What is FEN?</h3>
               <p className="text-sm text-muted-foreground mb-2">
                 FEN (Forsyth-Edwards Notation) is a standard text format for describing chess positions. It represents the board state in a compact string.
