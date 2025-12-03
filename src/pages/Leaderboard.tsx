@@ -485,14 +485,14 @@ export default function Leaderboard() {
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-slate-300 leading-relaxed">
-              Kimi-k2's high failure rate (Automatic Loss via invalid moves) highlights a critical architectural weakness: <strong className="text-white">The Failure of Negative Constraints</strong>.
+              Kimi-K2 lost often because it violated simple constraints: apologizing mid-game, inventing board states, or mixing reasoning with output.
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Despite strict instructions not to include conversational filler, the model struggled to separate reasoning from output. It frequently hallucinated board states or injected apologies into the game stream.
+              This isn't about conversational polish.
             </p>
             <div className="rounded-lg p-4 border border-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.15)]">
               <p className="text-sm text-white font-medium leading-relaxed">
-                <strong className="text-amber-400">The Lesson:</strong> Conversational fluency <span className="text-amber-400">≠</span> reasoning reliability. A model that cannot adhere to a simple negative constraint in a game cannot be trusted with write-access in a production database.
+                A model that can't follow a basic negative rule (<span className="text-amber-400">"don't add anything else"</span>) can't be trusted with write-access in production workflows.
               </p>
             </div>
           </div>
