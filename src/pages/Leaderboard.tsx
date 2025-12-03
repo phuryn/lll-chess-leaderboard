@@ -365,7 +365,7 @@ export default function Leaderboard() {
             className="text-muted-foreground hover:text-foreground transition-colors"
             activeClassName="text-foreground font-medium"
           >
-            Game Browser
+            Game Replays
           </NavLink>
         </nav>
 
@@ -375,9 +375,11 @@ export default function Leaderboard() {
             alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" 
             className="w-full rounded-lg shadow-lg"
           />
-          <p className="text-muted-foreground text-base mt-4 text-left">
-            Benchmark results based on Wins (+1) and Losses (-1). In each experiment, every model plays against every other model 6 times (3 as White, 3 as Black). Any invalid move (hallucination, illegal syntax, or conversational output) results in an automatic loss.
-          </p>
+          <div className="text-muted-foreground text-base mt-4 text-left space-y-4">
+            <p className="text-lg font-semibold text-foreground">The "Blindfold Paradox": Why hiding the board improved reasoning.</p>
+            <p>We subjected the world's top models to a high-stakes chess benchmark with a production-grade constraint: a single invalid move results in an immediate loss.</p>
+            <p>The results challenge our understanding of context utilization. We discovered that models consistently perform better when "blindfolded" (reconstructing the board purely from conversation history) than when given the exact board state (FEN). This highlights a critical distinction for AI Engineers: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware agents.</p>
+          </div>
         </div>
 
         {loading ? (
