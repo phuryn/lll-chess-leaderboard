@@ -325,7 +325,7 @@ export default function Leaderboard() {
           <img src={siliconGambitHero} alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" className="w-full rounded-lg shadow-lg" />
           <div className="text-muted-foreground text-base mt-4 text-left space-y-4">
             <p className="text-lg font-semibold text-foreground">The "Blindfold Paradox": Why hiding the board improved reasoning.</p>
-            <p>We tested the top LLMs in a brutally simple way: one invalid move = game over.
+            <p>I tested the top LLMs in a brutally simple way: one invalid move = game over.
             </p>
             <p>The strange part? Models play better blindfolded — when they can't see the board at all.</p>
             <p>This highlights a critical distinction for AI Engineers and PMs: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware AI agents.</p>
