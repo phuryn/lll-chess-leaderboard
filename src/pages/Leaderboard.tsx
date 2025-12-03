@@ -659,7 +659,7 @@ export default function Leaderboard() {
               </div>
               <div className="mt-4 border-l-2 border-red-500 pl-4 py-3 bg-slate-800/50 rounded-r-md">
                 <p className="text-sm text-slate-300">
-                  <span className="text-red-400 font-semibold">⚠ Strict Compliance:</span> This serves as the API contract. Any output containing conversational filler (<em className="text-slate-400">"Here is my move..."</em>), markdown blocks, or invalid syntax results in an <strong className="text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">Automatic Loss</strong>. This tests the model's ability to respect negative constraints under pressure.
+                  <strong className="text-red-400">Strict Compliance:</strong> This serves as the API contract. Any output containing conversational filler (<em className="text-slate-400">"Here is my move..."</em>), markdown blocks, or invalid syntax results in an <strong className="text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">Automatic Loss</strong>. This tests the model's ability to respect negative constraints under pressure.
                 </p>
               </div>
             </div>
