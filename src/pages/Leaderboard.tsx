@@ -441,23 +441,49 @@ export default function Leaderboard() {
         {/* Discussion & Analysis Section */}
         <h2 className="text-2xl font-bold mb-6">Discussion & Analysis</h2>
 
-        {/* Agentic Alignment Card */}
+        {/* Best LLMs for AI Agents Card */}
         <Card className="mb-6 p-6 border-l-4 border-l-emerald-400 bg-slate-800 shadow-lg shadow-emerald-500/10">
           <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
-            <span>🤖</span> Agentic Alignment: Syntax as a Stability Proxy
+            <span>🤖</span> Best LLMs for AI Agents
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-slate-300 leading-relaxed">
-              While chess competency relies on training data volume, the operational discipline required to survive this benchmark is a direct proxy for <strong className="text-white">agentic reliability</strong>.
+              Chess obviously depends on training data, but two parts of this test map directly to real agent behavior: <strong className="text-white">output discipline</strong> and <strong className="text-white">state consistency</strong>.
             </p>
             
-            <div className="space-y-3 pl-4 border-l-2 border-emerald-400/40">
-              <p className="text-sm text-slate-300 leading-relaxed">
-                <strong className="text-emerald-400 font-semibold">Syntax Adherence:</strong> GPT-5.1 and Gemini-3 were the only models capable of sustaining long games (32+ moves) without violating strict "SAN Only" formatting constraints. In production, this correlates directly to a model's ability to output complex JSON or function calls without conversational pollution.
-              </p>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                <strong className="text-emerald-400 font-semibold">State Drift:</strong> The "Blindfold" experiment stresses the model's ability to maintain a coherent world state over a sliding context window. Success here indicates high context-handling precision—the exact capability required for multi-step agents that must remember variable states across long interactions.
-              </p>
+            <div className="space-y-4 pl-4 border-l-2 border-emerald-400/40">
+              <div>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <strong className="text-emerald-400 font-semibold">Output discipline:</strong> GPT-5.1 and Gemini-3 Pro were the only models that consistently produced long games (32+ moves) without breaking the strict SAN format.
+                </p>
+                <p className="text-sm text-slate-400 leading-relaxed mt-2">
+                  In production this is the same skill as returning clean JSON, tool calls, or structured outputs without drifting into extra text.
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <strong className="text-emerald-400 font-semibold">State consistency:</strong> Blindfold chess forces the model to track world-state purely from the running conversation (models always see the full history: every prompt, every move they made.)
+                </p>
+                <p className="text-sm text-slate-400 leading-relaxed mt-2">
+                  A model that can keep a coherent narrative over many steps is exactly what you need for reliable multi-step agents.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-slate-700">
+              <p className="text-sm text-slate-400 mb-2">I've written about this in:</p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://www.productcompass.pm/p/ai-agents-101" target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                    How to Build an Autonomous AI Agent →
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.productcompass.pm/p/building-ai-agents-best-practices" target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                    1/4 Principles of Building AI Agents & Best LLMs →
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </Card>
