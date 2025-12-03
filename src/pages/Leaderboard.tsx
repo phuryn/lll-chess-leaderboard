@@ -492,7 +492,7 @@ export default function Leaderboard() {
             </p>
             <div className="rounded-lg p-4 border border-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.15)]">
               <p className="text-sm text-white font-medium leading-relaxed">
-                A model that can't follow a basic negative rule (<span className="text-amber-400">"don't add anything else"</span>) can't be trusted with write-access in production workflows.
+                A model that can't follow a basic negative rule ("don't add anything else") <span className="text-amber-400">can't be trusted</span> with write-access in production workflows.
               </p>
             </div>
           </div>
