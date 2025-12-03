@@ -490,8 +490,8 @@ export default function Leaderboard() {
             <p className="text-sm text-slate-300 leading-relaxed">
               This isn't about conversational polish.
             </p>
-            <div className="rounded-lg p-4 border border-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.15)]">
-              <p className="text-sm text-white font-medium leading-relaxed">
+            <div className="pl-4 border-l-2 border-amber-400/40">
+              <p className="text-sm text-slate-300 leading-relaxed">
                 A model that can't follow a basic negative rule ("don't add anything else") <span className="text-amber-400">can't be trusted</span> with write-access in production workflows.
               </p>
             </div>
