@@ -93,7 +93,7 @@ const getProviderFromModel = (modelName: string): {
   if (name.includes('deepseek')) {
     return {
       provider: 'DeepSeek',
-      logo: <img src={deepseekLogo} alt="DeepSeek" className="w-4 h-4" />
+      logo: <img src={deepseekLogo} alt="DeepSeek" className="w-5 h-5" />
     };
   }
 
