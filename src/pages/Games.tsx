@@ -153,13 +153,13 @@ export default function Games() {
               className="text-muted-foreground hover:text-foreground transition-colors"
               activeClassName="text-foreground font-medium"
             >
-              Game Browser
+              Game Replays
             </NavLink>
           </nav>
 
           {/* Header */}
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Game Browser</h1>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Game Replays</h1>
             <p className="text-muted-foreground">
               Browse all completed games with filtering options
             </p>

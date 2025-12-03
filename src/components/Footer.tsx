@@ -48,7 +48,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm text-zinc-400">
             <li>
               <Link to="/games" className="text-zinc-300 hover:text-white transition-colors">
-                Game Browser
+                Game Replays
               </Link>
             </li>
             <li>
