@@ -337,7 +337,7 @@ export default function Leaderboard() {
                 <div className="mb-4">
                   <h2 className="text-2xl font-bold mb-2">🧪 Experiment {testIndex + 1}: {testLeaderboard.testType}</h2>
                   <div className="text-sm text-muted-foreground space-y-2 break-words">
-                    {testLeaderboard.testDesc.split(/<br\s*\/?>/).map((segment, segIndex) => <p key={segIndex}>
+                    {testLeaderboard.testDesc.split(/<br\s*\/?>/i).map((segment, segIndex) => <p key={segIndex}>
                         {segment.split(/(\*\*[^*]+\*\*)/).map((part, i) => {
                     if (part.startsWith('**') && part.endsWith('**')) {
                       return <strong key={i} className="text-foreground font-semibold">{part.slice(2, -2)}</strong>;
