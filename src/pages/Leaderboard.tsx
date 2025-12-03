@@ -451,23 +451,13 @@ export default function Leaderboard() {
               Chess obviously depends on training data, but two parts of this test map directly to real agent behavior: <strong className="text-white">output discipline</strong> and <strong className="text-white">state consistency</strong>.
             </p>
             
-            <div className="space-y-4 pl-4 border-l-2 border-emerald-400/40">
-              <div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  <strong className="text-emerald-400 font-semibold">Output discipline:</strong> GPT-5.1 and Gemini-3 Pro were the only models that consistently produced long games (32+ moves) without breaking the strict SAN format.
-                </p>
-                <p className="text-sm text-slate-400 leading-relaxed mt-2">
-                  In production this is the same skill as returning clean JSON, tool calls, or structured outputs without drifting into extra text.
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  <strong className="text-emerald-400 font-semibold">State consistency:</strong> Blindfold chess forces the model to track world-state purely from the running conversation (models always see the full history: every prompt, every move they made.)
-                </p>
-                <p className="text-sm text-slate-400 leading-relaxed mt-2">
-                  A model that can keep a coherent narrative over many steps is exactly what you need for reliable multi-step agents.
-                </p>
-              </div>
+            <div className="space-y-3 pl-4 border-l-2 border-emerald-400/40">
+              <p className="text-sm text-slate-300 leading-relaxed">
+                <strong className="text-emerald-400 font-semibold">Output discipline:</strong> GPT-5.1 and Gemini-3 Pro were the only models that consistently produced long games (32+ moves) without breaking the strict SAN format. In production this is the same skill as returning clean JSON, tool calls, or structured outputs without drifting into extra text.
+              </p>
+              <p className="text-sm text-slate-300 leading-relaxed">
+                <strong className="text-emerald-400 font-semibold">State consistency:</strong> Blindfold chess forces the model to track world-state purely from the running conversation (models always see the full history: every prompt, every move they made.) A model that can keep a coherent narrative over many steps is exactly what you need for reliable multi-step agents.
+              </p>
             </div>
 
             <div className="mt-4 pt-4 border-t border-slate-700">
