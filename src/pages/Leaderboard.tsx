@@ -523,21 +523,22 @@ export default function Leaderboard() {
         {/* Discussion & Analysis Section */}
         <h2 className="text-2xl font-bold mb-6">Discussion & Analysis</h2>
 
-        {/* Agentic Reliability Card */}
+        {/* Agentic Alignment Card */}
         <Card className="mb-6 p-6 border-l-4 border-l-emerald-400 bg-slate-800 shadow-lg shadow-emerald-500/10">
           <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
-            <span>🤖</span> Agentic Reliability: GPT-5.1 & Gemini-3
+            <span>🤖</span> Agentic Alignment: Instruction Following & State Tracking
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-slate-300 leading-relaxed">
-              The gap between the top tier and the rest is not just about chess—it is about <strong className="text-white">instruction adherence</strong> and <strong className="text-white">state tracking</strong>. GPT-5.1 and Gemini-3 were the only models capable of sustaining long games (32+ moves) without breaking syntax.
+              While chess competency relies heavily on the volume of game data in a model's training set, the operational discipline required to win this benchmark correlates strongly with <strong className="text-white">agentic reliability</strong>.
             </p>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              This mirrors my experience building fully autonomous agents: the skills required to win this benchmark—<strong className="text-emerald-400">strict formatting</strong>, <strong className="text-emerald-400">multi-step planning</strong>, and <strong className="text-emerald-400">self-correction</strong>—are the exact same capabilities that make a model viable for complex agentic workflows.
-            </p>
-            <div className="rounded-lg p-4 border border-emerald-400/50 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
-              <p className="text-sm text-white font-medium leading-relaxed">
-                Chess benchmark performance is a proxy for agentic reliability.
+            
+            <div className="space-y-3 pl-4 border-l-2 border-emerald-400/40">
+              <p className="text-sm text-slate-300 leading-relaxed">
+                <strong className="text-emerald-400 font-semibold">Syntax as a Stability Signal:</strong> GPT-5.1 and Gemini-3 were the only models capable of sustaining long games (32+ moves) without breaking the strict "SAN Only" formatting rules. In agentic workflows, this translates to a model's ability to reliably output JSON or code without conversational pollution.
+              </p>
+              <p className="text-sm text-slate-300 leading-relaxed">
+                <strong className="text-emerald-400 font-semibold">Context Retention:</strong> The "Blindfold" experiment stresses the model's ability to track a changing state over a long context window. While the strategy may be pattern-matched from training data, the consistency of the game state—remembering where pieces are without seeing them—is a strong indicator of the context-handling precision needed for complex, multi-step agents.
               </p>
             </div>
           </div>
