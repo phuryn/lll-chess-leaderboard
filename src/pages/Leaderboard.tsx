@@ -520,11 +520,48 @@ export default function Leaderboard() {
         {/* Divider between leaderboards and info cards */}
         <div className="mt-8 mb-8 border-t border-slate-700/50" />
 
-        {/* Research Notes Section */}
-        <h2 className="text-2xl font-bold mb-1">Research Notes</h2>
+        {/* Discussion & Analysis Section */}
+        <h2 className="text-2xl font-bold mb-6">Discussion & Analysis</h2>
 
-        {/* The Blindfold Paradox */}
-        <Card className="mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/10">
+        {/* Agentic Reliability Card */}
+        <Card className="mb-6 p-6 border-l-4 border-l-emerald-400 bg-slate-800 shadow-lg shadow-emerald-500/10">
+          <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
+            <span>🤖</span> Agentic Reliability: GPT-5.1 & Gemini-3
+          </h2>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-300 leading-relaxed">
+              The gap between the top tier and the rest is not just about chess—it is about <strong className="text-white">instruction adherence</strong> and <strong className="text-white">state tracking</strong>. GPT-5.1 and Gemini-3 were the only models capable of sustaining long games (32+ moves) without breaking syntax.
+            </p>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              This mirrors my experience building fully autonomous agents: the skills required to win this benchmark—<strong className="text-emerald-400">strict formatting</strong>, <strong className="text-emerald-400">multi-step planning</strong>, and <strong className="text-emerald-400">self-correction</strong>—are the exact same capabilities that make a model viable for complex agentic workflows.
+            </p>
+            <div className="rounded-lg p-4 border border-emerald-400/50 shadow-[0_0_15px_rgba(52,211,153,0.15)]">
+              <p className="text-sm text-white font-medium leading-relaxed">
+                Chess benchmark performance is a proxy for agentic reliability.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Kimi-k2 Reality Check Card */}
+        <Card className="mb-6 p-6 border-l-4 border-l-amber-400 bg-slate-800 shadow-lg shadow-amber-500/10">
+          <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
+            <span>⚠️</span> The Kimi-k2 Reality Check
+          </h2>
+          <div className="space-y-4">
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Kimi-k2's high failure rate (Automatic Loss due to invalid moves) confirms limitations I have observed in production. It struggles to separate <strong className="text-white">reasoning from output</strong>, frequently hallucinating board states or injecting conversational filler despite strict negative constraints.
+            </p>
+            <div className="rounded-lg p-4 border border-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.15)]">
+              <p className="text-sm text-white font-medium leading-relaxed">
+                Conversational fluency <span className="text-amber-400">≠</span> reasoning reliability.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* The Blindfold Paradox - Flagship Card */}
+        <Card className="mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/20">
           <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
             <span>🦄</span> The Blindfold Paradox
           </h2>
@@ -553,7 +590,7 @@ export default function Leaderboard() {
             </div>
             
             {/* The Verdict */}
-            <div className="rounded-lg p-4 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.15)]">
+            <div className="rounded-lg p-4 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">The Verdict</h3>
               <p className="text-sm text-white font-medium leading-relaxed">
                 Ironically, asking the AI to "imagine" the board aligns better with its training data than showing it the board directly.
