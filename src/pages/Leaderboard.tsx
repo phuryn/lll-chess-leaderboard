@@ -529,19 +529,19 @@ export default function Leaderboard() {
         {/* Agentic Alignment Card */}
         <Card className="mb-6 p-6 border-l-4 border-l-emerald-400 bg-slate-800 shadow-lg shadow-emerald-500/10">
           <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
-            <span>🤖</span> Agentic Alignment: Instruction Following & State Tracking
+            <span>🤖</span> Agentic Alignment: Syntax as a Stability Proxy
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-slate-300 leading-relaxed">
-              While chess competency relies heavily on the volume of game data in a model's training set, the operational discipline required to win this benchmark correlates strongly with <strong className="text-white">agentic reliability</strong>.
+              While chess competency relies on training data volume, the operational discipline required to survive this benchmark is a direct proxy for <strong className="text-white">agentic reliability</strong>.
             </p>
             
             <div className="space-y-3 pl-4 border-l-2 border-emerald-400/40">
               <p className="text-sm text-slate-300 leading-relaxed">
-                <strong className="text-emerald-400 font-semibold">Syntax as a Stability Signal:</strong> GPT-5.1 and Gemini-3 were the only models capable of sustaining long games (32+ moves) without breaking the strict "SAN Only" formatting rules. In agentic workflows, this translates to a model's ability to reliably output JSON or code without conversational pollution.
+                <strong className="text-emerald-400 font-semibold">Syntax Adherence:</strong> GPT-5.1 and Gemini-3 were the only models capable of sustaining long games (32+ moves) without violating strict "SAN Only" formatting constraints. In production, this correlates directly to a model's ability to output complex JSON or function calls without conversational pollution.
               </p>
               <p className="text-sm text-slate-300 leading-relaxed">
-                <strong className="text-emerald-400 font-semibold">Context Retention:</strong> The "Blindfold" experiment stresses the model's ability to track a changing state over a long context window. While the strategy may be pattern-matched from training data, the consistency of the game state—remembering where pieces are without seeing them—is a strong indicator of the context-handling precision needed for complex, multi-step agents.
+                <strong className="text-emerald-400 font-semibold">State Drift:</strong> The "Blindfold" experiment stresses the model's ability to maintain a coherent world state over a sliding context window. Success here indicates high context-handling precision—the exact capability required for multi-step agents that must remember variable states across long interactions.
               </p>
             </div>
           </div>
@@ -554,11 +554,14 @@ export default function Leaderboard() {
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-slate-300 leading-relaxed">
-              Kimi-k2's high failure rate (Automatic Loss due to invalid moves) confirms limitations I have observed in production. It struggles to separate <strong className="text-white">reasoning from output</strong>, frequently hallucinating board states or injecting conversational filler despite strict negative constraints.
+              Kimi-k2's high failure rate (Automatic Loss via invalid moves) highlights a critical architectural weakness: <strong className="text-white">The Failure of Negative Constraints</strong>.
+            </p>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Despite strict instructions not to include conversational filler, the model struggled to separate reasoning from output. It frequently hallucinated board states or injected apologies into the game stream.
             </p>
             <div className="rounded-lg p-4 border border-amber-400/50 shadow-[0_0_15px_rgba(251,191,36,0.15)]">
               <p className="text-sm text-white font-medium leading-relaxed">
-                Conversational fluency <span className="text-amber-400">≠</span> reasoning reliability.
+                <strong className="text-amber-400">The Lesson:</strong> Conversational fluency <span className="text-amber-400">≠</span> reasoning reliability. A model that cannot adhere to a simple negative constraint in a game cannot be trusted with write-access in a production database.
               </p>
             </div>
           </div>
@@ -569,7 +572,7 @@ export default function Leaderboard() {
           <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
             <span>🦄</span> The Blindfold Paradox
           </h2>
-          <p className="text-base text-slate-400 italic mb-5">Why LLMs play better when they can't see the board.</p>
+          <p className="text-base text-slate-400 italic mb-5">Why hiding the board improved reasoning performance.</p>
           
           <div className="space-y-5">
             {/* The Discovery */}
@@ -585,10 +588,10 @@ export default function Leaderboard() {
               <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-3">The Hypothesis</h3>
               <div className="space-y-3 pl-4 border-l-2 border-cyan-400/40">
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  <strong className="text-cyan-400 font-semibold">Training Data Bias:</strong> LLMs are trained on millions of PGN files from chess databases. This is why they understand move sequences (<em className="text-slate-400">narratives</em>) better than static FEN positions (<em className="text-slate-400">compressed snapshots</em>).
+                  <strong className="text-cyan-400 font-semibold">Sequential Derivation {">"} Static Decoding:</strong> LLMs are autoregressive models trained on sequences (PGN), not static snapshots. When playing from history, the model derives the current state incrementally, effectively using the context window as a working memory.
                 </p>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  <strong className="text-cyan-400 font-semibold">The "Scratchpad" Effect:</strong> Reconstructing the board from history forces the model to engage in multi-step reasoning. It must explicitly simulate the state to know where pieces are. In contrast, giving them the FEN encourages lazy, surface-level pattern matching.
+                  <strong className="text-cyan-400 font-semibold">The "Decompression" Penalty:</strong> FEN strings are a compressed format (e.g., <code className="text-emerald-400 font-mono text-xs">8/8/4P3</code>). To understand the board, the model must perform spatial arithmetic—a known weakness of Transformer architecture. Giving the model a FEN forces it to decode a compressed state (math), whereas history allows it to track state changes (narrative).
                 </p>
               </div>
             </div>
@@ -597,7 +600,7 @@ export default function Leaderboard() {
             <div className="rounded-lg p-4 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">The Verdict</h3>
               <p className="text-sm text-white font-medium leading-relaxed">
-                Ironically, asking the AI to "imagine" the board aligns better with its training data than showing it the board directly.
+                Asking the AI to "imagine" the board aligns with its architecture; asking it to "see" the compressed board fights against it.
               </p>
             </div>
           </div>
