@@ -613,24 +613,32 @@ export default function Leaderboard() {
           </h2>
           <div className="space-y-6">
             <div>
-              <h3 className="text-base font-medium mb-2 text-cyan-400">FEN (Forsyth-Edwards Notation)</h3>
+              <h3 className="text-base font-medium mb-2 text-cyan-400">
+                FEN (Forsyth-Edwards Notation)
+                <span className="text-slate-500 font-normal ml-2">— The Compression Challenge</span>
+              </h3>
               <p className="text-sm text-slate-400 mb-3">
-                A compressed text string representing a static board state.
+                A text string that uses Run-Length Encoding (RLE) to represent a static board state.
               </p>
               <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 overflow-x-auto">
                 <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
                   rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
                 </code>
               </div>
-              <p className="text-sm text-slate-400">
-                <strong className="text-slate-200">Challenge:</strong> The model must parse this density to understand piece locations.
-              </p>
+              <div className="border-l-2 border-amber-500/70 pl-3 py-1 bg-amber-500/5">
+                <p className="text-sm text-slate-300">
+                  <strong className="text-amber-400">The Bottleneck:</strong> The number <code className="text-emerald-400 font-mono">8</code> represents eight empty squares. To "see" the board, the model must perform spatial decompression (arithmetic) rather than pattern matching—a task that exploits a known weakness in Transformer architecture.
+                </p>
+              </div>
             </div>
 
             <div>
-              <h3 className="text-base font-medium mb-2 text-cyan-400">SAN (Standard Algebraic Notation)</h3>
+              <h3 className="text-base font-medium mb-2 text-cyan-400">
+                SAN (Standard Algebraic Notation)
+                <span className="text-slate-500 font-normal ml-2">— The Output Protocol</span>
+              </h3>
               <p className="text-sm text-slate-400 mb-3">
-                The required output format for this benchmark.
+                The strict syntax required for all moves.
               </p>
               <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 flex flex-wrap gap-3 items-center">
                 <code className="text-sm font-mono text-emerald-400">e4</code>
@@ -642,24 +650,29 @@ export default function Leaderboard() {
               </div>
               <div className="border-l-2 border-red-500/70 pl-3 py-1 bg-red-500/5">
                 <p className="text-sm text-slate-300">
-                  <span className="text-red-400 font-semibold">⚠ STRICTNESS:</span> Models failing to output clean SAN (e.g., adding conversational filler) are penalized with an <strong className="text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">Automatic Loss</strong>.
+                  <span className="text-red-400 font-semibold">⚠ Strict Compliance:</span> This serves as the API contract. Any output containing conversational filler (<em className="text-slate-400">"Here is my move..."</em>), markdown blocks, or invalid syntax results in an <strong className="text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">Automatic Loss</strong>. This tests the model's ability to respect negative constraints under pressure.
                 </p>
               </div>
             </div>
 
             <div>
-              <h3 className="text-base font-medium mb-2 text-cyan-400">PGN (Portable Game Notation)</h3>
+              <h3 className="text-base font-medium mb-2 text-cyan-400">
+                PGN (Portable Game Notation)
+                <span className="text-slate-500 font-normal ml-2">— The Sequential Context</span>
+              </h3>
               <p className="text-sm text-slate-400 mb-3">
-                The file standard for recording full games.
+                The file standard for recording move history.
               </p>
               <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 overflow-x-auto">
                 <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
                   1. e4 e5 2. Nf3 Nc6
                 </code>
               </div>
-              <p className="text-sm text-slate-400">
-                <strong className="text-slate-200">Relevance:</strong> This is the native "language" of LLM chess training data.
-              </p>
+              <div className="border-l-2 border-cyan-500/70 pl-3 py-1 bg-cyan-500/5">
+                <p className="text-sm text-slate-300">
+                  <strong className="text-cyan-400">Alignment:</strong> This is the native "language" of LLM training data. Unlike FEN, PGN represents state as a narrative sequence, allowing the model to use autoregressive prediction to track the game state naturally.
+                </p>
+              </div>
             </div>
           </div>
         </Card>
