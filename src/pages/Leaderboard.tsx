@@ -500,39 +500,43 @@ export default function Leaderboard() {
 
         {/* The Blindfold Paradox - Flagship Card */}
         <Card className="mb-8 p-6 border-l-4 border-l-cyan-400 bg-slate-800 shadow-lg shadow-cyan-500/20">
-          <h2 className="text-xl font-semibold mb-1 flex items-center gap-2 text-white">
+          <h2 className="text-xl font-semibold mb-5 flex items-center gap-2 text-white">
             <span>🦄</span> The Blindfold Paradox
           </h2>
-          <p className="text-base text-slate-400 italic mb-5">Why hiding the board improved reasoning performance.</p>
           
           <div className="space-y-5">
-            {/* The Discovery */}
+            {/* What I found */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">The Discovery</h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Contrary to expectation, top models perform significantly better in <strong className="text-white font-semibold">Blind Mode</strong> (conversation history only) than when given the exact board state (FEN).
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">What I found</h3>
+              <p className="text-sm text-slate-300 leading-relaxed mb-3">
+                Models survive significantly more moves when blindfolded (reconstructing the board from history) than when you give them the exact FEN snapshot:
+              </p>
+              <ul className="text-sm text-slate-300 leading-relaxed space-y-1 pl-4">
+                <li>• With board access: ~18–19 valid moves</li>
+                <li>• Blindfolded: up to 32 valid moves</li>
+              </ul>
+              <p className="text-sm text-slate-300 leading-relaxed mt-3">
+                They perform worse when they <strong className="text-white">"see"</strong> more.
               </p>
             </div>
             
-            {/* The Hypothesis */}
+            {/* Why this happens */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-3">The Hypothesis</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-3">Why this happens</h3>
               <div className="space-y-3 pl-4 border-l-2 border-cyan-400/40">
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  <strong className="text-cyan-400 font-semibold">Sequential Derivation {">"} Static Decoding:</strong> LLMs are autoregressive models trained on sequences (PGN), not static snapshots. When playing from history, the model derives the current state incrementally, effectively using the context window as a working memory.
+                  LLMs are trained on sequences, not compressed board snapshots. A PGN-like history fits how they learned: one move after another.
                 </p>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  <strong className="text-cyan-400 font-semibold">The "Decompression" Penalty:</strong> FEN strings are a compressed format (e.g., <code className="text-emerald-400 font-mono text-xs">8/8/4P3</code>). To understand the board, the model must perform spatial arithmetic—a known weakness of Transformer architecture. Giving the model a FEN forces it to decode a compressed state (math), whereas history allows it to track state changes (narrative).
+                  FEN is a compressed summary. To use it, the model must unpack that summary into a mental board. That's harder for today's architectures than following a story of how we got here.
+                </p>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  When the model reconstructs the board step-by-step from the full trace, it treats the context window as working memory. That aligns with its strengths.
+                </p>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  When you hand it the compressed board, it has to decode and reason spatially — a weak spot.
                 </p>
               </div>
-            </div>
-            
-            {/* The Verdict */}
-            <div className="rounded-lg p-4 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">The Verdict</h3>
-              <p className="text-sm text-white font-medium leading-relaxed">
-                Asking the AI to "imagine" the board aligns with its architecture; asking it to "see" the compressed board fights against it.
-              </p>
             </div>
           </div>
         </Card>
