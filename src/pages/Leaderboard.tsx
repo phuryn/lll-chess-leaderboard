@@ -329,8 +329,8 @@ export default function Leaderboard() {
             <p className="text-lg font-semibold text-foreground">The "Blindfold Paradox": Why hiding the board improved reasoning.</p>
             <p>We tested the top LLMs in a brutally simple way: one invalid move = game over.
             </p>
-            <p>The strange part?</p>
-            <p>This highlights a critical distinction for AI Engineers and PMs: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware agents.</p>
+            <p>The strange part? Models play better blindfolded — when they can't see the board.</p>
+            <p>This highlights a critical distinction for AI Engineers and PMs: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware AI agents.</p>
           </div>
         </div>
 
