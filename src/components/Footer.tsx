@@ -35,7 +35,6 @@ export default function Footer() {
               <a 
                 href="https://www.productcompass.pm/" 
                 target="_blank" 
-                rel="noopener noreferrer"
                 className="text-zinc-300 hover:text-white transition-colors"
               >
                 The Product Compass
@@ -52,14 +51,19 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link to="/stats" className="text-zinc-300 hover:text-white transition-colors">
-                Battle Statistics
-              </Link>
-            </li>
-            <li>
               <Link to="/docs" className="text-zinc-300 hover:text-white transition-colors">
                 Chess Engine API
               </Link>
+            </li>
+            <li>
+              <a 
+                href="https://github.com/phuryn/lll-chess-leaderboard/tree/main/n8n" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-zinc-300 hover:text-white transition-colors"
+              >
+                n8n Workflow Definitions
+              </a>
             </li>
             <li>
               <a 

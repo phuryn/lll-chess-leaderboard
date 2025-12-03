@@ -464,12 +464,12 @@ export default function Leaderboard() {
               <p className="text-sm text-slate-400 mb-2">I've written about this in:</p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://www.productcompass.pm/p/ai-agents-101" target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                  <a href="https://www.productcompass.pm/p/ai-agents-101" target="_blank" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
                     How to Build an Autonomous AI Agent →
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.productcompass.pm/p/building-ai-agents-best-practices" target="_blank" rel="noopener noreferrer" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                  <a href="https://www.productcompass.pm/p/building-ai-agents-best-practices" target="_blank" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
                     1/4 Principles of Building AI Agents & Best LLMs →
                   </a>
                 </li>
