@@ -479,18 +479,18 @@ export default function Leaderboard() {
         {/* Kimi-k2 Reality Check Card */}
         <Card className="mb-6 p-6 border-l-4 border-l-amber-400 bg-slate-800 shadow-lg shadow-amber-500/10">
           <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
-            <span>⚠️</span> The Kimi-k2 Reality Check
+            <span>⚠️</span> The Kimi-k2 and DeepSeek-V3.2 Reality Check
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-slate-300 leading-relaxed">
-              Kimi-K2 lost often because it violated simple constraints: apologizing mid-game, inventing board states, or mixing reasoning with output.
+              Kimi-k2 and DeepSeek-V3.2 lost often because they violated simple constraints: apologizing mid-game, inventing board states, or mixing reasoning with output.
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
               This isn't about conversational polish.
             </p>
             <div className="pl-4 border-l-2 border-amber-400/40">
               <p className="text-sm text-slate-300 leading-relaxed">
-                A model that can't follow a basic negative rule ("don't add anything else") <span className="text-amber-400">can't be trusted</span> with write-access in production workflows.
+                Models that can't follow a basic negative rule ("don't add anything else") <span className="text-amber-400">can't be trusted</span> with write-access in production workflows.
               </p>
             </div>
           </div>
