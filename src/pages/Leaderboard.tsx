@@ -607,68 +607,83 @@ export default function Leaderboard() {
         </Card>
 
         {/* Definitions & Standards - Terminal Style */}
-        <Card className="mt-8 mb-16 p-6 bg-slate-900 border-slate-700">
-          <h2 className="text-xl font-semibold mb-5 text-cyan-400 flex items-center gap-2">
-            <span className="text-slate-500">~/</span> Standards and Definitions
+        <Card className="mt-8 mb-20 p-6 md:p-8 bg-slate-900 border-slate-700">
+          <h2 className="text-xl font-bold mb-6 text-cyan-400">
+            Standards and Definitions
           </h2>
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-base font-medium mb-2 text-cyan-400">
+          <div className="space-y-0">
+            {/* FEN Definition */}
+            <div className="py-6">
+              <h3 className="text-lg font-semibold mb-1 text-cyan-400">
                 FEN (Forsyth-Edwards Notation)
-                <span className="text-slate-500 font-normal ml-2">— The Compression Challenge</span>
               </h3>
-              <p className="text-sm text-slate-400 mb-3">
+              <p className="text-sm text-slate-200 mb-3">
+                The Compression Challenge
+              </p>
+              <p className="text-sm text-slate-400 mb-4">
                 A text string that uses Run-Length Encoding (RLE) to represent a static board state.
               </p>
-              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 overflow-x-auto">
-                <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
+              <div className="bg-slate-800/80 rounded-md p-3 mb-4 border border-slate-600 overflow-x-auto">
+                <code className="text-[14px] font-mono text-emerald-400 whitespace-nowrap">
                   rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
                 </code>
               </div>
-              <div className="border-l-2 border-amber-500/70 pl-3 py-1 bg-amber-500/5">
+              <div className="mt-4 border-l-2 border-amber-500 pl-4 py-3 bg-slate-800/50 rounded-r-md">
                 <p className="text-sm text-slate-300">
-                  <strong className="text-amber-400">The Bottleneck:</strong> The number <code className="text-emerald-400 font-mono">8</code> represents eight empty squares. To "see" the board, the model must perform spatial decompression (arithmetic) rather than pattern matching—a task that exploits a known weakness in Transformer architecture.
+                  <strong className="text-amber-400">The Bottleneck:</strong> The number <code className="text-emerald-400 font-mono text-[14px]">8</code> represents eight empty squares. To "see" the board, the model must perform spatial decompression (arithmetic) rather than pattern matching—a task that exploits a known weakness in Transformer architecture.
                 </p>
               </div>
             </div>
 
-            <div>
-              <h3 className="text-base font-medium mb-2 text-cyan-400">
+            {/* Divider */}
+            <div className="border-t border-white/10" />
+
+            {/* SAN Definition */}
+            <div className="py-6">
+              <h3 className="text-lg font-semibold mb-1 text-cyan-400">
                 SAN (Standard Algebraic Notation)
-                <span className="text-slate-500 font-normal ml-2">— The Output Protocol</span>
               </h3>
-              <p className="text-sm text-slate-400 mb-3">
+              <p className="text-sm text-slate-200 mb-3">
+                The Output Protocol
+              </p>
+              <p className="text-sm text-slate-400 mb-4">
                 The strict syntax required for all moves.
               </p>
-              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 flex flex-wrap gap-3 items-center">
-                <code className="text-sm font-mono text-emerald-400">e4</code>
-                <code className="text-sm font-mono text-emerald-400">Nf3</code>
-                <code className="text-sm font-mono text-emerald-400">O-O</code>
-                <span className="text-xs text-slate-500">(Castle)</span>
-                <code className="text-sm font-mono text-emerald-400">Qh5+</code>
-                <span className="text-xs text-slate-500">(Check)</span>
+              <div className="bg-slate-800/80 rounded-md p-3 mb-4 border border-slate-600 flex flex-wrap gap-3 items-center">
+                <code className="text-[14px] font-mono text-emerald-400">e4</code>
+                <code className="text-[14px] font-mono text-emerald-400">Nf3</code>
+                <code className="text-[14px] font-mono text-emerald-400">O-O</code>
+                <span className="text-xs text-slate-400">(Castle)</span>
+                <code className="text-[14px] font-mono text-emerald-400">Qh5+</code>
+                <span className="text-xs text-slate-400">(Check)</span>
               </div>
-              <div className="border-l-2 border-red-500/70 pl-3 py-1 bg-red-500/5">
+              <div className="mt-4 border-l-2 border-red-500 pl-4 py-3 bg-slate-800/50 rounded-r-md">
                 <p className="text-sm text-slate-300">
                   <span className="text-red-400 font-semibold">⚠ Strict Compliance:</span> This serves as the API contract. Any output containing conversational filler (<em className="text-slate-400">"Here is my move..."</em>), markdown blocks, or invalid syntax results in an <strong className="text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">Automatic Loss</strong>. This tests the model's ability to respect negative constraints under pressure.
                 </p>
               </div>
             </div>
 
-            <div>
-              <h3 className="text-base font-medium mb-2 text-cyan-400">
+            {/* Divider */}
+            <div className="border-t border-white/10" />
+
+            {/* PGN Definition */}
+            <div className="py-6">
+              <h3 className="text-lg font-semibold mb-1 text-cyan-400">
                 PGN (Portable Game Notation)
-                <span className="text-slate-500 font-normal ml-2">— The Sequential Context</span>
               </h3>
-              <p className="text-sm text-slate-400 mb-3">
+              <p className="text-sm text-slate-200 mb-3">
+                The Sequential Context
+              </p>
+              <p className="text-sm text-slate-400 mb-4">
                 The file standard for recording move history.
               </p>
-              <div className="bg-black/60 rounded-md p-3 mb-3 border border-slate-700 overflow-x-auto">
-                <code className="text-sm font-mono text-emerald-400 whitespace-nowrap">
+              <div className="bg-slate-800/80 rounded-md p-3 mb-4 border border-slate-600 overflow-x-auto">
+                <code className="text-[14px] font-mono text-emerald-400 whitespace-nowrap">
                   1. e4 e5 2. Nf3 Nc6
                 </code>
               </div>
-              <div className="border-l-2 border-cyan-500/70 pl-3 py-1 bg-cyan-500/5">
+              <div className="mt-4 border-l-2 border-cyan-500 pl-4 py-3 bg-slate-800/50 rounded-r-md">
                 <p className="text-sm text-slate-300">
                   <strong className="text-cyan-400">Alignment:</strong> This is the native "language" of LLM training data. Unlike FEN, PGN represents state as a narrative sequence, allowing the model to use autoregressive prediction to track the game state naturally.
                 </p>
