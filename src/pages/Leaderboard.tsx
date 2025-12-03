@@ -7,6 +7,7 @@ import { Trophy, TrendingUp, TrendingDown } from "lucide-react";
 import Footer from "@/components/Footer";
 import { NavLink } from "@/components/NavLink";
 import siliconGambitHero from "@/assets/silicon-gambit-hero.png";
+import deepseekLogo from "@/assets/deepseek-logo.png";
 interface PlayerStats {
   player: string;
   wins: number;
@@ -92,9 +93,7 @@ const getProviderFromModel = (modelName: string): {
   if (name.includes('deepseek')) {
     return {
       provider: 'DeepSeek',
-      logo: <svg viewBox="0 0 96 96" className="w-4 h-4" fill="currentColor">
-          <path d="M48 8C26 8 8 26 8 48s18 40 40 40 40-18 40-40S70 8 48 8zm-8 56c-8 0-14-6-14-14s6-14 14-14c2 0 4 0.5 6 1.5-4 2.5-6 7-6 12.5s2 10 6 12.5c-2 1-4 1.5-6 1.5zm24-4c0 2-2 4-4 4s-4-2-4-4 2-4 4-4 4 2 4 4zm4-12c-6 0-12-4-14-10 2-2 6-4 10-4 8 0 14 6 14 14 0 0-4 0-10 0z" />
-        </svg>
+      logo: <img src={deepseekLogo} alt="DeepSeek" className="w-4 h-4" />
     };
   }
 
