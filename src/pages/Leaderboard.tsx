@@ -378,7 +378,8 @@ export default function Leaderboard() {
           <div className="text-muted-foreground text-base mt-4 text-left space-y-4">
             <p className="text-lg font-semibold text-foreground">The "Blindfold Paradox": Why hiding the board improved reasoning.</p>
             <p>We subjected the world's top models to a high-stakes chess benchmark with a production-grade constraint: a single invalid move results in an immediate loss.</p>
-            <p>The results challenge our understanding of context utilization. We discovered that models consistently perform better when "blindfolded" (reconstructing the board purely from conversation history) than when given the exact board state (FEN). This highlights a critical distinction for AI Engineers: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware agents.</p>
+            <p>The results challenge our understanding of context utilization. We discovered that models consistently perform better when "blindfolded" (reconstructing the board purely from conversation history) than when given the exact board state (FEN).</p>
+            <p>This highlights a critical distinction for AI Engineers and PMs: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware agents.</p>
           </div>
         </div>
 
