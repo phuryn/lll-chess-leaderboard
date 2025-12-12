@@ -19,6 +19,8 @@ interface PlayerStats {
   invalidMoveLosses: number;
   invalidMoveRounds: number[];
   maxValidMoves: number;
+  totalValidMoves: number;
+  gamesPlayed: number;
 }
 interface TestTypeLeaderboard {
   testType: string;
@@ -218,7 +220,9 @@ export default function Leaderboard() {
               points: 0,
               invalidMoveLosses: 0,
               invalidMoveRounds: [],
-              maxValidMoves: 0
+              maxValidMoves: 0,
+              totalValidMoves: 0,
+              gamesPlayed: 0
             });
           }
           if (blackPlayer && !playerStatsMap.has(blackPlayer)) {
@@ -230,7 +234,9 @@ export default function Leaderboard() {
               points: 0,
               invalidMoveLosses: 0,
               invalidMoveRounds: [],
-              maxValidMoves: 0
+              maxValidMoves: 0,
+              totalValidMoves: 0,
+              gamesPlayed: 0
             });
           }
 
@@ -271,14 +277,18 @@ export default function Leaderboard() {
           const whiteAdjusted = game.status === "invalid_move" && game.winner === "black" ? whiteValidMoves - 1 : whiteValidMoves;
           const blackAdjusted = game.status === "invalid_move" && game.winner === "white" ? blackValidMoves - 1 : blackValidMoves;
 
-          // Update max for each player
+          // Update max and accumulate totals for each player
           if (whitePlayer && playerStatsMap.has(whitePlayer)) {
             const stats = playerStatsMap.get(whitePlayer)!;
             stats.maxValidMoves = Math.max(stats.maxValidMoves, whiteAdjusted);
+            stats.totalValidMoves += whiteAdjusted;
+            stats.gamesPlayed += 1;
           }
           if (blackPlayer && playerStatsMap.has(blackPlayer)) {
             const stats = playerStatsMap.get(blackPlayer)!;
             stats.maxValidMoves = Math.max(stats.maxValidMoves, blackAdjusted);
+            stats.totalValidMoves += blackAdjusted;
+            stats.gamesPlayed += 1;
           }
         });
 
@@ -393,6 +403,7 @@ export default function Leaderboard() {
                           </div>
                         </TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Lost by Invalid Move</TableHead>
+                        <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Avg Valid Moves</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Valid Moves</TableHead>
                         <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Score</TableHead>
@@ -427,6 +438,9 @@ export default function Leaderboard() {
                             <Link to={`/games?loser=${encodeURIComponent(player.player)}&invalidMove=true&testType=${encodeURIComponent(testLeaderboard.testType)}`} className="hover:opacity-80 hover:underline decoration-white transition-opacity">
                               {getComplianceBar(player.invalidMoveLosses, player.wins + player.losses)}
                             </Link>
+                          </TableCell>
+                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
+                            {player.gamesPlayed > 0 ? (player.totalValidMoves / player.gamesPlayed).toFixed(1) : '-'}
                           </TableCell>
                           <TableCell className="text-center text-slate-400 text-sm">
                             {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
