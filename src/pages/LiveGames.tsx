@@ -71,7 +71,7 @@ export default function LiveGames() {
             </NavLink>
             <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
               Live Games
-              <Badge className={`ml-1.5 border-0 px-1.5 py-0 text-xs ${liveCount > 0 ? 'bg-slate-700 text-cyan-400' : 'bg-slate-800 text-slate-500'}`}>
+              <Badge className={`ml-1.5 border-0 px-1.5 py-0 text-xs ${liveCount > 0 ? 'bg-slate-700 text-cyan-400' : 'bg-slate-800 text-slate-600'}`}>
                 {liveCount}
               </Badge>
             </NavLink>
