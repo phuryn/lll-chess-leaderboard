@@ -2,14 +2,19 @@ import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import Footer from "@/components/Footer";
 import { NavLink } from "@/components/NavLink";
 import { useLiveGameCount } from "@/hooks/useLiveGameCount";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Game {
   id: string;
@@ -45,15 +50,76 @@ function GamesNav() {
   );
 }
 
+// Multi-select filter component
+function MultiSelectFilter({ 
+  label, 
+  options, 
+  selected, 
+  onChange 
+}: { 
+  label: string; 
+  options: string[]; 
+  selected: string[]; 
+  onChange: (values: string[]) => void;
+}) {
+  const toggleOption = (option: string) => {
+    if (selected.includes(option)) {
+      onChange(selected.filter(s => s !== option));
+    } else {
+      onChange([...selected, option]);
+    }
+  };
+
+  const clearAll = () => onChange([]);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button 
+          variant="outline" 
+          className="w-full justify-between bg-slate-800 border-slate-600 text-slate-100 hover:bg-slate-700 hover:text-slate-100"
+        >
+          <span className="truncate">
+            {selected.length === 0 ? "All players" : `${selected.length} selected`}
+          </span>
+          {selected.length > 0 && (
+            <X 
+              className="h-4 w-4 ml-2 shrink-0 opacity-50 hover:opacity-100" 
+              onClick={(e) => { e.stopPropagation(); clearAll(); }}
+            />
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0 bg-slate-800 border-slate-600" align="start">
+        <div className="max-h-64 overflow-y-auto p-2 space-y-1">
+          {options.map((option) => (
+            <div
+              key={option}
+              className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-slate-700 cursor-pointer"
+              onClick={() => toggleOption(option)}
+            >
+              <Checkbox
+                checked={selected.includes(option)}
+                className="border-slate-500 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
+              />
+              <span className="text-sm text-slate-200 truncate">{option}</span>
+            </div>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export default function Games() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [players, setPlayers] = useState<string[]>([]);
 
-  // Filters from URL
-  const winnerFilter = searchParams.get("winner") || "";
-  const loserFilter = searchParams.get("loser") || "";
+  // Filters from URL (now arrays for multi-select)
+  const winnerFilter = searchParams.get("winner")?.split(",").filter(Boolean) || [];
+  const loserFilter = searchParams.get("loser")?.split(",").filter(Boolean) || [];
   const invalidMoveFilter = searchParams.get("invalidMove") === "true";
   const testTypeFilter = searchParams.get("testType") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -91,16 +157,16 @@ export default function Games() {
 
   const filteredGames = useMemo(() => {
     return games.filter((game) => {
-      // Winner filter
-      if (winnerFilter) {
+      // Winner filter (multi-select)
+      if (winnerFilter.length > 0) {
         const winningPlayer = game.winner === "white" ? game.white_player : game.black_player;
-        if (winningPlayer !== winnerFilter) return false;
+        if (!winningPlayer || !winnerFilter.includes(winningPlayer)) return false;
       }
 
-      // Loser filter
-      if (loserFilter) {
+      // Loser filter (multi-select)
+      if (loserFilter.length > 0) {
         const losingPlayer = game.winner === "white" ? game.black_player : game.white_player;
-        if (losingPlayer !== loserFilter) return false;
+        if (!losingPlayer || !loserFilter.includes(losingPlayer)) return false;
       }
 
       // Invalid move filter
@@ -120,10 +186,12 @@ export default function Games() {
     return Array.from(new Set(games.map((g) => g.test_type))).sort();
   }, [games]);
 
-  const updateFilter = (key: string, value: string | boolean) => {
+  const updateFilter = (key: string, value: string | boolean | string[]) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value === "" || value === false) {
+    if (value === "" || value === false || (Array.isArray(value) && value.length === 0)) {
       newParams.delete(key);
+    } else if (Array.isArray(value)) {
+      newParams.set(key, value.join(","));
     } else {
       newParams.set(key, String(value));
     }
@@ -177,36 +245,22 @@ export default function Games() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="space-y-1.5">
                 <label className="text-xs text-slate-400 uppercase tracking-wider">Winner</label>
-                <Select value={winnerFilter || "all"} onValueChange={(v) => updateFilter("winner", v === "all" ? "" : v)}>
-                  <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
-                    <SelectValue placeholder="All players" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600 text-slate-100">
-                    <SelectItem value="all" className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">All players</SelectItem>
-                    {players.map((player) => (
-                      <SelectItem key={player} value={player} className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">
-                        {player}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <MultiSelectFilter
+                  label="Winner"
+                  options={players}
+                  selected={winnerFilter}
+                  onChange={(values) => updateFilter("winner", values)}
+                />
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-xs text-slate-400 uppercase tracking-wider">Loser</label>
-                <Select value={loserFilter || "all"} onValueChange={(v) => updateFilter("loser", v === "all" ? "" : v)}>
-                  <SelectTrigger className="w-full bg-slate-800 border-slate-600 text-slate-100">
-                    <SelectValue placeholder="All players" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-800 border-slate-600 text-slate-100">
-                    <SelectItem value="all" className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">All players</SelectItem>
-                    {players.map((player) => (
-                      <SelectItem key={player} value={player} className="text-slate-100 focus:bg-slate-700 focus:text-slate-100">
-                        {player}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <MultiSelectFilter
+                  label="Loser"
+                  options={players}
+                  selected={loserFilter}
+                  onChange={(values) => updateFilter("loser", values)}
+                />
               </div>
 
               <div className="space-y-1.5">
