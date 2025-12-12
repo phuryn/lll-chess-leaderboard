@@ -326,7 +326,7 @@ export default function Leaderboard() {
     const isCritical = invalidMoves >= 15;
     const isWarning = invalidMoves >= 5 && invalidMoves < 15;
     return <div className="flex items-center gap-2">
-        <div className="w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
+        <div className="w-4 md:w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
           <div className={`h-full rounded-full transition-all ${isCritical ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]' : isWarning ? 'bg-amber-500' : 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]'}`} style={{
           width: `${percentage}%`
         }} />
@@ -373,7 +373,7 @@ export default function Leaderboard() {
 
                 <Card className="overflow-hidden bg-slate-900 border-slate-700 min-w-0">
                   <div className="overflow-x-auto">
-                    <Table className="min-w-[800px]">
+                    <Table className="min-w-[600px]">
                     <TableHeader>
                       <TableRow className="border-slate-700 hover:bg-transparent">
                         <TableHead className="w-20 text-slate-400 uppercase text-xs tracking-wider">Rank</TableHead>
@@ -392,7 +392,7 @@ export default function Leaderboard() {
                             <span className="hidden md:inline">Lost</span>
                           </div>
                         </TableHead>
-                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Invalid Moves</TableHead>
+                        <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Lost by Invalid Move</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Valid Moves</TableHead>
                         <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Score</TableHead>
