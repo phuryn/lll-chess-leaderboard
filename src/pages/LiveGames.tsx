@@ -115,11 +115,11 @@ export default function LiveGames() {
                       <TableRow
                         key={game.id}
                         className="cursor-pointer border-slate-700 hover:bg-slate-800/50 transition-colors"
-                        onClick={() => window.location.href = `/games/${game.id}`}
+                        onClick={() => window.location.href = `/games/${game.id}?from=live`}
                       >
                         <TableCell>
                           <Link
-                            to={`/games/${game.id}`}
+                            to={`/games/${game.id}?from=live`}
                             className="text-cyan-400 hover:text-cyan-300 hover:underline font-mono text-sm"
                             onClick={(e) => e.stopPropagation()}
                           >
