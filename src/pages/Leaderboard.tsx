@@ -357,13 +357,6 @@ export default function Leaderboard() {
 
         <div className="text-center space-y-3 max-w-full overflow-hidden">
           <img src={siliconGambitHero} alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" className="w-full rounded-lg shadow-lg" />
-          <div className="text-muted-foreground text-base mt-4 text-left space-y-4">
-            <p className="text-lg font-semibold text-foreground">The "Blindfold Paradox": Why hiding the board improved reasoning.</p>
-            <p>I tested the top LLMs in a brutally simple way: one invalid move = game over.
-            </p>
-            <p>The strange part? Some models play better blindfolded — when they can't see the board at all.</p>
-            <p>This highlights a critical distinction for AI Engineers and PMs: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware AI agents.</p>
-          </div>
         </div>
 
         {loading ? <div className="text-center text-muted-foreground">Loading leaderboard...</div> : leaderboards.length === 0 ? <div className="text-center text-muted-foreground">No completed games yet</div> : <div className="space-y-12">
@@ -537,24 +530,29 @@ export default function Leaderboard() {
           </h2>
           
           <div className="space-y-5">
-            {/* What I found */}
+            {/* What early games hinted at */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">What I found</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">What early games hinted at</h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-3">
-                Weaker models survive significantly more moves when blindfolded (reconstructing the board from history) than when you give them the exact FEN snapshot:
+                In the first few games, weaker models appeared to survive more moves when blindfolded (reconstructing the board from history) than when given the exact FEN snapshot:
               </p>
               <ul className="text-sm text-slate-300 leading-relaxed space-y-1 pl-4">
                 <li>• With board access: ~18–19 valid moves</li>
                 <li>• Blindfolded: up to 32 valid moves</li>
               </ul>
-              <p className="text-sm text-slate-300 leading-relaxed mt-3">
-                They perform worse when they <strong className="text-white">"see"</strong> more.
+            </div>
+
+            {/* What more data showed */}
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-amber-400 mb-2">What more data showed</h3>
+              <p className="text-sm text-slate-300 leading-relaxed">
+                This pattern was not confirmed with additional testing. The effect was inconsistent across models and test runs.
               </p>
             </div>
             
-            {/* Why this happens */}
+            {/* Why this could happen */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-3">Why this happens</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-3">Why this could happen (in theory)</h3>
               <div className="space-y-3 pl-4 border-l-2 border-cyan-400/40">
                 <p className="text-sm text-slate-300 leading-relaxed">
                   LLMs are trained on sequences, not compressed board snapshots. A PGN-like history fits how they learned: one move after another.
@@ -567,6 +565,9 @@ export default function Leaderboard() {
                 </p>
                 <p className="text-sm text-slate-300 leading-relaxed">
                   When you hand it the compressed board, it has to decode and reason spatially — a weak spot.
+                </p>
+                <p className="text-sm text-slate-400 leading-relaxed italic mt-2">
+                  This remains an interesting hypothesis, but the data here doesn't strongly support it.
                 </p>
               </div>
             </div>
