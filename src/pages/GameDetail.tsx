@@ -72,11 +72,9 @@ function GameDetailNav() {
       </NavLink>
       <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
         Live Games
-        {liveCount > 0 && (
-          <Badge className="ml-1.5 bg-slate-700 text-cyan-400 border-0 px-1.5 py-0 text-xs">
-            {liveCount}
-          </Badge>
-        )}
+        <Badge className={`ml-1.5 border-0 px-1.5 py-0 text-xs ${liveCount > 0 ? 'bg-slate-700 text-cyan-400' : 'bg-slate-800 text-slate-500'}`}>
+          {liveCount}
+        </Badge>
       </NavLink>
       <NavLink to="/games" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
         Game Replays
