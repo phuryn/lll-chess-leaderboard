@@ -393,8 +393,6 @@ export default function Leaderboard() {
                           </div>
                         </TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Invalid Moves</TableHead>
-                        <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Avg Fail</TableHead>
-                        <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Med Fail</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Moves</TableHead>
                         <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Score</TableHead>
@@ -429,12 +427,6 @@ export default function Leaderboard() {
                             <Link to={`/games?loser=${encodeURIComponent(player.player)}&invalidMove=true&testType=${encodeURIComponent(testLeaderboard.testType)}`} className="hover:opacity-80 hover:underline decoration-white transition-opacity">
                               {getComplianceBar(player.invalidMoveLosses, player.wins + player.losses)}
                             </Link>
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
-                            {player.invalidMoveRounds.length > 0 ? (player.invalidMoveRounds.reduce((a, b) => a + b, 0) / player.invalidMoveRounds.length).toFixed(1) : '-'}
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
-                            {player.invalidMoveRounds.length > 0 ? calculateMedian(player.invalidMoveRounds)?.toFixed(1) : '-'}
                           </TableCell>
                           <TableCell className="text-center text-slate-400 text-sm">
                             {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
