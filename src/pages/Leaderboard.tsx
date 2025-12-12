@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Trophy, TrendingUp, TrendingDown } from "lucide-react";
 import Footer from "@/components/Footer";
 import { NavLink } from "@/components/NavLink";
+import { useLiveGameCount } from "@/hooks/useLiveGameCount";
 import siliconGambitHero from "@/assets/silicon-gambit-hero.png";
 import deepseekLogo from "@/assets/deepseek-logo.png";
 interface PlayerStats {
@@ -132,6 +134,30 @@ const getProviderFromModel = (modelName: string): {
       </svg>
   };
 };
+
+function NavWithLiveGames() {
+  const { count: liveCount } = useLiveGameCount();
+  
+  return (
+    <nav className="flex gap-4 text-sm">
+      <NavLink to="/" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+        Leaderboard
+      </NavLink>
+      <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
+        Live Games
+        {liveCount > 0 && (
+          <Badge className="ml-1.5 bg-cyan-500 text-white border-0 px-1.5 py-0 text-xs animate-pulse">
+            {liveCount}
+          </Badge>
+        )}
+      </NavLink>
+      <NavLink to="/games" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+        Game Replays
+      </NavLink>
+    </nav>
+  );
+}
+
 export default function Leaderboard() {
   const [leaderboards, setLeaderboards] = useState<TestTypeLeaderboard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -312,14 +338,7 @@ export default function Leaderboard() {
     <div className="min-h-screen bg-background p-8 flex flex-col overflow-x-hidden">
       <div className="max-w-6xl mx-auto space-y-8 flex-1 w-full">
         {/* Navigation */}
-        <nav className="flex gap-4 text-sm">
-          <NavLink to="/" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
-            Leaderboard
-          </NavLink>
-          <NavLink to="/games" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
-            Game Replays
-          </NavLink>
-        </nav>
+        <NavWithLiveGames />
 
         <div className="text-center space-y-3 max-w-full overflow-hidden">
           <img src={siliconGambitHero} alt="The Silicon Gambit - High-Stakes LLM Chess Benchmark" className="w-full rounded-lg shadow-lg" />

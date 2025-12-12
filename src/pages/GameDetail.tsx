@@ -8,6 +8,8 @@ import { ArrowLeft } from "lucide-react";
 import ChessBoard from "@/components/ChessBoard";
 import PlaybackControls from "@/components/PlaybackControls";
 import Footer from "@/components/Footer";
+import { NavLink } from "@/components/NavLink";
+import { useLiveGameCount } from "@/hooks/useLiveGameCount";
 import {
   Tooltip,
   TooltipContent,
@@ -59,6 +61,29 @@ const cleanMove = (move: string): string => {
   // If nothing matches, return truncated
   return cleaned.substring(0, 15) + (cleaned.length > 15 ? "…" : "");
 };
+
+function GameDetailNav() {
+  const { count: liveCount } = useLiveGameCount();
+  
+  return (
+    <nav className="flex gap-4 text-sm mb-4">
+      <NavLink to="/" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+        Leaderboard
+      </NavLink>
+      <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
+        Live Games
+        {liveCount > 0 && (
+          <Badge className="ml-1.5 bg-cyan-500 text-white border-0 px-1.5 py-0 text-xs animate-pulse">
+            {liveCount}
+          </Badge>
+        )}
+      </NavLink>
+      <NavLink to="/games" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+        Game Replays
+      </NavLink>
+    </nav>
+  );
+}
 
 export default function GameDetail() {
   const { gameId } = useParams<{ gameId: string }>();
@@ -248,6 +273,9 @@ export default function GameDetail() {
     <>
       <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col">
         <div className="max-w-5xl mx-auto space-y-6 flex-1 w-full">
+          {/* Navigation */}
+          <GameDetailNav />
+          
           {/* Back button */}
           <Link to="/games">
             <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50">
