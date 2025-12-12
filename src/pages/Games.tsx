@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Footer from "@/components/Footer";
 import { NavLink } from "@/components/NavLink";
+import { useLiveGameCount } from "@/hooks/useLiveGameCount";
 
 interface Game {
   id: string;
@@ -22,6 +23,29 @@ interface Game {
 }
 
 const GAMES_PER_PAGE = 25;
+
+function GamesNav() {
+  const { count: liveCount } = useLiveGameCount();
+  
+  return (
+    <nav className="flex gap-4 text-sm">
+      <NavLink to="/" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+        Leaderboard
+      </NavLink>
+      <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
+        Live Games
+        {liveCount > 0 && (
+          <Badge className="ml-1.5 bg-cyan-500 text-white border-0 px-1.5 py-0 text-xs animate-pulse">
+            {liveCount}
+          </Badge>
+        )}
+      </NavLink>
+      <NavLink to="/games" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+        Game Replays
+      </NavLink>
+    </nav>
+  );
+}
 
 export default function Games() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -140,22 +164,7 @@ export default function Games() {
       <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col">
         <div className="max-w-6xl mx-auto space-y-6 flex-1 w-full">
           {/* Navigation */}
-          <nav className="flex gap-4 text-sm">
-            <NavLink
-              to="/"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              activeClassName="text-foreground font-medium"
-            >
-              Leaderboard
-            </NavLink>
-            <NavLink
-              to="/games"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              activeClassName="text-foreground font-medium"
-            >
-              Game Replays
-            </NavLink>
-          </nav>
+          <GamesNav />
 
           {/* Header */}
           <div className="space-y-2">
