@@ -84,7 +84,7 @@ export default function LiveGames() {
           <div className="space-y-2">
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Live Games</h1>
             <p className="text-muted-foreground">
-              Games currently in progress (started within the last 8 hours)
+              Games currently in progress
             </p>
           </div>
 
