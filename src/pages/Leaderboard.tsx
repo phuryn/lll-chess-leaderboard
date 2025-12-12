@@ -502,7 +502,7 @@ export default function Leaderboard() {
                 </li>
                 <li>
                   <a href="https://www.productcompass.pm/p/building-ai-agents-best-practices" target="_blank" className="text-sm text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
-                    1/4 Principles of Building AI Agents & Best LLMs →
+                    14 Principles of Building AI Agents & Best LLMs →
                   </a>
                 </li>
               </ul>
