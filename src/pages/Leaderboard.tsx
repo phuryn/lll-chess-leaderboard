@@ -349,7 +349,7 @@ export default function Leaderboard() {
             <p className="text-lg font-semibold text-foreground">The "Blindfold Paradox": Why hiding the board improved reasoning.</p>
             <p>I tested the top LLMs in a brutally simple way: one invalid move = game over.
             </p>
-            <p>The strange part? Models play better blindfolded — when they can't see the board at all.</p>
+            <p>The strange part? Some models play better blindfolded — when they can't see the board at all.</p>
             <p>This highlights a critical distinction for AI Engineers and PMs: the difference between the brittle pattern matching of static inputs and the deep sequential reasoning required for reliable, state-aware AI agents.</p>
           </div>
         </div>
@@ -521,7 +521,7 @@ export default function Leaderboard() {
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wide text-cyan-400 mb-2">What I found</h3>
               <p className="text-sm text-slate-300 leading-relaxed mb-3">
-                Models survive significantly more moves when blindfolded (reconstructing the board from history) than when you give them the exact FEN snapshot:
+                Weaker models survive significantly more moves when blindfolded (reconstructing the board from history) than when you give them the exact FEN snapshot:
               </p>
               <ul className="text-sm text-slate-300 leading-relaxed space-y-1 pl-4">
                 <li>• With board access: ~18–19 valid moves</li>
