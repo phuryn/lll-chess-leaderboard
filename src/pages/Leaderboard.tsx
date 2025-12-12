@@ -661,6 +661,19 @@ export default function Leaderboard() {
 
       </div>
     </div>
+    
+    {/* Newsletter Embed */}
+    <div className="flex justify-center py-8 bg-background">
+      <iframe 
+        src="https://www.productcompass.pm/embed" 
+        width="480" 
+        height="320" 
+        style={{ border: "1px solid #EEE", background: "white" }} 
+        frameBorder="0" 
+        scrolling="no"
+      />
+    </div>
+    
     <Footer />
     </>;
 }
