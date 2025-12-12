@@ -20,7 +20,7 @@ interface Game {
 export default function LiveGames() {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
-  const { count: liveCount } = useLiveGameCount();
+  const { count: liveCount, refetch: refetchCount } = useLiveGameCount();
 
   useEffect(() => {
     fetchGames();
@@ -46,6 +46,9 @@ export default function LiveGames() {
       setGames(data || []);
     }
     setLoading(false);
+    
+    // Also refresh the count when games refresh
+    refetchCount();
   };
 
   const formatDate = (dateStr: string) => {
@@ -59,17 +62,17 @@ export default function LiveGames() {
 
   return (
     <>
-      <div className="min-h-screen bg-background p-8 flex flex-col">
-        <div className="max-w-6xl mx-auto space-y-8 flex-1 w-full">
+      <div className="min-h-screen bg-background p-4 md:p-8 flex flex-col">
+        <div className="max-w-6xl mx-auto space-y-6 flex-1 w-full">
           {/* Navigation */}
           <nav className="flex gap-4 text-sm">
             <NavLink to="/" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
               Leaderboard
             </NavLink>
-            <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors" activeClassName="text-foreground font-medium">
+            <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
               Live Games
               {liveCount > 0 && (
-                <Badge className="ml-1.5 bg-cyan-500 text-white border-0 px-1.5 py-0 text-xs animate-pulse">
+                <Badge className="ml-1.5 bg-slate-700 text-cyan-400 border-0 px-1.5 py-0 text-xs">
                   {liveCount}
                 </Badge>
               )}
@@ -79,60 +82,63 @@ export default function LiveGames() {
             </NavLink>
           </nav>
 
-          <div className="mb-4">
-            <h1 className="text-3xl font-bold text-foreground">Live Games</h1>
-            <p className="text-muted-foreground mt-1">Games currently in progress (started within the last 8 hours)</p>
+          {/* Header */}
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Live Games</h1>
+            <p className="text-muted-foreground">
+              Games currently in progress (started within the last 8 hours)
+            </p>
           </div>
 
+          {/* Games Table */}
           {loading ? (
-            <div className="text-center text-muted-foreground">Loading live games...</div>
+            <div className="text-center text-slate-400 py-8">Loading live games...</div>
           ) : games.length === 0 ? (
-            <div className="text-center text-muted-foreground py-12">
+            <div className="text-center text-slate-400 py-12">
               <p className="text-lg">No live games at the moment</p>
               <p className="text-sm mt-2">Games in progress will appear here</p>
             </div>
           ) : (
-            <div className="rounded-lg border border-border overflow-hidden">
+            <div className="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="text-muted-foreground">Game ID</TableHead>
-                      <TableHead className="text-muted-foreground">White</TableHead>
-                      <TableHead className="text-muted-foreground">Black</TableHead>
-                      <TableHead className="text-muted-foreground text-center">#Moves</TableHead>
-                      <TableHead className="text-muted-foreground">Test Type</TableHead>
-                      <TableHead className="text-muted-foreground">Started</TableHead>
+                    <TableRow className="border-slate-700 hover:bg-transparent">
+                      <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Game</TableHead>
+                      <TableHead className="text-slate-400 uppercase text-xs tracking-wider">White</TableHead>
+                      <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Black</TableHead>
+                      <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden md:table-cell">#Moves</TableHead>
+                      <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden lg:table-cell">Test Type</TableHead>
+                      <TableHead className="text-slate-400 uppercase text-xs tracking-wider hidden sm:table-cell">Started</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {games.map((game) => (
-                      <TableRow key={game.id} className="hover:bg-muted/30 transition-colors">
+                      <TableRow
+                        key={game.id}
+                        className="cursor-pointer border-slate-700 hover:bg-slate-800/50 transition-colors"
+                        onClick={() => window.location.href = `/games/${game.id}`}
+                      >
                         <TableCell>
                           <Link
                             to={`/games/${game.id}`}
-                            className="text-cyan-400 hover:text-cyan-300 font-mono text-sm"
+                            className="text-cyan-400 hover:text-cyan-300 hover:underline font-mono text-sm"
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            {game.id.substring(0, 8)}...
+                            {game.id.slice(0, 8)}...
                           </Link>
                         </TableCell>
-                        <TableCell className="text-foreground font-medium">
-                          {game.white_player || "Unknown"}
+                        <TableCell className="font-medium text-slate-200">{game.white_player || "-"}</TableCell>
+                        <TableCell className="font-medium text-slate-200">{game.black_player || "-"}</TableCell>
+                        <TableCell className="hidden md:table-cell text-slate-300 font-mono">
+                          {game.move_history?.length || 0}
                         </TableCell>
-                        <TableCell className="text-foreground font-medium">
-                          {game.black_player || "Unknown"}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <Badge variant="outline" className="border-slate-600 text-slate-300">
-                            {game.move_history.length}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary" className="text-xs">
+                        <TableCell className="hidden lg:table-cell">
+                          <Badge variant="outline" className="text-xs border-slate-600 text-slate-300">
                             {game.test_type}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-muted-foreground text-sm">
+                        <TableCell className="text-slate-400 text-sm hidden sm:table-cell">
                           {formatDate(game.created_at)}
                         </TableCell>
                       </TableRow>

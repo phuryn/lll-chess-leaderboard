@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export function useLiveGameCount() {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const fetchCount = async () => {
+  const fetchCount = useCallback(async () => {
     const eightHoursAgo = new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString();
     
     const { count: liveCount, error } = await supabase
@@ -18,7 +18,7 @@ export function useLiveGameCount() {
       setCount(liveCount);
     }
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     fetchCount();
@@ -26,7 +26,7 @@ export function useLiveGameCount() {
     // Refresh every 30 seconds
     const interval = setInterval(fetchCount, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchCount]);
 
-  return { count, loading };
+  return { count, loading, refetch: fetchCount };
 }

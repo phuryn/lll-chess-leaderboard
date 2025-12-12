@@ -136,7 +136,12 @@ const getProviderFromModel = (modelName: string): {
 };
 
 function NavWithLiveGames() {
-  const { count: liveCount } = useLiveGameCount();
+  const { count: liveCount, refetch: refetchCount } = useLiveGameCount();
+  
+  // Refetch count on mount (when user navigates to Leaderboard)
+  useEffect(() => {
+    refetchCount();
+  }, [refetchCount]);
   
   return (
     <nav className="flex gap-4 text-sm">
@@ -146,7 +151,7 @@ function NavWithLiveGames() {
       <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
         Live Games
         {liveCount > 0 && (
-          <Badge className="ml-1.5 bg-cyan-500 text-white border-0 px-1.5 py-0 text-xs animate-pulse">
+          <Badge className="ml-1.5 bg-slate-700 text-cyan-400 border-0 px-1.5 py-0 text-xs">
             {liveCount}
           </Badge>
         )}
