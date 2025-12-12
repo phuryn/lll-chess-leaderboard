@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Chess } from "chess.js";
 import { Badge } from "@/components/ui/badge";
@@ -85,6 +85,10 @@ function GameDetailNav() {
 
 export default function GameDetail() {
   const { gameId } = useParams<{ gameId: string }>();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const fromLive = searchParams.get("from") === "live";
+  
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
@@ -198,10 +202,10 @@ export default function GameDetail() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <div className="text-slate-400">Game not found</div>
-        <Link to="/games">
+        <Link to={fromLive ? "/live" : "/games"}>
           <Button variant="outline" className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Games
+            {fromLive ? "Back to Live Games" : "Back to Replays"}
           </Button>
         </Link>
       </div>
@@ -275,10 +279,10 @@ export default function GameDetail() {
           <GameDetailNav />
           
           {/* Back button */}
-          <Link to="/games">
+          <Link to={fromLive ? "/live" : "/games"}>
             <Button variant="ghost" size="sm" className="text-slate-500 hover:text-slate-300 hover:bg-slate-800/50">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Games
+              {fromLive ? "Back to Live Games" : "Back to Replays"}
             </Button>
           </Link>
 
@@ -299,17 +303,23 @@ export default function GameDetail() {
                   <span className="text-sm text-slate-400">{formatDate(game.created_at)}</span>
                 </div>
               </div>
-              {winnerName && (
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <span className="text-sm text-slate-400">Winner:</span>
-                  <span className="font-semibold text-green-400" style={{ textShadow: "0 0 10px rgba(74, 222, 128, 0.5)" }}>
-                    {winnerName}
-                  </span>
-                  {game.reason && (
-                    <span className="text-sm text-slate-500">({game.reason})</span>
-                  )}
-                </div>
-              )}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <span className="text-sm text-slate-400">Winner:</span>
+                {game.status === "continue" ? (
+                  <span className="text-slate-500">-</span>
+                ) : winnerName ? (
+                  <>
+                    <span className="font-semibold text-green-400" style={{ textShadow: "0 0 10px rgba(74, 222, 128, 0.5)" }}>
+                      {winnerName}
+                    </span>
+                    {game.reason && (
+                      <span className="text-sm text-slate-500">({game.reason})</span>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-slate-500">-</span>
+                )}
+              </div>
             </div>
           </div>
 
