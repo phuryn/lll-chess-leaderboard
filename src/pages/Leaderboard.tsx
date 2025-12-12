@@ -152,7 +152,7 @@ function NavWithLiveGames() {
       </NavLink>
       <NavLink to="/live" className="text-muted-foreground hover:text-foreground transition-colors flex items-center" activeClassName="text-foreground font-medium">
         Live Games
-        <Badge className={`ml-1.5 border-0 px-1.5 py-0 text-xs ${liveCount > 0 ? 'bg-slate-700 text-cyan-400' : 'bg-slate-800 text-slate-600'}`}>
+        <Badge className={`ml-1.5 border-0 px-1.5 py-0 text-xs ${liveCount > 0 ? 'bg-slate-700 text-cyan-400' : 'bg-slate-200 text-[hsl(215.4,16.3%,46.9%)]'}`}>
           {liveCount}
         </Badge>
       </NavLink>
@@ -263,9 +263,11 @@ export default function Leaderboard() {
           } else if (game.status === "draw" || game.status === "stalemate") {
             if (whitePlayer && playerStatsMap.has(whitePlayer)) {
               playerStatsMap.get(whitePlayer)!.draws++;
+              playerStatsMap.get(whitePlayer)!.points += 0.5;
             }
             if (blackPlayer && playerStatsMap.has(blackPlayer)) {
               playerStatsMap.get(blackPlayer)!.draws++;
+              playerStatsMap.get(blackPlayer)!.points += 0.5;
             }
           }
 
@@ -445,12 +447,16 @@ export default function Leaderboard() {
                           <TableCell className="text-center text-slate-400 text-sm">
                             {player.maxValidMoves > 0 ? player.maxValidMoves : '-'}
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell text-center text-slate-400 text-sm">
-                            {player.draws}
+                          <TableCell className="hidden lg:table-cell text-center text-sm">
+                            {player.draws > 0 ? (
+                              <span className="text-blue-400 font-bold">{player.draws}</span>
+                            ) : (
+                              <span className="text-slate-400">0</span>
+                            )}
                           </TableCell>
                           <TableCell className="text-center">
                             <span className={`text-xl font-black ${player.points > 0 ? "text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]" : player.points < 0 ? "text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]" : "text-slate-400"}`}>
-                              {player.points > 0 ? "+" : ""}{player.points}
+                              {player.points > 0 ? "+" : ""}{player.points % 1 === 0 ? player.points : player.points.toFixed(1)}
                             </span>
                           </TableCell>
                         </TableRow>)}
