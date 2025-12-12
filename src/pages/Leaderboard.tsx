@@ -393,7 +393,7 @@ export default function Leaderboard() {
                           </div>
                         </TableHead>
                         <TableHead className="text-slate-400 uppercase text-xs tracking-wider">Invalid Moves</TableHead>
-                        <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Moves</TableHead>
+                        <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Max Valid Moves</TableHead>
                         <TableHead className="hidden lg:table-cell text-center text-slate-400 uppercase text-xs tracking-wider">Draws</TableHead>
                         <TableHead className="text-center text-slate-400 uppercase text-xs tracking-wider">Score</TableHead>
                       </TableRow>
