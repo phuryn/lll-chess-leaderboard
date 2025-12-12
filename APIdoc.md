@@ -2,11 +2,25 @@
 
 Stateful HTTP JSON API for chess move validation and game state management.
 
-**Features:** Stateful • Game-ID Based • CORS Enabled
+**Features:** Stateful • Game-ID Based • CORS Enabled • API Key Protected
 
 ## Overview
 
 This API provides a stateful chess engine that stores games in a database with unique IDs. Each game tracks its complete state including move history, player names, and current position.
+
+### Authentication
+
+Write endpoints require an API key passed via the `x-api-key` header:
+
+```
+x-api-key: *****
+```
+
+**Protected endpoints:** `/new-game`, `/apply-move`, `/current-position`
+
+**Public endpoints:** `/legal-moves` (no authentication required)
+
+Requests without a valid API key will receive a `401 Unauthorized` response.
 
 ### Key Features
 
@@ -59,6 +73,7 @@ Create a new chess game and get a unique game ID.
 ```bash
 curl -X POST https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/new-game \
   -H "Content-Type: application/json" \
+  -H "x-api-key: *****" \
   -d '{
     "whitePlayer": "Alice",
     "blackPlayer": "Bob",
@@ -108,6 +123,7 @@ Get the current state of a game by its ID.
 ```bash
 curl -X POST https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/current-position \
   -H "Content-Type: application/json" \
+  -H "x-api-key: *****" \
   -d '{
     "gameId": "123e4567-e89b-12d3-a456-426614174000"
   }'
@@ -176,6 +192,7 @@ Apply a move to a game and get the updated state.
 ```bash
 curl -X POST https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/apply-move \
   -H "Content-Type: application/json" \
+  -H "x-api-key: *****" \
   -d '{
     "gameId": "123e4567-e89b-12d3-a456-426614174000",
     "move": "e4"

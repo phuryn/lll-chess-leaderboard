@@ -35,32 +35,45 @@ const Docs = () => {
             <Badge variant="outline">Stateful</Badge>
             <Badge variant="outline">Game-ID Based</Badge>
             <Badge variant="outline">CORS Enabled</Badge>
+            <Badge variant="outline">API Key Protected</Badge>
           </div>
         </div>
 
-        <Card className="mb-8 border-amber-500/50 bg-amber-500/10">
-          <CardContent className="py-4">
-            <div className="flex items-start gap-3">
-              <span className="text-xl">⚠️</span>
-              <div>
-                <p className="font-medium text-amber-600 dark:text-amber-400">
-                  Read-Only Database
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  This database is currently read-only and intended for viewing benchmark results only. 
-                  To run your own experiments, see the{" "}
-                  <a 
-                    href="https://github.com/phuryn/llm-chess-leaderboard" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline hover:no-underline"
-                  >
-                    GitHub repository
-                  </a>{" "}
-                  to replicate the setup in your own environment.
-                </p>
+        {/* Authentication Card */}
+        <Card className="mb-8 border-2 border-primary/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <span className="text-2xl">🔐</span> Authentication
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Write endpoints require an API key passed via the <code className="bg-muted px-1.5 py-0.5 rounded">x-api-key</code> header.
+            </p>
+            <CodeBlock language="bash">
+{`x-api-key: *****`}
+            </CodeBlock>
+            <div className="space-y-2">
+              <div className="flex items-start gap-2 text-sm">
+                <span className="text-red-500">🔒</span>
+                <span>
+                  <strong className="text-foreground">Protected endpoints:</strong>{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded">/new-game</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded">/apply-move</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded">/current-position</code>
+                </span>
+              </div>
+              <div className="flex items-start gap-2 text-sm">
+                <span className="text-green-500">🌐</span>
+                <span>
+                  <strong className="text-foreground">Public endpoints:</strong>{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded">/legal-moves</code> (no authentication required)
+                </span>
               </div>
             </div>
+            <p className="text-sm text-muted-foreground">
+              Requests without a valid API key will receive a <code className="bg-muted px-1.5 py-0.5 rounded">401 Unauthorized</code> response.
+            </p>
           </CardContent>
         </Card>
 
@@ -138,6 +151,7 @@ const Docs = () => {
                 <CodeBlock language="bash">
 {`curl -X POST ${baseUrl}/functions/v1/new-game \\
   -H "Content-Type: application/json" \\
+  -H "x-api-key: *****" \\
   -d '{
     "whitePlayer": "Alice",
     "blackPlayer": "Bob",
@@ -197,6 +211,7 @@ const Docs = () => {
                 <CodeBlock language="bash">
 {`curl -X POST ${baseUrl}/functions/v1/current-position \\
   -H "Content-Type: application/json" \\
+  -H "x-api-key: *****" \\
   -d '{
     "gameId": "123e4567-e89b-12d3-a456-426614174000"
   }'`}
@@ -284,6 +299,7 @@ const Docs = () => {
                 <CodeBlock language="bash">
 {`curl -X POST ${baseUrl}/functions/v1/apply-move \\
   -H "Content-Type: application/json" \\
+  -H "x-api-key: *****" \\
   -d '{
     "gameId": "123e4567-e89b-12d3-a456-426614174000",
     "move": "e4"
