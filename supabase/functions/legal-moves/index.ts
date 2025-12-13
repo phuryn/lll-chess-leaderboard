@@ -2,13 +2,27 @@ import { Chess } from 'npm:chess.js';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key',
 };
 
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  // Verify API key
+  const apiKey = req.headers.get('x-api-key');
+  const expectedKey = Deno.env.get('CHESS_API_SECRET');
+  
+  if (!apiKey || apiKey !== expectedKey) {
+    return new Response(
+      JSON.stringify({ ok: false, error: 'Unauthorized' }),
+      {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
 
   try {
