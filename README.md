@@ -1,4 +1,4 @@
-# LLM Chess Benchmark
+# The Silicon Gambit: High-Stakes LLM Chess Benchmark
 
 A chess engine API designed for benchmarking LLM chess capabilities via n8n orchestration. Models play chess by outputting moves in Standard Algebraic Notation (SAN), and invalid moves result in automatic losses.
 
@@ -9,6 +9,21 @@ A chess engine API designed for benchmarking LLM chess capabilities via n8n orch
 - **Move validation** using Standard Algebraic Notation (SAN)
 - **Game state detection**: checkmate, stalemate, draw, invalid moves
 - **Player tracking** and leaderboard with points system
+- **API Key protected** write endpoints
+
+## Authentication
+
+Write endpoints require an API key passed via the `x-api-key` header:
+
+```
+x-api-key: *****
+```
+
+**Protected endpoints:** `/new-game`, `/apply-move`, `/current-position`, `/legal-moves`
+
+**Public access:** Database queries for stats and game details (no authentication required)
+
+Requests without a valid API key will receive a `401 Unauthorized` response.
 
 ## API Documentation
 
@@ -41,20 +56,29 @@ Pre-built n8n workflows are available in the `/n8n` folder:
 3. Select the JSON file (`blind_mode.json` or `FEN_mode.json`)
 4. Configure the HTTP Request nodes with your API endpoint URL
 5. Add your **OpenRouter API keys** to the AI/LLM nodes
-6. Activate the workflow
-
-### Key Finding: Blind Mode Outperforms FEN
-
-I believe models perform better in blind mode than with FEN because LLMs are trained extensively on natural-language chess notation, PGN move sequences, and commentary — but very little on strict FEN decoding.
-
-Reconstructing the position from move history triggers multi-step reasoning and forces the model to simulate board state explicitly, which reduces illegal moves.
+6. **Add your Chess API key** to the `x-api-key` header in HTTP Request nodes
+7. Activate the workflow
 
 ## Scoring System
 
 - **Win**: +1 point
 - **Loss**: -1 point
-- **Draw**: 0 points
+- **Draw**: +0.5 points
 - **Invalid move**: Automatic loss (-1 point)
+
+## Key Findings
+
+### The Kimi-k2 and DeepSeek-V3.2 Reality Check
+
+Kimi-k2 and DeepSeek-V3.2 lost often because they violated simple constraints: apologizing mid-game, inventing board states, or mixing reasoning with output.
+
+Models that can't follow a basic negative rule ("don't add anything else") can't be trusted with write-access in production workflows.
+
+### The Blindfold Paradox
+
+Early games hinted that weaker models survived more moves when blindfolded (reconstructing the board from history) than when given the exact FEN snapshot. However, this pattern was not confirmed with additional testing—the effect was inconsistent across models and test runs.
+
+**Why this could happen (in theory):** LLMs are trained on sequences, not compressed board snapshots. FEN requires spatial decompression, while PGN-like history aligns with autoregressive prediction. This remains an interesting hypothesis, but the data doesn't strongly support it.
 
 ## Technology Stack
 
@@ -68,3 +92,4 @@ Reconstructing the position from move history triggers multi-step reasoning and 
 - **Live Leaderboard**: [View benchmark results](https://chess.productcompass.pm/)
 - **Battle Statistics**: [/stats](https://chess.productcompass.pm/stats)
 - **API Documentation**: [/docs](https://chess.productcompass.pm/docs)
+- **Game Replays**: [/games](https://chess.productcompass.pm/games)
