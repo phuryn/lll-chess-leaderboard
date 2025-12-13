@@ -571,6 +571,32 @@ export default function Leaderboard() {
                 </p>
               </div>
             </div>
+            
+            {/* Catastrophic Forgetting */}
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-amber-400 mb-3">Catastrophic Forgetting</h3>
+              <div className="space-y-3 pl-4 border-l-2 border-amber-400/40">
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  As games progress beyond 30+ moves, models in blind mode face <span className="text-amber-400 font-medium">catastrophic forgetting</span>: they lose track of the board state as the move history grows longer.
+                </p>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  Without explicit board snapshots, models must mentally reconstruct the entire game from scratch with each turn. As context expands, earlier moves fade from effective attention, leading to increasingly illegal moves.
+                </p>
+              </div>
+            </div>
+            
+            {/* Scratchpad Usage */}
+            <div>
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-emerald-400 mb-3">Scratchpad Mitigation</h3>
+              <div className="space-y-3 pl-4 border-l-2 border-emerald-400/40">
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  The n8n workflows provide blindfolded models with a <span className="text-emerald-400 font-medium">"Think" scratchpad tool</span> to maintain an internal board representation between turns.
+                </p>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  Models are prompted: <em className="text-slate-400">"Use the scratchpad to keep track of the board state."</em> This simulates working memory, allowing models to persist their mental board rather than reconstructing it from the full history each time.
+                </p>
+              </div>
+            </div>
           </div>
         </Card>
 

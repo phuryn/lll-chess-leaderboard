@@ -82,6 +82,14 @@ Early games hinted that weaker models survived more moves when blindfolded (reco
 
 **Why this could happen (in theory):** LLMs are trained on sequences, not compressed board snapshots. FEN requires spatial decompression, while PGN-like history aligns with autoregressive prediction. This remains an interesting hypothesis, but the data doesn't strongly support it.
 
+### Catastrophic Forgetting
+
+As games progress beyond 30+ moves, models in blind mode face **catastrophic forgetting**: they lose track of the board state as move history grows longer. Without explicit board snapshots, models must mentally reconstruct the entire game from scratch with each turn. As context expands, earlier moves fade from effective attention, leading to increasingly illegal moves.
+
+### Scratchpad Mitigation
+
+The n8n workflows provide blindfolded models with a **"Think" scratchpad tool** to maintain an internal board representation between turns. Models are prompted to use this scratchpad to keep track of the board state, simulating working memory that persists their mental board rather than reconstructing it from the full history each time.
+
 ## Technology Stack
 
 - React + TypeScript + Vite
