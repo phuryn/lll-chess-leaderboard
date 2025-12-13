@@ -55,9 +55,11 @@ Pre-built n8n workflows are available in the `/n8n` folder:
 2. Go to **Workflows → Import from file**
 3. Select the JSON file (`blind_mode.json` or `FEN_mode.json`)
 4. Configure the HTTP Request nodes with your API endpoint URL
-5. Add your **OpenRouter API keys** to the AI/LLM nodes
-6. **Add your Chess API key** to the `x-api-key` header in HTTP Request nodes
+5. **Add `x-api-key` header** to all HTTP Request nodes (required for API authentication)
+6. Add your **OpenRouter API keys** to the AI/LLM nodes
 7. Activate the workflow
+
+> **Note:** The provided workflows include a limited set of models. You may need to extend them to add more LLM models. The `x-api-key` header is **not included** in the workflow files and **must be manually added** to all HTTP Request node headers.
 
 ## Scoring System
 
