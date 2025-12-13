@@ -16,9 +16,9 @@ Write endpoints require an API key passed via the `x-api-key` header:
 x-api-key: *****
 ```
 
-**Protected endpoints:** `/new-game`, `/apply-move`, `/current-position`
+**Protected endpoints:** `/new-game`, `/apply-move`, `/current-position`, `/legal-moves`
 
-**Public endpoints:** `/legal-moves` (no authentication required)
+**Public endpoints:** Database queries for stats and game details (no authentication required)
 
 Requests without a valid API key will receive a `401 Unauthorized` response.
 
@@ -233,6 +233,7 @@ Get all legal moves for a given FEN position (stateless).
 ```bash
 curl -X POST https://csdagwvbuurumpgrqweh.supabase.co/functions/v1/legal-moves \
   -H "Content-Type: application/json" \
+  -H "x-api-key: *****" \
   -d '{
     "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
   }'

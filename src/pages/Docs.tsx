@@ -60,14 +60,15 @@ const Docs = () => {
                   <strong className="text-foreground">Protected endpoints:</strong>{" "}
                   <code className="bg-muted px-1.5 py-0.5 rounded">/new-game</code>,{" "}
                   <code className="bg-muted px-1.5 py-0.5 rounded">/apply-move</code>,{" "}
-                  <code className="bg-muted px-1.5 py-0.5 rounded">/current-position</code>
+                  <code className="bg-muted px-1.5 py-0.5 rounded">/current-position</code>,{" "}
+                  <code className="bg-muted px-1.5 py-0.5 rounded">/legal-moves</code>
                 </span>
               </div>
               <div className="flex items-start gap-2 text-sm">
                 <span className="text-green-500">🌐</span>
                 <span>
-                  <strong className="text-foreground">Public endpoints:</strong>{" "}
-                  <code className="bg-muted px-1.5 py-0.5 rounded">/legal-moves</code> (no authentication required)
+                  <strong className="text-foreground">Public access:</strong>{" "}
+                  Database queries for stats and game details (no authentication required)
                 </span>
               </div>
             </div>
@@ -349,6 +350,7 @@ const Docs = () => {
                 <CodeBlock language="bash">
 {`curl -X POST ${baseUrl}/functions/v1/legal-moves \\
   -H "Content-Type: application/json" \\
+  -H "x-api-key: *****" \\
   -d '{
     "fen": "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
   }'`}
